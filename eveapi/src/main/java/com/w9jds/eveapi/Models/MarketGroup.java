@@ -2,12 +2,10 @@ package com.w9jds.eveapi.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
 
 /**
- * Created by Jeremy Shore on 2/16/16.
+ * Created by Jeremy on 2/17/2016.
  */
 public final class MarketGroup {
 
@@ -18,7 +16,7 @@ public final class MarketGroup {
     private int id;
 
     @SerializedName("parentGroup")
-    private String parentGroup;
+    private Reference parentGroup;
 
     @SerializedName("href")
     private String href;
@@ -27,7 +25,7 @@ public final class MarketGroup {
     private String description;
 
     @SerializedName("types")
-    private ArrayList<String> types;
+    private Reference types;
 
     public Hashtable<Integer, MarketGroup> children = new Hashtable<>();
 
@@ -47,16 +45,16 @@ public final class MarketGroup {
         return href;
     }
 
-    public ArrayList<String> getTypes() {
-        return types;
+    public String getTypes() {
+        return types.href;
     }
 
     public String getParentGroup() {
-        return parentGroup;
+        return parentGroup.href;
     }
 
     public Integer getParentGroupId() {
-        String[] query = this.parentGroup.split("///g/");
+        String[] query = this.parentGroup.href.split("/");
 
         for (int i = query.length; i > 0; i--) {
             if (!query[i-1].equals("")) {
@@ -68,6 +66,6 @@ public final class MarketGroup {
     }
 
     public boolean hasParent() {
-        return this.parentGroup != null && !this.parentGroup.equals("");
+        return this.parentGroup != null && !this.parentGroup.href.equals("");
     }
 }

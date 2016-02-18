@@ -1,22 +1,21 @@
 package com.w9jds.eveapi.Client;
 
-import com.google.gson.Gson;
 import com.w9jds.eveapi.Callback;
-import com.w9jds.eveapi.Client.Converters.StringConverter;
 import com.w9jds.eveapi.Models.MarketGroup;
+import com.w9jds.eveapi.Models.MarketGroups;
 import com.w9jds.eveapi.Models.Region;
+import com.w9jds.eveapi.Models.Types;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Hashtable;
 
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.QueryMap;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Url;
 
 /**
  * Created by Jeremy Shore on 2/16/16.
@@ -37,60 +36,54 @@ public final class Crest {
     }
 
     interface Endpoint {
-        @GET("/{path}")
-        void getCrest(@Path("path") String path, retrofit.Callback<?> callback);
 
-        @GET("/{type}/{path}")
-        void getCrest(@Path("type") String type, @Path("path") String path, retrofit.Callback<?> callback);
+        @GET
+        Call<Types> getMarketTypes(@Url String url);
 
-        @GET("/{path}")
-        void getCrest(@Path("path") String path, @QueryMap HashMap<String, String> params,
-                      retrofit.Callback<?> callback);
+        @GET("/market/groups/")
+        Call<MarketGroups> getMarketGroups();
 
-        @GET("/{path}/{id}/")
-        void getCrest(@Path("path") String path, @Path("id") int id, retrofit.Callback<?> callback);
+        @GET("/regions/")
+        Call<Region[]> getRegions();
 
-        @GET("/{path}/{id}/")
-        void getCrest(@Path("path") String path, @Path("id") int id, @QueryMap HashMap<String, String> params,
-                      retrofit.Callback<?> callback);
     }
 
     public void getRegions(final Callback<ArrayList<Region>> callback) {
-        crestEndpoint.getCrest("regions", new retrofit.Callback<String>() {
+        Call<Region[]> call = crestEndpoint.getRegions();
+        call.enqueue(new retrofit2.Callback<Region[]>() {
             @Override
-            public void success(String json, Response response) {
-                Region[] regions = new Gson().fromJson(json, Region[].class);
-
-                callback.success((ArrayList<Region>)Arrays.asList(regions));
+            public void onResponse(Call<Region[]> call, Response<Region[]> response) {
+                callback.success((ArrayList<Region>) Arrays.asList(response.body()));
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error.getMessage());
+            public void onFailure(Call<Region[]> call, Throwable t) {
+                callback.failure(t.getMessage());
             }
         });
     }
 
     public void getMarketGroups(final Callback<Hashtable<Integer, MarketGroup>> callback) {
-        crestEndpoint.getCrest("market/groups", new retrofit.Callback<String>() {
+        Call<MarketGroups> call = crestEndpoint.getMarketGroups();
+        call.enqueue(new retrofit2.Callback<MarketGroups>() {
             @Override
-            public void success(String json, Response response) {
+            public void onResponse(Call<MarketGroups> call, Response<MarketGroups> response) {
                 Hashtable<Integer, MarketGroup> tree = new Hashtable<>();
-                MarketGroup[] groups = new Gson().fromJson(json, MarketGroup[].class);
 
-                for (MarketGroup group : groups) {
-                    if (!group.hasParent()) {
-                        tree.put(group.getId(), group);
-                    }
+                for (MarketGroup group : response.body().groups) {
+                    tree.put(group.getId(), group);
                 }
 
-                for (MarketGroup group : groups) {
+                for (int i = response.body().groups.size() - 1; i > 0; i--) {
+                    MarketGroup group = response.body().groups.get(i);
+
                     if (group.hasParent()) {
                         Integer parentId = group.getParentGroupId();
-
-                        if (parentId != null) {
+                        if (tree.containsKey(parentId)) {
                             tree.get(parentId).children.put(group.getId(), group);
                         }
+
+                        tree.remove(group.getId());
                     }
                 }
 
@@ -98,11 +91,27 @@ public final class Crest {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error.getMessage());
+            public void onFailure(Call<MarketGroups> call, Throwable t) {
+                callback.failure(t.getMessage());
             }
         });
     }
+
+    public void getMarketTypes(String href, final Callback<Types> callback) {
+        Call<Types> call = crestEndpoint.getMarketTypes(href);
+        call.enqueue(new retrofit2.Callback<Types>() {
+            @Override
+            public void onResponse(Call<Types> call, Response<Types> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Types> call, Throwable t) {
+                callback.failure(t.getMessage());
+            }
+        });
+    }
+
 
     public static class Builder {
 
@@ -135,9 +144,9 @@ public final class Crest {
         }
 
         public Endpoint buildEndpoint() {
-            return new RestAdapter.Builder()
-                    .setConverter(new StringConverter())
-                    .setEndpoint(basePath)
+            return new Retrofit.Builder()
+                    .baseUrl(basePath)
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build()
                     .create(Endpoint.class);
         }

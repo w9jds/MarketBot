@@ -1,5 +1,6 @@
 package com.w9jds.eveapi.Models;
 
+
 import com.google.gson.annotations.SerializedName;
 
 /**
