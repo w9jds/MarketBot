@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.w9jds.marketbot.Classes;
+package com.w9jds.marketbot.classes;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -32,7 +32,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Utility methods for working with colors.
  */
-public class ColorUtils {
+public final class ColorUtils {
 
     private ColorUtils() { }
 

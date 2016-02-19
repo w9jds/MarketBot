@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.w9jds.marketbot.Widgets;
+package com.w9jds.marketbot.ui.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -24,7 +24,7 @@ import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
-import com.w9jds.marketbot.Classes.ColorUtils;
+import com.w9jds.marketbot.classes.ColorUtils;
 import com.w9jds.marketbot.R;
 
 import java.util.ArrayList;

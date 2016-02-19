@@ -1,4 +1,4 @@
-package com.w9jds.marketbot.Classes;
+package com.w9jds.marketbot.classes;
 
 import android.os.Build;
 import android.support.v4.view.ViewCompat;

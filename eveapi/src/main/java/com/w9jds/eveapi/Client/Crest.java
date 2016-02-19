@@ -48,20 +48,20 @@ public final class Crest {
 
     }
 
-    public void getRegions(final Callback<ArrayList<Region>> callback) {
-        Call<Region[]> call = crestEndpoint.getRegions();
-        call.enqueue(new retrofit2.Callback<Region[]>() {
-            @Override
-            public void onResponse(Call<Region[]> call, Response<Region[]> response) {
-                callback.success((ArrayList<Region>) Arrays.asList(response.body()));
-            }
-
-            @Override
-            public void onFailure(Call<Region[]> call, Throwable t) {
-                callback.failure(t.getMessage());
-            }
-        });
-    }
+//    public void getRegions(final Callback<ArrayList<Region>> callback) {
+//        Call<Region[]> call = crestEndpoint.getRegions();
+//        call.enqueue(new retrofit2.Callback<Region[]>() {
+//            @Override
+//            public void onResponse(Call<Region[]> call, Response<Region[]> response) {
+//                callback.success((ArrayList<Region>) Arrays.asList(response.body()));
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Region[]> call, Throwable t) {
+//                callback.failure(t.getMessage());
+//            }
+//        });
+//    }
 
     public void getMarketGroups(final Callback<Hashtable<Integer, MarketGroup>> callback) {
         Call<MarketGroups> call = crestEndpoint.getMarketGroups();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.w9jds.marketbot.Widgets;
+package com.w9jds.marketbot.ui.widgets;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
-import com.w9jds.marketbot.Classes.ViewOffsetHelper;
+import com.w9jds.marketbot.classes.ViewOffsetHelper;
 import com.w9jds.marketbot.R;
 
 import java.util.ArrayList;

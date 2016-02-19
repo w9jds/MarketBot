@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Activities.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/market_groups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        android:clipToPadding="false"
+        android:elevation="1dp" />
 
-</RelativeLayout>
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:title="@string/app_name"
+        android:outlineProvider="none"
+        android:elevation="1dp" />
+        <!--style="@style/Widget.Plaid.HomeToolbar" />-->
+
+    <!--<ProgressBar-->
+        <!--android:id="@android:id/empty"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:indeterminate="true"-->
+        <!--android:indeterminateTint="?android:colorAccent"-->
+        <!--android:indeterminateTintMode="src_in" />-->
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="@dimen/fab_size"-->
+        <!--android:layout_height="@dimen/fab_size"-->
+        <!--android:elevation="@dimen/z_fab"-->
+        <!--android:background="@drawable/fab"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_marginEnd="@dimen/padding_normal"-->
+        <!--android:layout_marginBottom="@dimen/padding_normal"-->
+        <!--android:stateListAnimator="@animator/raise"-->
+        <!--android:src="@drawable/ic_add_dark" />-->
+
+</FrameLayout>

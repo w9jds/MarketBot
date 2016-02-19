@@ -1,4 +1,4 @@
-package com.w9jds.marketbot.Classes;
+package com.w9jds.marketbot.classes;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Utility methods for working with animations.
  */
-public class AnimUtils {
+public final class AnimUtils {
 
     private AnimUtils() { }
 
