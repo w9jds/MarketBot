@@ -10,7 +10,9 @@ import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Client.Crest;
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.data.DataManager;
 
+import java.util.Collection;
 import java.util.Hashtable;
 
 import butterknife.Bind;
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.market_groups)
     RecyclerView mRecyclerView;
 
+    private DataManager dataManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,24 +35,12 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        populateMarketGroups();
-    }
-
-    private void populateMarketGroups() {
-        Crest crestService = new Crest.Builder()
-                .setPublicTranquilityEndpoint()
-                .build();
-
-        crestService.getMarketGroups(new Callback<Hashtable<Integer, MarketGroup>>() {
+        dataManager = new DataManager(this, ) {
             @Override
-            public void success(Hashtable<Integer, MarketGroup> integerMarketGroupHashtable) {
+            public void onDataLoaded(Collection<?> data) {
 
             }
-
-            @Override
-            public void failure(String error) {
-
-            }
-        });
+        }
     }
+
 }

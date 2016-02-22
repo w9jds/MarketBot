@@ -5,6 +5,7 @@ import android.content.Context;
 import com.w9jds.eveapi.Client.Crest;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,7 +26,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         loadingCount = new AtomicInteger(0);
     }
 
-    public abstract void onDataLoaded(List<?> data);
+    public abstract void onDataLoaded(Collection<?> data);
 
     @Override
     public boolean isDataLoading() {

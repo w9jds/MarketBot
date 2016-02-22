@@ -14,7 +14,7 @@ public abstract class DataManager extends BaseDataManager {
 
     public DataManager(Context context) {
         super(context);
-        setupPageIndexes();
+//        setupPageIndexes();
     }
 
     private void loadMarketGroups() {
@@ -24,7 +24,7 @@ public abstract class DataManager extends BaseDataManager {
             public void success(Hashtable<Integer, MarketGroup> groups) {
                 loadFinished();
                 if (groups != null) {
-                    onDataLoaded(groups);
+                    onDataLoaded(groups.values());
                 }
             }
 

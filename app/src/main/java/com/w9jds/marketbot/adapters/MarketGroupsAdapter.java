@@ -1,6 +1,9 @@
 package com.w9jds.marketbot.adapters;
 
+import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.w9jds.marketbot.data.DataLoadingSubject;
@@ -11,8 +14,26 @@ import com.w9jds.marketbot.data.DataLoadingSubject;
 public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements DataLoadingSubject.DataLoadingCallbacks {
 
+    private final Activity host;
+    private final LayoutInflater layoutInflater;
+    private final @Nullable DataLoadingSubject dataLoading;
+
+    public MarketGroupsAdapter(Activity host, DataLoadingSubject dataLoading) {
+        this.host = host;
+        this.layoutInflater = LayoutInflater.from(host);
+        this.dataLoading = dataLoading;
+
+
+    }
+
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch(viewType) {
+
+        }
+
+
         return null;
     }
 
