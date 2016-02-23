@@ -16,6 +16,6 @@ public final class Types {
     public int count;
 
     @SerializedName("type")
-    public ArrayList<TypeItem> items;
+    public ArrayList<Type> items;
 
 }

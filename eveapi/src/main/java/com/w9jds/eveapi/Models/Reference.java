@@ -10,7 +10,4 @@ public final class Reference {
     @SerializedName("href")
     public String href;
 
-    @SerializedName("id")
-    public int id;
-
 }

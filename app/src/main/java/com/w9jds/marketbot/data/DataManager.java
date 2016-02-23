@@ -5,6 +5,7 @@ import android.content.Context;
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Models.MarketGroup;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
@@ -17,14 +18,14 @@ public abstract class DataManager extends BaseDataManager {
 //        setupPageIndexes();
     }
 
-    private void loadMarketGroups() {
+    public void loadMarketGroups() {
         getPublicCrestApi().getMarketGroups(new Callback<Hashtable<Integer, MarketGroup>>() {
 
             @Override
             public void success(Hashtable<Integer, MarketGroup> groups) {
                 loadFinished();
                 if (groups != null) {
-                    onDataLoaded(groups.values());
+                    onDataLoaded(new ArrayList<MarketGroup>(groups.values()));
                 }
             }
 

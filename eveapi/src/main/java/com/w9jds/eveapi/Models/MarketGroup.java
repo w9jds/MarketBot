@@ -7,13 +7,7 @@ import java.util.Hashtable;
 /**
  * Created by Jeremy on 2/17/2016.
  */
-public final class MarketGroup {
-
-    @SerializedName("name")
-    private String name;
-
-    @SerializedName("id")
-    private int id;
+public final class MarketGroup extends MarketItemBase {
 
     @SerializedName("parentGroup")
     private Reference parentGroup;
@@ -28,14 +22,6 @@ public final class MarketGroup {
     private Reference types;
 
     public Hashtable<Integer, MarketGroup> children = new Hashtable<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public int getId() {
-        return id;
-    }
 
     public String getDescription() {
         return description;

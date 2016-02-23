@@ -3,6 +3,8 @@ package com.w9jds.marketbot.data;
 import android.content.Context;
 
 import com.w9jds.eveapi.Client.Crest;
+import com.w9jds.eveapi.Models.MarketItemBase;
+import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +28,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         loadingCount = new AtomicInteger(0);
     }
 
-    public abstract void onDataLoaded(Collection<?> data);
+    public abstract void onDataLoaded(List<? extends MarketItemBase> data);
 
     @Override
     public boolean isDataLoading() {
