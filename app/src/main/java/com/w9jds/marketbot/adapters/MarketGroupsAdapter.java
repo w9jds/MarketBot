@@ -18,6 +18,7 @@ import com.w9jds.marketbot.activities.GroupActivity;
 import com.w9jds.marketbot.data.DataLoadingSubject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -65,13 +66,33 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MarketGroup item = (MarketGroup) getItem(holder.getAdapterPosition());
 
+//                    holder.image.setTransitionName(holder.itemView.getResources().getString(R
+//                            .string.transition_shot));
+
+                    final Intent intent = new Intent();
+                    intent.setClass(host, GroupActivity.class);
+                    intent.putExtra("MarketGroup", item);
+
+//                    final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
+//                            Pair.create(holder.itemView, host.getString(R.string.transition_background)),
+//                            Pair.create(holder.itemView, host.getString(R.string.transition_title_background)));
+                    host.startActivity(intent);
                 }
             }
         );
 
         return holder;
     }
+
+//    private void openGroupList(MarketGroup group) {
+//
+//    }
+//
+//    private void openTypeList(MarketGroup group) {
+//
+//    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -102,7 +123,7 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.subtitle.setText(group.getDescription());
     }
 
-    private void deduplicateAndAdd(List<? extends MarketItemBase> newItems) {
+    private void deduplicateAndAdd(Collection<? extends MarketItemBase> newItems) {
         final int count = getItemCount();
         for (MarketItemBase newItem : newItems) {
             boolean add = true;
@@ -119,7 +140,7 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void addAndResort(List<? extends MarketItemBase> newItems) {
+    public void addAndResort(Collection<? extends MarketItemBase> newItems) {
         deduplicateAndAdd(newItems);
         sort();
 

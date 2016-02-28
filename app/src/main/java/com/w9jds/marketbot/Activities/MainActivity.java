@@ -35,14 +35,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-//        dataManager = new DataManager(this, filtersAdapter) {
-//            @Override
-//            public void onDataLoaded(List<? extends PlaidItem> data) {
-//                adapter.addAndResort(data);
-//                checkEmptyState();
-//            }
-//        };
-
         dataManager = new DataManager(this) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {

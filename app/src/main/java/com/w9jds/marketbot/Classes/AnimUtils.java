@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.w9jds.marketbot.classes;
 
 import android.animation.Animator;
@@ -6,6 +22,7 @@ import android.content.Context;
 import android.transition.Transition;
 import android.util.ArrayMap;
 import android.util.Property;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
@@ -17,18 +34,32 @@ public final class AnimUtils {
 
     private AnimUtils() { }
 
-    private static Interpolator gusterpolator;
+    private static Interpolator fastOutSlowIn;
+    private static Interpolator fastOutLinearIn;
+    private static Interpolator linearOutSlowIn;
 
-    public static Interpolator getMaterialInterpolator(Context ctx) {
-        if (gusterpolator == null) {
-            synchronized (AnimUtils.class) {
-                if (gusterpolator == null) {
-                    gusterpolator = android.view.animation.AnimationUtils.loadInterpolator(ctx,
-                            android.R.interpolator.fast_out_slow_in);
-                }
-            }
+    public static Interpolator getFastOutSlowInInterpolator(Context context) {
+        if (fastOutSlowIn == null) {
+            fastOutSlowIn = AnimationUtils.loadInterpolator(context,
+                    android.R.interpolator.fast_out_slow_in);
         }
-        return gusterpolator;
+        return fastOutSlowIn;
+    }
+
+    public static Interpolator getFastOutLinearInInterpolator(Context context) {
+        if (fastOutLinearIn == null) {
+            fastOutLinearIn = AnimationUtils.loadInterpolator(context,
+                    android.R.interpolator.fast_out_linear_in);
+        }
+        return fastOutLinearIn;
+    }
+
+    public static Interpolator getLinearOutSlowInInterpolator(Context context) {
+        if (linearOutSlowIn == null) {
+            linearOutSlowIn = AnimationUtils.loadInterpolator(context,
+                    android.R.interpolator.linear_out_slow_in);
+        }
+        return linearOutSlowIn;
     }
 
     /**
@@ -103,7 +134,8 @@ public final class AnimUtils {
      */
     public static class NoPauseAnimator extends Animator {
         private final Animator mAnimator;
-        private final ArrayMap<AnimatorListener, AnimatorListener> mListeners = new ArrayMap<>();
+        private final ArrayMap<AnimatorListener, AnimatorListener> mListeners =
+                new ArrayMap<AnimatorListener, AnimatorListener>();
 
         public NoPauseAnimator(Animator animator) {
             mAnimator = animator;
@@ -283,5 +315,5 @@ public final class AnimUtils {
 
         }
     }
-}
 
+}

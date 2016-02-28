@@ -18,6 +18,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.GroupActivity">
+
+        </activity>
+
     </application>
 
 </manifest>
