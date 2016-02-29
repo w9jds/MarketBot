@@ -45,33 +45,33 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_market_group);
         ButterKnife.bind(this);
 
-        systemChromeFader = new ElasticDragDismissFrameLayout.SystemChromeFader(this) {
-            @Override
-            public void onDragDismissed() {
-                finishAfterTransition();
-            }
-        };
-
-        itemsList.setLayoutManager(new LinearLayoutManager(this));
-        itemsList.setItemAnimator(new DefaultItemAnimator());
-
-        dataManager = new DataManager(this) {
-            @Override
-            public void onDataLoaded(List<? extends MarketItemBase> data) {
-                adapter.addAndResort(data);
-            }
-        };
-
-        final Intent intent = getIntent();
-        if (intent.hasExtra("MarketGroup")) {
-
-            adapter = new MarketGroupsAdapter(this, dataManager);
-            parentGroup = intent.getParcelableExtra("MarketGroup");
-
-            if (parentGroup.children.size() > 0) {
-                adapter.addAndResort(parentGroup.children.values());
-            }
-        }
+//        systemChromeFader = new ElasticDragDismissFrameLayout.SystemChromeFader(this) {
+//            @Override
+//            public void onDragDismissed() {
+//                finishAfterTransition();
+//            }
+//        };
+//
+//        itemsList.setLayoutManager(new LinearLayoutManager(this));
+//        itemsList.setItemAnimator(new DefaultItemAnimator());
+//
+//        dataManager = new DataManager(this) {
+//            @Override
+//            public void onDataLoaded(List<? extends MarketItemBase> data) {
+//                adapter.addAndResort(data);
+//            }
+//        };
+//
+//        final Intent intent = getIntent();
+//        if (intent.hasExtra("MarketGroup")) {
+//
+//            adapter = new MarketGroupsAdapter(this, dataManager);
+//            parentGroup = intent.getParcelableExtra("MarketGroup");
+//
+//            if (parentGroup.children.size() > 0) {
+//                adapter.addAndResort(parentGroup.children.values());
+//            }
+//        }
 
 
 

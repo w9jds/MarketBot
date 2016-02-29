@@ -13,6 +13,8 @@ public class MarketItemBase {
     @SerializedName("name")
     private String name;
 
+    public boolean visited = false;
+
     public int getId() {
         return id;
     }

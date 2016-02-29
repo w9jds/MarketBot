@@ -36,16 +36,22 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final LayoutInflater layoutInflater;
     private final @Nullable DataLoadingSubject dataLoading;
 
+    private onMarketGroupChanged groupChangedListener;
     private List<MarketGroup> items;
 
-    public MarketGroupsAdapter(Activity host, DataLoadingSubject dataLoading) {
+    public interface onMarketGroupChanged {
+        void updateSelectedParentGroup(MarketGroup group);
+    }
+
+    public MarketGroupsAdapter(Activity host, DataLoadingSubject dataLoading, onMarketGroupChanged changed) {
+        this.groupChangedListener = changed;
         this.host = host;
         this.layoutInflater = LayoutInflater.from(host);
         this.dataLoading = dataLoading;
         this.items = new ArrayList<>();
     }
 
-    static class MarketGroupHolder extends RecyclerView.ViewHolder {
+    public static class MarketGroupHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.title) TextView title;
         @Bind(R.id.subtitle) TextView subtitle;
@@ -68,31 +74,24 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View v) {
                     MarketGroup item = (MarketGroup) getItem(holder.getAdapterPosition());
 
-//                    holder.image.setTransitionName(holder.itemView.getResources().getString(R
-//                            .string.transition_shot));
+                    if (item.children.size() > 0) {
+                        groupChangedListener.updateSelectedParentGroup(item);
+                    }
 
-                    final Intent intent = new Intent();
-                    intent.setClass(host, GroupActivity.class);
-                    intent.putExtra("MarketGroup", item);
+//                    final Intent intent = new Intent();
+//                    intent.setClass(host, GroupActivity.class);
+//                    intent.putExtra("MarketGroup", item);
 
 //                    final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
 //                            Pair.create(holder.itemView, host.getString(R.string.transition_background)),
 //                            Pair.create(holder.itemView, host.getString(R.string.transition_title_background)));
-                    host.startActivity(intent);
+//                    host.startActivity(intent);
                 }
             }
         );
 
         return holder;
     }
-
-//    private void openGroupList(MarketGroup group) {
-//
-//    }
-//
-//    private void openTypeList(MarketGroup group) {
-//
-//    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -141,18 +140,48 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void addAndResort(Collection<? extends MarketItemBase> newItems) {
-        deduplicateAndAdd(newItems);
-        sort();
+        ArrayList<MarketItemBase> groups = new ArrayList<>(newItems);
+        Collections.sort(groups, new Comparitor());
+        deduplicateAndAdd(groups);
 
         notifyDataSetChanged();
     }
 
     private void add(MarketGroup item) {
         items.add(item);
+        notifyItemInserted(items.size() - 1);
     }
 
-    private void sort() {
-        Collections.sort(items, new Comparitor());
+    public void updateCollection(Collection<? extends MarketItemBase> newChildren) {
+        ArrayList<MarketItemBase> groups = new ArrayList<>(newChildren);
+        Collections.sort(groups, new Comparitor());
+
+//        int newSize = groups.size();
+//        int oldSize = items.size();
+        items.clear();
+
+        for (MarketItemBase group : groups) {
+            items.add((MarketGroup) group);
+        }
+
+        notifyDataSetChanged();
+
+//        for (int i = 0; i < oldSize; i++) {
+//            if (i < newSize) {
+//                MarketGroup group = (MarketGroup) groups.get(i);
+//
+//                items.add(group);
+//                if (i < oldSize) {
+//                    notifyItemChanged(i);
+//                }
+//                else {
+//                    notifyItemInserted(i);
+//                }
+//            }
+//            else {
+//                notifyItemRemoved(i);
+//            }
+//        }
     }
 
     public void clear() {
@@ -160,10 +189,9 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
-    private class Comparitor implements Comparator<MarketGroup> {
-
+    private class Comparitor implements Comparator<MarketItemBase> {
         @Override
-        public int compare(MarketGroup lhs, MarketGroup rhs) {
+        public int compare(MarketItemBase lhs, MarketItemBase rhs) {
             return lhs.getName().compareTo(rhs.getName());
         }
     }
