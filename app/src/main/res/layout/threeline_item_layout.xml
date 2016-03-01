@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
@@ -21,8 +21,7 @@
     <TextView
         android:id="@+id/subtitle"
         android:typeface="normal"
-        android:lines="2"
-        android:maxLines="2"
+        android:maxLines="3"
         style="?android:attr/subtitleTextStyle"
         android:layout_width="match_parent"
         android:textSize="14sp"

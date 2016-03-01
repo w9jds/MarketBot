@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Models.MarketGroup;
+import com.w9jds.eveapi.Models.Types;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -15,7 +16,7 @@ public abstract class DataManager extends BaseDataManager {
 
     public DataManager(Context context) {
         super(context);
-//        setupPageIndexes();
+
     }
 
     public void loadMarketGroups() {
@@ -25,7 +26,24 @@ public abstract class DataManager extends BaseDataManager {
             public void success(Hashtable<Integer, MarketGroup> groups) {
                 loadFinished();
                 if (groups != null) {
-                    onDataLoaded(new ArrayList<MarketGroup>(groups.values()));
+                    onDataLoaded(new ArrayList<>(groups.values()));
+                }
+            }
+
+            @Override
+            public void failure(String error) {
+                loadFinished();
+            }
+        });
+    }
+
+    public void loadGroupTypes(String targetLocation) {
+        getPublicCrestApi().getMarketTypes(targetLocation, new Callback<Types>() {
+            @Override
+            public void success(Types types) {
+                loadFinished();
+                if (types != null) {
+                    onDataLoaded(types.items);
                 }
             }
 

@@ -23,4 +23,8 @@
         <item name="android:windowBackground">@color/background_dark</item>
         <!--<item name="android:windowEnterTransition">@transition/home_enter</item>-->
     </style>
+
+    <!--<style name="Widget.MarketBot" parent="android:Widget" />-->
+
+
 </resources>

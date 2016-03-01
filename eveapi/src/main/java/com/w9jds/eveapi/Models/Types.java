@@ -15,7 +15,7 @@ public final class Types {
     @SerializedName("totalCount")
     public int count;
 
-    @SerializedName("type")
+    @SerializedName("items")
     public ArrayList<Type> items;
 
 }
