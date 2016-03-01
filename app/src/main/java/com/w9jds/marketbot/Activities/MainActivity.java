@@ -14,14 +14,10 @@ import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
-import com.w9jds.marketbot.ui.animations.GridItemAnimator;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Queue;
 
 import butterknife.Bind;
@@ -39,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
     private DataManager dataManager;
     private MarketGroupsAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
     private ArrayList<? extends MarketItemBase> marketGroupList;
     private MarketGroup currentParent;
@@ -49,19 +46,18 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         dataManager = new DataManager(this) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
-                if (adapter.getItemCount() == 0) {
+                if (marketGroupList == null) {
                     marketGroupList = new ArrayList<>(data);
-                    adapter.addAndResort(data);
                 }
-                else {
-                    adapter.updateCollection(data);
-                }
+
+                adapter.addAndResort(data);
             }
         };
 
@@ -81,11 +77,14 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             adapter.updateCollection(group.children.values());
         }
         else if (group.items.size() < 1) {
+            adapter.clear();
             dataManager.loadGroupTypes(group.getTypesLocation());
         }
         else {
             adapter.updateCollection(group.items.values());
         }
+
+        layoutManager.scrollToPosition(0);
     }
 
     @Override

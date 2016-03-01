@@ -36,32 +36,16 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     protected void loadStarted() {
-        if (0 == loadingCount.getAndIncrement()) {
-            dispatchLoadingStartedCallbacks();
-        }
+        dispatchLoadingStartedCallbacks();
     }
 
     protected void loadFinished() {
-        if (0 == loadingCount.decrementAndGet()) {
-            dispatchLoadingFinishedCallbacks();
-        }
+        dispatchLoadingFinishedCallbacks();
     }
 
     protected void resetLoadingCount() {
         loadingCount.set(0);
     }
-
-//    protected static void setPage(List<?> items, int page) {
-//        for (Object item : items) {
-//            item.page = page;
-//        }
-//    }
-//
-//    protected static void setDataSource(List<?> items, String dataSource) {
-//        for (Object item : items) {
-//            item.dataSource = dataSource;
-//        }
-//    }
 
     private void createPublicCrestApi() {
         publicCrestApi = new Crest.Builder()

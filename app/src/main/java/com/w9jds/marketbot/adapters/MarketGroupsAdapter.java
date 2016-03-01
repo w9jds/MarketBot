@@ -179,12 +179,17 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void bindMarketGroup(final MarketGroup group, MarketGroupHolder holder) {
         holder.title.setText(group.getName());
-        holder.subtitle.setText(group.getDescription());
+
+        if (group.getDescription().equals("")) {
+            holder.subtitle.setVisibility(View.GONE);
+        }
+        else {
+            holder.subtitle.setText(group.getDescription());
+        }
     }
 
     private void bindMarketType(final Type type, MarketTypeHolder holder) {
         holder.title.setText(type.getName());
-//        holder.subtitle.setText(type.);
 
         Glide.with(host)
                 .load(type.getIconLink())
@@ -192,35 +197,13 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 .into(holder.image);
     }
 
-//    private void deduplicateAndAdd(Collection<? extends MarketItemBase> newItems) {
-//        final int count = getItemCount();
-//        for (MarketItemBase newItem : newItems) {
-//            boolean add = true;
-//            for (int i = 0; i < count; i++) {
-//                MarketGroup existingItem = (MarketGroup) getItem(i);
-//                if (existingItem.equals(newItem)) {
-//                    add = false;
-//                    break;
-//                }
-//            }
-//            if (add) {
-//                add((MarketGroup) newItem);
-//            }
-//        }
-//    }
-
     public void addAndResort(Collection<? extends MarketItemBase> newItems) {
         ArrayList<MarketItemBase> groups = new ArrayList<>(newItems);
         Collections.sort(groups, new Comparitor());
         items = groups;
 
-        notifyItemRangeInserted(0, items.size() - 1);
+        notifyItemRangeInserted(0, items.size());
     }
-
-//    private void add(MarketGroup item) {
-//        items.add(item);
-//        notifyItemInserted(items.size() - 1);
-//    }
 
     public void updateCollection(Collection<? extends MarketItemBase> newChildren) {
         ArrayList<MarketItemBase> groups = new ArrayList<>(newChildren);
@@ -232,33 +215,16 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         items = groups;
 
         if (newSize < oldSize) {
-            notifyItemRangeChanged(0, newSize - 1);
-            notifyItemRangeRemoved(newSize, oldSize - 1);
+            notifyItemRangeRemoved(newSize, oldSize - newSize);
+            notifyItemRangeChanged(0, newSize);
         }
         if (newSize == oldSize) {
-            notifyItemRangeChanged(0, newSize - 1);
+            notifyItemRangeChanged(0, newSize);
         }
         if (newSize > oldSize) {
-            notifyItemRangeChanged(0, oldSize - 1);
-            notifyItemRangeInserted(oldSize, newSize - 1);
+            notifyItemRangeChanged(0, oldSize);
+            notifyItemRangeInserted(oldSize, newSize - oldSize);
         }
-
-//        for (int i = 0; i < oldSize; i++) {
-//            if (i < newSize) {
-//                MarketGroup group = (MarketGroup) groups.get(i);
-//
-//                items.add(group);
-//                if (i < oldSize) {
-//                    notifyItemChanged(i);
-//                }
-//                else {
-//                    notifyItemInserted(i);
-//                }
-//            }
-//            else {
-//                notifyItemRemoved(i);
-//            }
-//        }
     }
 
     public void clear() {
