@@ -4,7 +4,11 @@ import android.content.Context;
 
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Models.MarketGroup;
-import com.w9jds.eveapi.Models.Types;
+import com.w9jds.eveapi.Models.OrderType;
+import com.w9jds.eveapi.Models.Region;
+import com.w9jds.eveapi.Models.Type;
+import com.w9jds.eveapi.Models.containers.MarketOrders;
+import com.w9jds.eveapi.Models.containers.Types;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -46,6 +50,63 @@ public abstract class DataManager extends BaseDataManager {
             public void success(Types types) {
                 if (types != null) {
                     onDataLoaded(types.items);
+                }
+
+                loadFinished();
+            }
+
+            @Override
+            public void failure(String error) {
+                loadFinished();
+            }
+        });
+    }
+
+    public void loadRegions() {
+        loadStarted();
+        getPublicCrestApi().getRegions(new Callback<ArrayList<Region>>() {
+            @Override
+            public void success(ArrayList<Region> regions) {
+                if (regions != null) {
+                    onDataLoaded(regions);
+                }
+
+                loadFinished();
+            }
+
+            @Override
+            public void failure(String error) {
+                loadFinished();
+            }
+        });
+    }
+
+    public void loadSellOrders(Region region, Type type) {
+        loadStarted();
+        getPublicCrestApi().getOrders(region, type, OrderType.sell, new Callback<MarketOrders>() {
+            @Override
+            public void success(MarketOrders marketOrders) {
+                if (marketOrders != null) {
+//                    onDataLoaded(marketOrders);
+                }
+
+                loadFinished();
+            }
+
+            @Override
+            public void failure(String error) {
+                loadFinished();
+            }
+        });
+    }
+
+    public void loadBuyOrders(Region region, Type type) {
+        loadStarted();
+        getPublicCrestApi().getOrders(region, type, OrderType.buy, new Callback<MarketOrders>() {
+            @Override
+            public void success(MarketOrders marketOrders) {
+                if (marketOrders != null) {
+//                    onDataLoaded(marketOrders);
                 }
 
                 loadFinished();

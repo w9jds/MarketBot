@@ -7,7 +7,7 @@
 
     <changeBounds>
         <targets>
-            <target android:targetId="@id/group_draggable_frame" />
+            <target android:targetId="@id/draggable_frame" />
         </targets>
     </changeBounds>
 

@@ -1,23 +1,35 @@
 package com.w9jds.eveapi.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jeremy on 2/17/2016.
  */
-public final class Type extends MarketItemBase {
+public final class Type extends MarketItemBase implements Parcelable {
 
     @SerializedName("type")
-    private Item type;
+    private TypeItem type;
 
 
     @SerializedName("marketGroup")
     public Reference marketGroup;
 
-
     @Override
     public String getName() {
         return type.name;
+    }
+
+    public Type() {
+
+    }
+
+    protected Type(Parcel in) {
+        this.setId(in.readInt());
+        this.type = in.readParcelable(TypeItem.class.getClassLoader());
+        this.marketGroup = in.readParcelable(Reference.class.getClassLoader());
     }
 
     public String getIconLink() {
@@ -28,16 +40,26 @@ public final class Type extends MarketItemBase {
         return type.href;
     }
 
-    private class Item {
-
-        @SerializedName("name")
-        public String name;
-
-        @SerializedName("href")
-        public String href;
-
-        @SerializedName("icon")
-        public Reference icon;
-
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.getId());
+        dest.writeParcelable(this.type, flags);
+        dest.writeParcelable(this.marketGroup, 0);
+    }
+
+    public static final Creator<Type> CREATOR = new Creator<Type>() {
+        public Type createFromParcel(Parcel source) {
+            return new Type(source);
+        }
+
+        public Type[] newArray(int size) {
+            return new Type[size];
+        }
+    };
+
 }

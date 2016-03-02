@@ -2,12 +2,16 @@ package com.w9jds.eveapi.Client;
 
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Models.MarketGroup;
-import com.w9jds.eveapi.Models.MarketGroups;
+import com.w9jds.eveapi.Models.MarketOrder;
+import com.w9jds.eveapi.Models.OrderType;
+import com.w9jds.eveapi.Models.Type;
+import com.w9jds.eveapi.Models.containers.MarketGroups;
 import com.w9jds.eveapi.Models.Region;
-import com.w9jds.eveapi.Models.Types;
+import com.w9jds.eveapi.Models.containers.MarketOrders;
+import com.w9jds.eveapi.Models.containers.Regions;
+import com.w9jds.eveapi.Models.containers.Types;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 
 import retrofit2.Call;
@@ -15,6 +19,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 /**
@@ -44,24 +49,28 @@ public final class Crest {
         Call<MarketGroups> getMarketGroups();
 
         @GET("/regions/")
-        Call<Region[]> getRegions();
+        Call<Regions> getRegions();
+
+        @GET("/market/{regionId}/orders/{orderType}/?type={typeId}")
+        Call<MarketOrders> getMarketOrders(@Path("regionId") int regionId, @Path("orderType") String orderType,
+                                           @Path(value = "typeId", encoded = true) String typeId);
 
     }
 
-//    public void getRegions(final Callback<ArrayList<Region>> callback) {
-//        Call<Region[]> call = crestEndpoint.getRegions();
-//        call.enqueue(new retrofit2.Callback<Region[]>() {
-//            @Override
-//            public void onResponse(Call<Region[]> call, Response<Region[]> response) {
-//                callback.success((ArrayList<Region>) Arrays.asList(response.body()));
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Region[]> call, Throwable t) {
-//                callback.failure(t.getMessage());
-//            }
-//        });
-//    }
+    public void getRegions(final Callback<ArrayList<Region>> callback) {
+        Call<Regions> call = crestEndpoint.getRegions();
+        call.enqueue(new retrofit2.Callback<Regions>() {
+            @Override
+            public void onResponse(Call<Regions> call, Response<Regions> response) {
+                callback.success(response.body().items);
+            }
+
+            @Override
+            public void onFailure(Call<Regions> call, Throwable t) {
+                callback.failure(t.getMessage());
+            }
+        });
+    }
 
     public void getMarketGroups(final Callback<Hashtable<Integer, MarketGroup>> callback) {
         Call<MarketGroups> call = crestEndpoint.getMarketGroups();
@@ -108,6 +117,21 @@ public final class Crest {
 
             @Override
             public void onFailure(Call<Types> call, Throwable t) {
+                callback.failure(t.getMessage());
+            }
+        });
+    }
+
+    public void getOrders(Region region, Type type, OrderType orderType, final Callback<MarketOrders> callback) {
+        Call<MarketOrders> call = crestEndpoint.getMarketOrders(region.getId(), orderType.toString(), type.getHref());
+        call.enqueue(new retrofit2.Callback<MarketOrders>() {
+            @Override
+            public void onResponse(Call<MarketOrders> call, Response<MarketOrders> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<MarketOrders> call, Throwable t) {
                 callback.failure(t.getMessage());
             }
         });

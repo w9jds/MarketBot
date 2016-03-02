@@ -24,7 +24,47 @@
         <!--<item name="android:windowEnterTransition">@transition/home_enter</item>-->
     </style>
 
-    <!--<style name="Widget.MarketBot" parent="android:Widget" />-->
+    <style name="Widget.MarketBot" parent="android:Widget" />
 
+    <style name="Widget.MarketBot.Toolbar">
+        <item name="android:titleTextAppearance">@android:style/TextAppearance.Material.Widget.ActionBar.Title</item>
+        <item name="android:background">?android:colorPrimary</item>
+        <item name="android:theme">@style/MarketBotDarkOverlay</item>
+    </style>
+
+    <style name="Widget.MarketBot.Toolbar.SmallCapsTitle">
+        <item name="android:titleTextAppearance">@style/TextAppearance.ToolbarTitleSmallCaps</item>
+    </style>
+
+    <!--<style name="Widget.MarketBot.HomeToolbar" parent="Widget.MarketBot.Toolbar.SmallCapsTitle">-->
+        <!--<item name="android:background">?android:colorPrimary</item>-->
+        <!--<item name="android:elevation">0dp</item>-->
+        <!--<item name="android:theme">@android:style/ThemeOverlay.Material.Dark</item>-->
+    <!--</style>-->
+
+    <style name="Widget.MarketBot.OverlayToolbar" parent="android:Widget.Material.ActionBar">
+        <item name="android:background">?android:colorPrimary</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Widget.MarketBot.Toolbar.Accent">
+        <item name="android:background">?android:colorAccent</item>
+        <item name="android:titleTextAppearance">@style/TextAppearance.AccentToolbar</item>
+    </style>
+
+    <style name="TextAppearance.AccentToolbar" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@color/text_on_accent</item>
+    </style>
+
+    <style name="TextAppearance.ToolbarTitleSmallCaps" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:fontFeatureSettings">smcp</item>
+        <item name="android:letterSpacing">0.2</item>
+    </style>
+
+    <style name="MarketBotDarkOverlay" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar">
+        <!-- Used to theme dark elements in light themed screens.
+             Extend the material dark Action Bar overlay as this contains text styling. -->
+    </style>
 
 </resources>

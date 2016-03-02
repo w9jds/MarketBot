@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Market Bot</string>
+
+    <string name="sell_orders">Sell Orders</string>
+    <string name="buy_orders">Buy Orders</string>
+
 </resources>

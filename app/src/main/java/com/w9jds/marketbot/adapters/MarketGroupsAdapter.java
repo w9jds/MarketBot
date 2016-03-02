@@ -17,7 +17,7 @@ import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.activities.GroupActivity;
+import com.w9jds.marketbot.activities.ItemActivity;
 import com.w9jds.marketbot.data.DataLoadingSubject;
 
 import java.util.ArrayList;
@@ -32,8 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Jeremy on 2/18/2016.
  */
-public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements DataLoadingSubject.DataLoadingCallbacks {
+public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int MARKET_GROUP_VIEW = 0;
     private final int MARKET_TYPE_VIEW = 1;
@@ -121,14 +120,16 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//        final Intent intent = new Intent();
-//        intent.setClass(host, GroupActivity.class);
-//        intent.putExtra("MarketGroup", item);
-//
-//        final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
-//                Pair.create(holder.itemView, host.getString(R.string.transition_background)),
-//                Pair.create(holder.itemView, host.getString(R.string.transition_title_background)));
-//        host.startActivity(intent);
+                Type type = (Type) getItem(holder.getAdapterPosition());
+
+                final Intent intent = new Intent();
+                intent.setClass(host, ItemActivity.class);
+                intent.putExtra("currentType", type);
+
+//                final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
+//                        Pair.create(holder.itemView, host.getString(R.string.transition_background)),
+//                        Pair.create(holder.itemView, host.getString(R.string.transition_title_background)));
+                host.startActivity(intent);
             }
         });
 
@@ -165,16 +166,6 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public Object getItem(int position) {
         return items.get(position);
-    }
-
-    @Override
-    public void dataStartedLoading() {
-
-    }
-
-    @Override
-    public void dataFinishedLoading() {
-
     }
 
     private void bindMarketGroup(final MarketGroup group, MarketGroupHolder holder) {

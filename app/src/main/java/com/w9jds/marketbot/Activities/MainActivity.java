@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
+import com.w9jds.eveapi.Models.Region;
+import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
@@ -25,7 +27,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MarketGroupsAdapter.onMarketGroupChanged,
         BaseDataManager.DataLoadingCallbacks{
-
 
     @Bind(R.id.market_groups)
     RecyclerView recyclerView;

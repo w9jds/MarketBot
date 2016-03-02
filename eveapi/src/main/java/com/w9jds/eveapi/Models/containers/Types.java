@@ -1,6 +1,7 @@
-package com.w9jds.eveapi.Models;
+package com.w9jds.eveapi.Models.containers;
 
 import com.google.gson.annotations.SerializedName;
+import com.w9jds.eveapi.Models.Type;
 
 import java.util.ArrayList;
 
