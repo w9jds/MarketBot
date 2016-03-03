@@ -16,7 +16,6 @@ import com.w9jds.marketbot.R;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -41,6 +40,18 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
 
     }
 
+    public int getPositionfromId(int id) {
+        int size = regions.size();
+        for (int i = 0; i < size; i++) {
+            Region region = regions.get(i);
+            if (region.getId() == id) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public int getCount() {
         return regions.size();
@@ -53,7 +64,7 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
 
     @Override
     public long getItemId(int position) {
-        return regions.get(position).getId();
+        return position;
     }
 
     @Override
@@ -61,30 +72,28 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
         return true;
     }
 
-    class ViewHolder {
+    static class RegionViewHolder {
 
-        @Bind(R.id.region_name)
         TextView name;
 
-        public ViewHolder(View view) {
-            ButterKnife.bind(view);
+        public RegionViewHolder(View view) {
+            name = ButterKnife.findById(view, R.id.region_name);
         }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        RegionViewHolder holder;
         final Region region = (Region) getItem(position);
-        final int layout = getItemViewType(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(layout, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
 
-            holder = new ViewHolder(convertView);
+            holder = new RegionViewHolder(convertView);
             convertView.setTag(holder);
         }
         else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (RegionViewHolder) convertView.getTag();
         }
 
         holder.name.setText(region.getName());
@@ -102,12 +111,27 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getView(position, convertView, parent);
+        RegionViewHolder holder;
+        final Region region = (Region) getItem(position);
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
+
+            holder = new RegionViewHolder(convertView);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (RegionViewHolder) convertView.getTag();
+        }
+
+        holder.name.setText(region.getName());
+
+        return convertView;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return R.layout.simple_spinner_item;
+        return R.layout.toolbar_spinner_item_actionbar;
     }
 
     @Override

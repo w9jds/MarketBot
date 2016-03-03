@@ -24,23 +24,32 @@
         <!--<item name="android:windowEnterTransition">@transition/home_enter</item>-->
     </style>
 
-    <style name="Widget.MarketBot" parent="android:Widget" />
+    <style name="Widget.MarketBot.HeaderBar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:dropDownWidth">?android:dropDownWidth</item>
+        <item name="android:topOffset">-16dp</item>
+        <item name="android:divider">@null</item>
+        <item name="android:overlapAnchor">true</item>
+        <item name="android:gravity">left</item>
+        <!--<item name="android:background">@android:color/white</item>-->
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
 
-    <style name="Widget.MarketBot.Toolbar">
-        <item name="android:titleTextAppearance">@android:style/TextAppearance.Material.Widget.ActionBar.Title</item>
-        <item name="android:background">?android:colorPrimary</item>
+    <style name="Widget.MarketBot.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@android:style/TextAppearance.Material.Widget.ActionBar.Title</item>
+        <item name="android:background">@color/primary</item>
         <item name="android:theme">@style/MarketBotDarkOverlay</item>
     </style>
 
     <style name="Widget.MarketBot.Toolbar.SmallCapsTitle">
-        <item name="android:titleTextAppearance">@style/TextAppearance.ToolbarTitleSmallCaps</item>
+        <item name="titleTextAppearance">@style/TextAppearance.ToolbarTitleSmallCaps</item>
     </style>
 
-    <!--<style name="Widget.MarketBot.HomeToolbar" parent="Widget.MarketBot.Toolbar.SmallCapsTitle">-->
-        <!--<item name="android:background">?android:colorPrimary</item>-->
-        <!--<item name="android:elevation">0dp</item>-->
-        <!--<item name="android:theme">@android:style/ThemeOverlay.Material.Dark</item>-->
-    <!--</style>-->
+    <style name="Widget.MarketBot.Toolbar.ItemToolbar" parent="Widget.MarketBot.Toolbar.SmallCapsTitle">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="selectableItemBackground">?android:selectableItemBackground</item>
+        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+    </style>
 
     <style name="Widget.MarketBot.OverlayToolbar" parent="android:Widget.Material.ActionBar">
         <item name="android:background">?android:colorPrimary</item>

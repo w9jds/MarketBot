@@ -24,19 +24,23 @@
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/Widget.MarketBot.Toolbar">
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            style="@style/Widget.MarketBot.Toolbar.ItemToolbar">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_toolbar"
-                android:background="?attr/colorPrimary"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <Spinner
                     android:id="@+id/region_spinner"
+                    style="@style/Widget.MarketBot.HeaderBar.Spinner"
+
+                    android:dropDownWidth="200dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"/>
 
             </android.support.v7.widget.Toolbar>
 
@@ -46,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:animateLayoutChanges="true"
+                android:background="@color/primary"
                 app:tabIndicatorHeight="2dp"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable" />

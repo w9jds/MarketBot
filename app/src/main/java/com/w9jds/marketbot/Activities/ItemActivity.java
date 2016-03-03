@@ -6,7 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
@@ -57,7 +59,9 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
 
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
         }
 
         currentType = getIntent().getParcelableExtra("currentType");
@@ -68,6 +72,8 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
                 if (data.size() > 0) {
                     if (data.get(0) instanceof Region) {
                         regionAdapter.addAllItems(data);
+
+                        regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
                     }
                 }
             }
@@ -111,7 +117,18 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
 
     }
 
-//    private final View.OnClickListener backClick = new View.OnClickListener() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //    private final View.OnClickListener backClick = new View.OnClickListener() {
 //        @Override
 //        public void onClick(View view) {
 //            finishAfterTransition();
