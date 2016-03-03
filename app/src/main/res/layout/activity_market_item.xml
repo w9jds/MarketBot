@@ -18,27 +18,27 @@
             android:id="@+id/content_pager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            style="@style/Widget.MarketBot.Toolbar.ItemToolbar">
+            style="@style/Widget.MarketBot.Toolbar.ItemToolbar"
+            android:elevation="4dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_toolbar"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                app:layout_scrollFlags="scroll|enterAlways"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
                 <Spinner
                     android:id="@+id/region_spinner"
-                    style="@style/Widget.MarketBot.HeaderBar.Spinner"
-
+                    style="@style/Widget.Light.Spinner"
                     android:dropDownWidth="200dp"
+                    android:background="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"/>
 
@@ -46,14 +46,9 @@
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/sliding_tabs"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:animateLayoutChanges="true"
-                android:background="@color/primary"
-                app:tabIndicatorHeight="2dp"
-                app:tabIndicatorColor="@android:color/white"
-                app:tabMode="scrollable" />
+                app:tabIndicatorColor="@android:color/white" />
 
         </android.support.design.widget.AppBarLayout>
 

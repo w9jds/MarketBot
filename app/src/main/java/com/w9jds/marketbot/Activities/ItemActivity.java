@@ -6,8 +6,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -54,6 +56,13 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
         ButterKnife.bind(this);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.main_toolbar);
+
+//        View spinnerContainer = LayoutInflater.from(this).inflate(R.layout.toolbar_spinner, toolbar, false);
+//        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
+//                ActionBar.LayoutParams.MATCH_PARENT);
+//        toolbar.addView(spinnerContainer, layoutParams);
+//        regionSpinner = ButterKnife.findById(spinnerContainer, R.id.region_spinner);
+
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
 

@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Jeremy Shore on 3/3/16.
  */
-public class TypeInfoTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
+public final class TypeInfoTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
 
     static final String ARG_PAGE = "ARG_PAGE";
     static final String ARG_TYPEID = "ARG_TYPEID";
