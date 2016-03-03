@@ -3,5 +3,8 @@
 
     <string name="sell_orders">Sell Orders</string>
     <string name="buy_orders">Buy Orders</string>
+    <string name="type_info_label">Info</string>
 
+    <string name="mass_label">Mass: </string>
+    <string name="capacity_label">Capacity: </string>
 </resources>

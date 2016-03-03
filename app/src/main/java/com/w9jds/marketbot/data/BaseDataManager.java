@@ -29,6 +29,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     public abstract void onDataLoaded(List<? extends MarketItemBase> data);
+    public abstract void onDataLoaded(Object data);
 
     @Override
     public boolean isDataLoading() {

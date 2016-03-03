@@ -77,12 +77,17 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
                     }
                 }
             }
+
+            @Override
+            public void onDataLoaded(Object data) {
+                // never fired
+            }
         };
 
         regionSpinner.setAdapter(regionAdapter);
         regionSpinner.setOnItemSelectedListener(this);
 
-        tabAdapter = new OrdersTabAdapter(getSupportFragmentManager(), this);
+        tabAdapter = new OrdersTabAdapter(getSupportFragmentManager(), this, currentType.getId());
         pager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(pager);
         tabLayout.setTabsFromPagerAdapter(tabAdapter);

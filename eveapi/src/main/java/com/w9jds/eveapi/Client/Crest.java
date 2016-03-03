@@ -5,6 +5,7 @@ import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketOrder;
 import com.w9jds.eveapi.Models.OrderType;
 import com.w9jds.eveapi.Models.Type;
+import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.eveapi.Models.containers.MarketGroups;
 import com.w9jds.eveapi.Models.Region;
 import com.w9jds.eveapi.Models.containers.MarketOrders;
@@ -44,6 +45,9 @@ public final class Crest {
 
         @GET
         Call<Types> getMarketTypes(@Url String url);
+
+        @GET("/types/{typeId}/")
+        Call<TypeInfo> getTypeInfo(@Path("typeId") int id);
 
         @GET("/market/groups/")
         Call<MarketGroups> getMarketGroups();
@@ -117,6 +121,21 @@ public final class Crest {
 
             @Override
             public void onFailure(Call<Types> call, Throwable t) {
+                callback.failure(t.getMessage());
+            }
+        });
+    }
+
+    public void getTypeInfo(int typeId, final Callback<TypeInfo> callback) {
+        Call<TypeInfo> call = crestEndpoint.getTypeInfo(typeId);
+        call.enqueue(new retrofit2.Callback<TypeInfo>() {
+            @Override
+            public void onResponse(Call<TypeInfo> call, Response<TypeInfo> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<TypeInfo> call, Throwable t) {
                 callback.failure(t.getMessage());
             }
         });

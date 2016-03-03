@@ -30,8 +30,6 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
 
     static final String ARG_PAGE = "ARG_PAGE";
 
-
-
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
 
@@ -61,12 +59,17 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
             public void onDataLoaded(List<? extends MarketItemBase> data) {
 //                adapter.updateCollection(data);
             }
+
+            @Override
+            public void onDataLoaded(Object data) {
+                // never fired
+            }
         };
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_fragment_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
         ButterKnife.bind(view);
 
         orders = ButterKnife.findById(view, R.id.orders_list);
@@ -85,10 +88,10 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
     @Override
     public void updateOrdersList(Region region, Type type) {
         switch(position) {
-            case 0:
+            case 1:
                 dataManager.loadSellOrders(region, type);
                 break;
-            case 1:
+            case 2:
                 dataManager.loadBuyOrders(region, type);
                 break;
         }

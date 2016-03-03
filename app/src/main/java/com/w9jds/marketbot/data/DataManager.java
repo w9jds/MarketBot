@@ -7,6 +7,7 @@ import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.OrderType;
 import com.w9jds.eveapi.Models.Region;
 import com.w9jds.eveapi.Models.Type;
+import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.eveapi.Models.containers.MarketOrders;
 import com.w9jds.eveapi.Models.containers.Types;
 
@@ -50,6 +51,25 @@ public abstract class DataManager extends BaseDataManager {
             public void success(Types types) {
                 if (types != null) {
                     onDataLoaded(types.items);
+                }
+
+                loadFinished();
+            }
+
+            @Override
+            public void failure(String error) {
+                loadFinished();
+            }
+        });
+    }
+
+    public void loadTypeInfo(int typeId) {
+        loadStarted();
+        getPublicCrestApi().getTypeInfo(typeId, new Callback<TypeInfo>() {
+            @Override
+            public void success(TypeInfo typeInfo) {
+                if (typeInfo != null) {
+                    onDataLoaded(typeInfo);
                 }
 
                 loadFinished();

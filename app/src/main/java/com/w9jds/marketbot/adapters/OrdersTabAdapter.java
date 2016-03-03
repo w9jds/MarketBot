@@ -10,6 +10,7 @@ import com.w9jds.eveapi.Models.Region;
 import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.ui.fragments.OrdersTab;
+import com.w9jds.marketbot.ui.fragments.TypeInfoTab;
 
 /**
  * Created by Jeremy on 3/1/2016.
@@ -17,11 +18,14 @@ import com.w9jds.marketbot.ui.fragments.OrdersTab;
 public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
 
     private Resources resources;
-    final int PAGE_COUNT = 2;
+    private int typeId;
 
-    public OrdersTabAdapter(FragmentManager fragmentManager, Context context) {
+    final int PAGE_COUNT = 3;
+
+    public OrdersTabAdapter(FragmentManager fragmentManager, Context context, int typeId) {
         super(fragmentManager);
         resources = context.getResources();
+        this.typeId = typeId;
     }
 
     @Override
@@ -34,8 +38,10 @@ public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
 
         switch(position) {
             case 0:
-                return resources.getString(R.string.buy_orders);
+                return resources.getString(R.string.type_info_label);
             case 1:
+                return resources.getString(R.string.buy_orders);
+            case 2:
                 return resources.getString(R.string.sell_orders);
             default:
                 return "";
@@ -51,6 +57,12 @@ public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return OrdersTab.create(position);
+        if (position == 0) {
+            return TypeInfoTab.create(position, typeId);
+        }
+        else {
+            return OrdersTab.create(position);
+        }
+
     }
 }

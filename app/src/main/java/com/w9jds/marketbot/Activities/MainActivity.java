@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
                 adapter.addAndResort(data);
             }
+
+            @Override
+            public void onDataLoaded(Object data) {
+                // never fired
+            }
         };
 
         dataManager.registerCallback(this);
