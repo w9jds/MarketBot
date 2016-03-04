@@ -128,6 +128,7 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
         currentRegion = region;
         currentType = type;
 
+        adapter.clear();
         switch(position) {
             case 1:
                 dataManager.loadSellOrders(region, type);
