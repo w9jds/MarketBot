@@ -1,52 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content"
+    android:minWidth="72dp">
 
-    <FrameLayout
-        android:layout_width="72dp"
-        android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/range"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_gravity="top|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/volume_remaining"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            style="@style/TextAppearance.AppCompat.Title"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:orientation="vertical"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/price"
+        <View
+            android:layout_marginEnd="3dp"
+            android:layout_width="5dp"
+            android:background="@color/primary"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Medium"/>
+            android:layout_margin="16dp">
 
-        <TextView
-            android:id="@+id/location"
-            android:layout_gravity="bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            style="@style/TextAppearance.AppCompat.Subhead"/>
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                style="@style/TextAppearance.AppCompat.Medium"/>
 
-        <!--<TextView-->
-            <!--android:id="@+id/issued"-->
-            <!--android:layout_gravity="bottom"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--style="@style/TextAppearance.AppCompat.Medium"/>-->
+            <TextView
+                android:id="@+id/volume_remaining"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                style="@style/TextAppearance.AppCompat.Medium"/>
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                style="@style/TextAppearance.AppCompat.Subhead"/>
+
+        </LinearLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+
+
+
+</FrameLayout>

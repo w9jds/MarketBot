@@ -12,6 +12,9 @@ import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.MarketOrder;
 import com.w9jds.marketbot.R;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,8 +44,8 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView price;
         @Bind(R.id.location)
         TextView location;
-//        @Bind(R.id.issued)
-//        TextView issued;
+        @Bind(R.id.range)
+        TextView range;
 
         public OrderViewHolder(View view) {
             super(view);
@@ -67,10 +70,18 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         String price = formatter.format(order.getPrice()) + " ISK";
         formatter = new DecimalFormat("#,###");
         String volumeRemaining = formatter.format(order.getVolume());
+        String range = order.getRange();
 
         viewHolder.location.setText(order.getLocation().getName());
         viewHolder.price.setText(price);
         viewHolder.volume.setText(volumeRemaining);
+
+        if (StringUtils.isNumeric(range)) {
+            range = range + " Jumps";
+        }
+
+        range = WordUtils.capitalizeFully(range);
+        viewHolder.range.setText(range);
     }
 
     @Override
