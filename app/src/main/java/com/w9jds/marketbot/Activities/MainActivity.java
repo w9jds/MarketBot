@@ -95,16 +95,16 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
     @Override
     public void onBackPressed() {
-        if (currentParent != null && currentParent.hasParent()) {
-            bfsForParent(currentParent.getParentGroupId());
-            adapter.updateCollection(currentParent.children.values());
-        }
-        else if (currentParent != null) {
-            adapter.updateCollection(marketGroupList);
-            currentParent = null;
-        }
-        else {
-            super.onBackPressed();
+        if (!dataManager.isDataLoading()) {
+            if (currentParent != null && currentParent.hasParent()) {
+                bfsForParent(currentParent.getParentGroupId());
+                adapter.updateCollection(currentParent.children.values());
+            } else if (currentParent != null) {
+                adapter.updateCollection(marketGroupList);
+                currentParent = null;
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         progressBar.setVisibility(View.GONE);
     }
 
-    private void bfsForParent(Integer parentId) {
+    private void bfsForParent(long parentId) {
         boolean parentFound = false;
         Queue queue = new LinkedList();
 

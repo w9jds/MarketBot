@@ -21,6 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 /**
@@ -47,7 +48,7 @@ public final class Crest {
         Call<Types> getMarketTypes(@Url String url);
 
         @GET("/types/{typeId}/")
-        Call<TypeInfo> getTypeInfo(@Path("typeId") int id);
+        Call<TypeInfo> getTypeInfo(@Path("typeId") long id);
 
         @GET("/market/groups/")
         Call<MarketGroups> getMarketGroups();
@@ -55,9 +56,9 @@ public final class Crest {
         @GET("/regions/")
         Call<Regions> getRegions();
 
-        @GET("/market/{regionId}/orders/{orderType}/?type={typeId}")
-        Call<MarketOrders> getMarketOrders(@Path("regionId") int regionId, @Path("orderType") String orderType,
-                                           @Path(value = "typeId", encoded = true) String typeId);
+        @GET("/market/{regionId}/orders/{orderType}/")
+        Call<MarketOrders> getMarketOrders(@Path("regionId") long regionId, @Path("orderType") String orderType,
+                                           @Query(value = "type", encoded = true) String typeId);
 
     }
 
@@ -76,12 +77,12 @@ public final class Crest {
         });
     }
 
-    public void getMarketGroups(final Callback<Hashtable<Integer, MarketGroup>> callback) {
+    public void getMarketGroups(final Callback<Hashtable<Long, MarketGroup>> callback) {
         Call<MarketGroups> call = crestEndpoint.getMarketGroups();
         call.enqueue(new retrofit2.Callback<MarketGroups>() {
             @Override
             public void onResponse(Call<MarketGroups> call, Response<MarketGroups> response) {
-                Hashtable<Integer, MarketGroup> tree = new Hashtable<>();
+                Hashtable<Long, MarketGroup> tree = new Hashtable<>();
 
                 for (MarketGroup group : response.body().groups) {
                     tree.put(group.getId(), group);
@@ -91,7 +92,7 @@ public final class Crest {
                     MarketGroup group = response.body().groups.get(i);
 
                     if (group.hasParent()) {
-                        Integer parentId = group.getParentGroupId();
+                        long parentId = group.getParentGroupId();
                         if (tree.containsKey(parentId)) {
                             tree.get(parentId).children.put(group.getId(), group);
                         }
@@ -126,7 +127,7 @@ public final class Crest {
         });
     }
 
-    public void getTypeInfo(int typeId, final Callback<TypeInfo> callback) {
+    public void getTypeInfo(long typeId, final Callback<TypeInfo> callback) {
         Call<TypeInfo> call = crestEndpoint.getTypeInfo(typeId);
         call.enqueue(new retrofit2.Callback<TypeInfo>() {
             @Override

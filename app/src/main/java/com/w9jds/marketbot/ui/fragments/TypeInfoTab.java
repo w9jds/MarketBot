@@ -6,12 +6,15 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.activities.ItemActivity;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
 
@@ -39,15 +42,22 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
     TextView mass;
     @Bind(R.id.capacity_value)
     TextView capacity;
+    @Bind(R.id.volume_value)
+    TextView volume;
+    @Bind(R.id.portion_value)
+    TextView portion;
+
+    @Bind(R.id.item_icon)
+    ImageView icon;
 
     private int position;
-    private int typeId;
+    private long typeId;
     private DataManager dataManager;
 
-    public static TypeInfoTab create(int page, int typeId) {
+    public static TypeInfoTab create(int page, long typeId) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        args.putInt(ARG_TYPEID, typeId);
+        args.putLong(ARG_TYPEID, typeId);
         TypeInfoTab fragment = new TypeInfoTab();
         fragment.setArguments(args);
         return fragment;
@@ -59,7 +69,7 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
         Bundle args = getArguments();
 
         position = args.getInt(ARG_PAGE);
-        typeId = args.getInt(ARG_TYPEID);
+        typeId = args.getLong(ARG_TYPEID);
 
         dataManager = new DataManager(getContext()) {
             @Override
@@ -72,13 +82,16 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
                 if (data instanceof TypeInfo) {
                     TypeInfo info = (TypeInfo) data;
 
-                    name.setText(info.getName());
                     description.setText(Html.fromHtml(info.getDescription()));
                     mass.setText(String.valueOf(info.getMass()));
                     capacity.setText(String.valueOf(info.getCapacity()));
+                    portion.setText(String.valueOf(info.getPortionSize()));
+                    volume.setText(String.valueOf(info.getVolume()));
                 }
             }
         };
+
+
 
         dataManager.registerCallback(this);
     }
@@ -87,6 +100,12 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_type_info, container, false);
         ButterKnife.bind(this, view);
+
+        ItemActivity host = (ItemActivity) getActivity();
+        name.setText(host.getCurrentTypeName());
+        Glide.with(host)
+                .load(host.getCurrentTypeIcon())
+                .into(icon);
 
         dataManager.loadTypeInfo(typeId);
         return view;

@@ -30,16 +30,6 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
         this.context = context;
     }
 
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-
-    }
-
     public int getPositionfromId(int id) {
         int size = regions.size();
         for (int i = 0; i < size; i++) {
@@ -65,11 +55,6 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
     }
 
     static class RegionViewHolder {
@@ -129,18 +114,4 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
         return convertView;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return R.layout.toolbar_spinner_item_actionbar;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
 }

@@ -8,6 +8,6 @@ import com.w9jds.eveapi.Models.Type;
  */
 public interface onRegionChanged {
 
-    void updateOrdersList(Region region, Type type);
+    void updateOrdersList(Region region, Type type, int position);
 
 }

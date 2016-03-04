@@ -2,15 +2,13 @@ package com.w9jds.marketbot.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
@@ -21,10 +19,13 @@ import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.OrdersTabAdapter;
 import com.w9jds.marketbot.adapters.RegionAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.DataManager;
+import com.w9jds.marketbot.ui.fragments.OrdersTab;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,6 +50,8 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
     private RegionAdapter regionAdapter;
     private OrdersTabAdapter tabAdapter;
 
+    private HashMap<Integer, OrdersTab> orderTabs = new HashMap<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +59,6 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
         ButterKnife.bind(this);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.main_toolbar);
-
-//        View spinnerContainer = LayoutInflater.from(this).inflate(R.layout.toolbar_spinner, toolbar, false);
-//        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-//                ActionBar.LayoutParams.MATCH_PARENT);
-//        toolbar.addView(spinnerContainer, layoutParams);
-//        regionSpinner = ButterKnife.findById(spinnerContainer, R.id.region_spinner);
 
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
@@ -97,11 +94,20 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
         regionSpinner.setOnItemSelectedListener(this);
 
         tabAdapter = new OrdersTabAdapter(getSupportFragmentManager(), this, currentType.getId());
+        pager.setOffscreenPageLimit(4);
         pager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(pager);
         tabLayout.setTabsFromPagerAdapter(tabAdapter);
 
         dataManager.loadRegions();
+    }
+
+    public String getCurrentTypeIcon() {
+        return currentType.getIconLink();
+    }
+
+    public String getCurrentTypeName() {
+        return currentType.getName();
     }
 
     @Override
@@ -123,7 +129,14 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Region region = (Region) regionAdapter.getItem(position);
-        tabAdapter.updateOrderLists(region, currentType);
+
+        for (OrdersTab tab : orderTabs.values()) {
+            tab.updateOrdersList(region, currentType);
+        }
+    }
+
+    public void addOrdersFragment(int position, OrdersTab tab) {
+        orderTabs.put(position, tab);
     }
 
     @Override
@@ -141,11 +154,4 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    //    private final View.OnClickListener backClick = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            finishAfterTransition();
-//        }
-//    };
 }

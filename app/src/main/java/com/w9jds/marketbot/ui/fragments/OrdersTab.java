@@ -1,5 +1,6 @@
 package com.w9jds.marketbot.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,13 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.w9jds.eveapi.Models.MarketItemBase;
+import com.w9jds.eveapi.Models.MarketOrder;
 import com.w9jds.eveapi.Models.Region;
 import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.activities.ItemActivity;
 import com.w9jds.marketbot.adapters.OrdersAdapter;
+import com.w9jds.marketbot.classes.Triplet;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -26,18 +31,23 @@ import butterknife.ButterKnife;
 /**
  * Created by Jeremy on 3/1/2016.
  */
-public final class OrdersTab extends Fragment implements onRegionChanged, BaseDataManager.DataLoadingCallbacks {
+public final class OrdersTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
 
     static final String ARG_PAGE = "ARG_PAGE";
 
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
 
+    @Bind(R.id.orders_list)
+    RecyclerView orders;
+
     private int position;
 
-    private RecyclerView orders;
     private OrdersAdapter adapter;
     private DataManager dataManager;
+
+    private Region currentRegion;
+    private Type currentType;
 
     public static OrdersTab create(int page) {
         Bundle args = new Bundle();
@@ -47,6 +57,15 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
         return fragment;
     }
 
+    public OrdersTab() {
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +73,20 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
 
         position = args.getInt(ARG_PAGE);
 
+        adapter = new OrdersAdapter(getContext());
         dataManager = new DataManager(getContext()) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
-//                adapter.updateCollection(data);
+                if (data.size() > 0) {
+                    if (data.get(0) instanceof MarketOrder) {
+                        ArrayList<MarketOrder> orders = new ArrayList<>();
+                        for (MarketItemBase base : data) {
+                            orders.add((MarketOrder) base);
+                        }
+
+                        adapter.updateCollection(orders);
+                    }
+                }
             }
 
             @Override
@@ -65,16 +94,26 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
                 // never fired
             }
         };
+
+        dataManager.registerCallback(this);
+        ((ItemActivity)getActivity()).addOrdersFragment(position, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
-        ButterKnife.bind(view);
+        ButterKnife.bind(this, view);
 
-        orders = ButterKnife.findById(view, R.id.orders_list);
         orders.setLayoutManager(new LinearLayoutManager(getContext()));
         orders.setItemAnimator(new DefaultItemAnimator());
+        orders.setAdapter(adapter);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateOrdersList(currentRegion, currentType);
+            }
+        });
 
         return view;
     }
@@ -85,8 +124,10 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
         ButterKnife.unbind(this);
     }
 
-    @Override
     public void updateOrdersList(Region region, Type type) {
+        currentRegion = region;
+        currentType = type;
+
         switch(position) {
             case 1:
                 dataManager.loadSellOrders(region, type);
@@ -106,4 +147,6 @@ public final class OrdersTab extends Fragment implements onRegionChanged, BaseDa
     public void dataFinishedLoading() {
         refreshLayout.setRefreshing(false);
     }
+
+
 }

@@ -5,11 +5,11 @@
     android:transitionOrdering="together"
     android:duration="300">
 
-    <changeBounds>
-        <targets>
-            <target android:targetId="@id/draggable_frame" />
-        </targets>
-    </changeBounds>
+    <!--<changeBounds>-->
+        <!--<targets>-->
+            <!--<target android:targetId="@id/draggable_frame" />-->
+        <!--</targets>-->
+    <!--</changeBounds>-->
 
     <!--<transition class="com.w9jds.marketbot.ui.tansitions.GroupSharedEnter">-->
         <!--<targets>-->

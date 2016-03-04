@@ -2,18 +2,20 @@ package com.w9jds.eveapi.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.math.BigInteger;
+
 /**
  * Created by Jeremy Shore on 2/21/16.
  */
 public class MarketItemBase {
 
     @SerializedName("id")
-    private int id;
+    private long id;
 
     @SerializedName("name")
     private String name;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -21,7 +23,7 @@ public class MarketItemBase {
         return name;
     }
 
-    void setId(int id) {
+    void setId(long id) {
         this.id = id;
     }
 

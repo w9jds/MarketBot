@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.w9jds.eveapi.Models.Region;
@@ -18,11 +19,11 @@ import com.w9jds.marketbot.ui.fragments.TypeInfoTab;
 public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
 
     private Resources resources;
-    private int typeId;
+    private long typeId;
 
     final int PAGE_COUNT = 3;
 
-    public OrdersTabAdapter(FragmentManager fragmentManager, Context context, int typeId) {
+    public OrdersTabAdapter(FragmentManager fragmentManager, Context context, long typeId) {
         super(fragmentManager);
         resources = context.getResources();
         this.typeId = typeId;
@@ -45,13 +46,6 @@ public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
                 return resources.getString(R.string.sell_orders);
             default:
                 return "";
-        }
-    }
-
-    public void updateOrderLists(Region region, Type type) {
-        for (int i = 0; i < PAGE_COUNT; i++) {
-            OrdersTab tab = (OrdersTab)getItem(i);
-            tab.updateOrdersList(region, type);
         }
     }
 

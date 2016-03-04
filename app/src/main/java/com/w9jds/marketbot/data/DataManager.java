@@ -26,10 +26,10 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadMarketGroups() {
         loadStarted();
-        getPublicCrestApi().getMarketGroups(new Callback<Hashtable<Integer, MarketGroup>>() {
+        getPublicCrestApi().getMarketGroups(new Callback<Hashtable<Long, MarketGroup>>() {
 
             @Override
-            public void success(Hashtable<Integer, MarketGroup> groups) {
+            public void success(Hashtable<Long, MarketGroup> groups) {
                 if (groups != null) {
                     onDataLoaded(new ArrayList<>(groups.values()));
                 }
@@ -63,7 +63,7 @@ public abstract class DataManager extends BaseDataManager {
         });
     }
 
-    public void loadTypeInfo(int typeId) {
+    public void loadTypeInfo(long typeId) {
         loadStarted();
         getPublicCrestApi().getTypeInfo(typeId, new Callback<TypeInfo>() {
             @Override
@@ -107,7 +107,7 @@ public abstract class DataManager extends BaseDataManager {
             @Override
             public void success(MarketOrders marketOrders) {
                 if (marketOrders != null) {
-//                    onDataLoaded(marketOrders);
+                    onDataLoaded(marketOrders.orders);
                 }
 
                 loadFinished();
@@ -126,7 +126,7 @@ public abstract class DataManager extends BaseDataManager {
             @Override
             public void success(MarketOrders marketOrders) {
                 if (marketOrders != null) {
-//                    onDataLoaded(marketOrders);
+                    onDataLoaded(marketOrders.orders);
                 }
 
                 loadFinished();

@@ -29,7 +29,7 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
     @SerializedName("types")
     private Reference types;
 
-    public HashMap<Integer, MarketGroup> children = new HashMap<>();
+    public HashMap<Long, MarketGroup> children = new HashMap<>();
     public Map<Integer, Type> items = new HashMap<>();
 
     public MarketGroup() {
@@ -52,16 +52,16 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
         return parentGroup.href;
     }
 
-    public Integer getParentGroupId() {
+    public Long getParentGroupId() {
         String[] query = this.parentGroup.href.split("/");
 
         for (int i = query.length; i > 0; i--) {
             if (!query[i-1].equals("")) {
-                return Integer.parseInt(query[i-1]);
+                return Long.parseLong(query[i-1]);
             }
         }
 
-        return null;
+        return 0L;
     }
 
     public boolean hasParent() {
@@ -76,7 +76,7 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeString(this.getName());
         dest.writeParcelable(this.parentGroup, 0);
         dest.writeString(this.href);
@@ -90,7 +90,7 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
     }
 
     protected MarketGroup(Parcel in) {
-        this.setId(in.readInt());
+        this.setId(in.readLong());
         this.setName(in.readString());
         this.parentGroup = in.readParcelable(Reference.class.getClassLoader());
         this.href = in.readString();

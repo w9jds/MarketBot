@@ -25,19 +25,21 @@
     </style>
 
     <style name="Widget.Light.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
-        <item name="android:background">?android:selectableItemBackground</item>
+        <!--<item name="android:background">?android:selectableItemBackground</item>-->
         <item name="android:dropDownSelector">?android:selectableItemBackground</item>
         <item name="android:divider">@null</item>
         <item name="android:overlapAnchor">true</item>
+        <item name="android:gravity">left</item>
+        <item name="android:popupBackground">@android:color/white</item>
 
         <!--<item name="android:dropDownSelector">?android:selectableItemBackground</item>-->
         <!--<item name="android:spinnerDropDownItemStyle">?attr/spinnerDropDownItemStyle</item>-->
         <!--<item name="android:dropDownWidth">?android:dropDownWidth</item>-->
         <!--<item name="android:divider">@null</item>-->
         <!--<item name="android:overlapAnchor">true</item>-->
-        <!--<item name="android:gravity">left</item>-->
+        <!---->
         <!--<item name="android:background">@android:color/white</item>-->
-        <!--<item name="android:popupBackground">@android:color/white</item>-->
+        <!---->
     </style>
 
     <style name="Widget.MarketBot.Toolbar" parent="Widget.AppCompat.Toolbar">

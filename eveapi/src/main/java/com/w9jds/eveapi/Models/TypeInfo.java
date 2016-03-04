@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jeremy Shore on 3/3/16.
  */
-public class TypeInfo extends MarketItemBase {
+public final class TypeInfo extends MarketItemBase {
 
     @SerializedName("capacity")
     private double capacity;

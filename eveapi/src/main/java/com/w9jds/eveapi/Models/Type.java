@@ -27,7 +27,7 @@ public final class Type extends MarketItemBase implements Parcelable {
     }
 
     protected Type(Parcel in) {
-        this.setId(in.readInt());
+        this.setId(in.readLong());
         this.type = in.readParcelable(TypeItem.class.getClassLoader());
         this.marketGroup = in.readParcelable(Reference.class.getClassLoader());
     }
@@ -47,7 +47,7 @@ public final class Type extends MarketItemBase implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeParcelable(this.type, flags);
         dest.writeParcelable(this.marketGroup, 0);
     }
