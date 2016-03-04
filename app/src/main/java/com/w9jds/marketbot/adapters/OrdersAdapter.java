@@ -126,4 +126,11 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    public void clear() {
+        int oldSize = orders.size();
+
+        orders.clear();
+        notifyItemRangeRemoved(0, oldSize);
+    }
+
 }

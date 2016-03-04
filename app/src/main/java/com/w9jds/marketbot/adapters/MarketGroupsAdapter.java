@@ -43,7 +43,7 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final @Nullable DataLoadingSubject dataLoading;
 
     private onMarketGroupChanged groupChangedListener;
-    private List<? extends MarketItemBase> items;
+    private List<? extends MarketItemBase> items = new ArrayList<>();
 
     public interface onMarketGroupChanged {
         void updateSelectedParentGroup(MarketGroup group);
@@ -168,9 +168,14 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return items.get(position);
     }
 
+    public int getAdapterSize() {
+        return items.size();
+    }
+
     private void bindMarketGroup(final MarketGroup group, MarketGroupHolder holder) {
         holder.title.setText(group.getName());
 
+        holder.subtitle.setVisibility(View.VISIBLE);
         if (group.getDescription().equals("")) {
             holder.subtitle.setVisibility(View.GONE);
         }
@@ -190,10 +195,17 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addAndResort(Collection<? extends MarketItemBase> newItems) {
         ArrayList<MarketItemBase> groups = new ArrayList<>(newItems);
+        groups.addAll(items);
+        int oldSize = items.size();
         Collections.sort(groups, new Comparitor());
+
         items = groups;
 
-        notifyItemRangeInserted(0, items.size());
+        if (items.size() > 0) {
+            notifyItemRangeChanged(0, oldSize);
+        }
+
+        notifyItemRangeInserted(oldSize, items.size() - oldSize);
     }
 
     public void updateCollection(Collection<? extends MarketItemBase> newChildren) {
@@ -219,13 +231,22 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void clear() {
+        int oldSize = items.size();
+
         items.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, oldSize);
     }
 
     private class Comparitor implements Comparator<MarketItemBase> {
         @Override
         public int compare(MarketItemBase lhs, MarketItemBase rhs) {
+            if (lhs instanceof MarketGroup && rhs instanceof Type) {
+                return -1;
+            }
+            if (lhs instanceof Type && rhs instanceof MarketGroup) {
+                return 1;
+            }
+
             return lhs.getName().compareTo(rhs.getName());
         }
     }

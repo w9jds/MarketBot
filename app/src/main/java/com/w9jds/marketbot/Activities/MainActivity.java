@@ -79,15 +79,26 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     public void updateSelectedParentGroup(MarketGroup group) {
         currentParent = group;
 
-        if (group.children.size() > 0) {
-            adapter.updateCollection(group.children.values());
-        }
-        else if (group.items.size() < 1) {
-            adapter.clear();
-            dataManager.loadGroupTypes(group.getTypesLocation());
-        }
-        else {
+        if (group.items.size() > 0) {
             adapter.updateCollection(group.items.values());
+        }
+
+        if (currentParent != null) {
+            if (group.children.size() > 0) {
+                if (group.items.size() > 0) {
+                    adapter.addAndResort(group.children.values());
+                }
+                else {
+                    adapter.clear();
+                    adapter.updateCollection(group.children.values());
+                }
+            } else {
+                if (group.items.size() < 1) {
+                    adapter.clear();
+                }
+
+                dataManager.loadGroupTypes(currentParent.getTypesLocation());
+            }
         }
 
         layoutManager.scrollToPosition(0);
@@ -110,7 +121,9 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
     @Override
     public void dataStartedLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (adapter.getAdapterSize() < 1) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
