@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Jeremy on 2/18/2016.
  */
-public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int MARKET_GROUP_VIEW = 0;
     private final int MARKET_TYPE_VIEW = 1;
@@ -127,12 +127,12 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 intent.setClass(host, ItemActivity.class);
                 intent.putExtra("currentType", type);
 
-//                final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
-//                        Pair.create(host.findViewById(R.id.toolbar),
-//                                host.getString(R.string.toolbar_transition_name)));
+                final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
+                        Pair.create(host.findViewById(R.id.app_bar),
+                                host.getString(R.string.toolbar_transition_name)));
 
-//                ActivityCompat.startActivity(host, intent, options.toBundle());
-                host.startActivity(intent);
+                ActivityCompat.startActivity(host, intent, options.toBundle());
+//                host.startActivity(intent);
             }
         });
 
