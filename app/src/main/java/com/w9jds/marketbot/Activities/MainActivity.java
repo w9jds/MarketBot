@@ -1,5 +1,6 @@
 package com.w9jds.marketbot.activities;
 
+import android.animation.Animator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
@@ -126,22 +131,83 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             }
         }
 
-        updateToolbar();
+        animateTitleChange();
+//        showToolbar();
         layoutManager.scrollToPosition(0);
     }
 
-    public void updateToolbar() {
-        if (currentParent != null) {
-            actionBar.setTitle(currentParent.getName());
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    private View getToolbarTitle() {
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View child = toolbar.getChildAt(i);
+            if (child instanceof TextView) {
+                return child;
+            }
         }
-        else {
-            actionBar.setTitle("");
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(false);
+
+        return new View(this);
+    }
+
+    private void animateTitleChange() {
+        final View view = getToolbarTitle();
+
+        if (view instanceof TextView) {
+            view.animate()
+                    .alpha(0f)
+                    .setDuration(250)
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            if (currentParent != null) {
+                                actionBar.setTitle(currentParent.getName());
+                                actionBar.setDisplayShowHomeEnabled(true);
+                                actionBar.setDisplayHomeAsUpEnabled(true);
+                            }
+                            else {
+                                actionBar.setTitle("");
+                                actionBar.setDisplayShowHomeEnabled(false);
+                                actionBar.setDisplayHomeAsUpEnabled(false);
+                            }
+
+                            view.animate()
+                                    .alpha(1f)
+                                    .setDuration(250)
+                                    .start();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    })
+                    .start();
         }
     }
+
+//    private void showToolbar() {
+//        toolbar
+//                .animate()
+//                .translationY(0)
+//                .setInterpolator(new DecelerateInterpolator())
+//                .start();
+//    }
+
+//    private void hideToolbar() {
+//        toolbar
+//                .animate()
+//                .translationY(-toolbar.getBottom())
+//                .setInterpolator(new AccelerateInterpolator())
+//                .start();
+//    }
 
     @Override
     public void onBackPressed() {
@@ -156,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
                 super.onBackPressed();
             }
 
-            updateToolbar();
+            animateTitleChange();
         }
     }
 
