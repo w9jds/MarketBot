@@ -1,10 +1,13 @@
 package com.w9jds.marketbot.activities;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     @Bind(R.id.dataloading_progress)
     ProgressBar progressBar;
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
+    private ActionBar actionBar;
     private DataManager dataManager;
     private MarketGroupsAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -46,6 +53,13 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle("");
+        }
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -76,6 +90,17 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void updateSelectedParentGroup(MarketGroup group) {
         currentParent = group;
 
@@ -101,7 +126,21 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             }
         }
 
+        updateToolbar();
         layoutManager.scrollToPosition(0);
+    }
+
+    public void updateToolbar() {
+        if (currentParent != null) {
+            actionBar.setTitle(currentParent.getName());
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        else {
+            actionBar.setTitle("");
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     @Override
@@ -116,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             } else {
                 super.onBackPressed();
             }
+
+            updateToolbar();
         }
     }
 
