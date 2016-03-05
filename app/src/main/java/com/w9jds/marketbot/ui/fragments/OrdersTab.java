@@ -141,12 +141,16 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
 
     @Override
     public void dataStartedLoading() {
-        refreshLayout.setRefreshing(true);
+        if (refreshLayout != null) {
+            refreshLayout.setRefreshing(true);
+        }
     }
 
     @Override
     public void dataFinishedLoading() {
-        refreshLayout.setRefreshing(false);
+        if (refreshLayout != null) {
+            refreshLayout.setRefreshing(false);
+        }
     }
 
 

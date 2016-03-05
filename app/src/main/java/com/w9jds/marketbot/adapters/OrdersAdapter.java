@@ -93,9 +93,25 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @Override
         public int compare(MarketOrder lhs, MarketOrder rhs) {
             if (lhs.isBuyOrder()) {
-                return lhs.getPrice() < rhs.getPrice() ? 1 : -1;
+                if (lhs.getPrice() < rhs.getPrice()) {
+                    return 1;
+                }
+                else if (lhs.getPrice() > rhs.getPrice()) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
             } else {
-                return lhs.getPrice() < rhs.getPrice() ? -1 : 1;
+                if (lhs.getPrice() < rhs.getPrice()) {
+                    return -1;
+                }
+                else if (lhs.getPrice() > rhs.getPrice()) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
             }
         }
     }

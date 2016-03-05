@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -127,8 +128,10 @@ public class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 intent.putExtra("currentType", type);
 
 //                final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
-//                        Pair.create(holder.itemView, host.getString(R.string.transition_background)),
-//                        Pair.create(holder.itemView, host.getString(R.string.transition_title_background)));
+//                        Pair.create(host.findViewById(R.id.toolbar),
+//                                host.getString(R.string.toolbar_transition_name)));
+
+//                ActivityCompat.startActivity(host, intent, options.toBundle());
                 host.startActivity(intent);
             }
         });

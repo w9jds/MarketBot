@@ -91,8 +91,6 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
             }
         };
 
-
-
         dataManager.registerCallback(this);
     }
 

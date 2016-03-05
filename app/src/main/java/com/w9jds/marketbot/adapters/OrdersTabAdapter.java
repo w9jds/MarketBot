@@ -41,9 +41,9 @@ public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return resources.getString(R.string.type_info_label);
             case 1:
-                return resources.getString(R.string.buy_orders);
-            case 2:
                 return resources.getString(R.string.sell_orders);
+            case 2:
+                return resources.getString(R.string.buy_orders);
             default:
                 return "";
         }

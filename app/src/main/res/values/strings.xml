@@ -11,4 +11,6 @@
     <string name="volume_label">Volume: </string>
 
     <string name="price_format">$d ISK</string>
+
+    <string name="toolbar_transition_name" translatable="false">transition_toolbar</string>
 </resources>
