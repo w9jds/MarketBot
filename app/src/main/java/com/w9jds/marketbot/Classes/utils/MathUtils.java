@@ -1,4 +1,4 @@
-package com.w9jds.marketbot.classes;
+package com.w9jds.marketbot.classes.utils;
 
 public final class MathUtils {
 

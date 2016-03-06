@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.w9jds.marketbot.classes;
+package com.w9jds.marketbot.classes.utils;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;

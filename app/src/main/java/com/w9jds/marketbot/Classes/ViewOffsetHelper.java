@@ -6,6 +6,8 @@ import android.util.Property;
 import android.view.View;
 import android.view.ViewParent;
 
+import com.w9jds.marketbot.classes.utils.AnimUtils;
+
 /**
  * Borrowed from the design lib.
  *

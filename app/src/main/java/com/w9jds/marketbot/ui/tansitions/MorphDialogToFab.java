@@ -1,23 +1,6 @@
 package com.w9jds.marketbot.ui.tansitions;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
 import android.transition.ChangeBounds;
-import android.transition.TransitionValues;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.ui.drawable.MorphDrawable;
-
-import static com.w9jds.marketbot.classes.AnimUtils.getFastOutLinearInInterpolator;
-import static com.w9jds.marketbot.classes.AnimUtils.getFastOutSlowInInterpolator;
 
 /**
  * A transition that morphs a rectangle into a circle, changing it's background color.

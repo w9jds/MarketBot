@@ -95,19 +95,19 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
             this.regions.add((Region)item);
         }
 
-        final String regex = "[A-Z]-R\\w+";
-
-        Predicate<Region> wormholeRegex = new Predicate<Region>() {
-            @Override
-            public boolean apply(Region region) {
-                return region.getName().matches(regex);
-            }
-        };
-
-        Iterables.filter(this.regions, wormholeRegex)
-
-        Iterable<Region> iterable = Iterables.filter(this.regions, wormholeRegex);
-        this.regions = Lists.newArrayList(iterable);
+//        final String regex = "[A-Z]-R\\w+";
+//
+//        Predicate<Region> wormholeRegex = new Predicate<Region>() {
+//            @Override
+//            public boolean apply(Region region) {
+//                return region.getName().matches(regex);
+//            }
+//        };
+//
+//        Iterables.filter(this.regions, wormholeRegex)
+//
+//        Iterable<Region> iterable = Iterables.filter(this.regions, wormholeRegex);
+//        this.regions = Lists.newArrayList(iterable);
 
         notifyDataSetChanged();
     }

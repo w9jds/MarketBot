@@ -103,7 +103,7 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadSellOrders(Region region, Type type) {
         loadStarted();
-        getPublicCrestApi().getOrders(region, type, OrderType.sell, new Callback<MarketOrders>() {
+        getPublicCrestApi().getOrders(region.getId(), type.getHref(), OrderType.sell, new Callback<MarketOrders>() {
             @Override
             public void success(MarketOrders marketOrders) {
                 if (marketOrders != null) {
@@ -122,7 +122,7 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadBuyOrders(Region region, Type type) {
         loadStarted();
-        getPublicCrestApi().getOrders(region, type, OrderType.buy, new Callback<MarketOrders>() {
+        getPublicCrestApi().getOrders(region.getId(), type.getHref(), OrderType.buy, new Callback<MarketOrders>() {
             @Override
             public void success(MarketOrders marketOrders) {
                 if (marketOrders != null) {
