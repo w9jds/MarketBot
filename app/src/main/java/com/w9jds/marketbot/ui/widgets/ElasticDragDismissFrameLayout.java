@@ -22,13 +22,12 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.classes.AnimUtils;
-import com.w9jds.marketbot.classes.ColorUtils;
-import com.w9jds.marketbot.classes.ViewUtils;
+import com.w9jds.marketbot.classes.utils.AnimUtils;
+import com.w9jds.marketbot.classes.utils.ColorUtils;
+import com.w9jds.marketbot.classes.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;

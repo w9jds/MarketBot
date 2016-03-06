@@ -18,7 +18,10 @@ import com.w9jds.marketbot.activities.ItemActivity;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,6 +57,9 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
     private long typeId;
     private DataManager dataManager;
 
+    /**
+     * TODO: Possibly show ship 3d view using webresource
+     */
     public static TypeInfoTab create(int page, long typeId) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -61,6 +67,16 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
         TypeInfoTab fragment = new TypeInfoTab();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private String formatNumberValue(double value, String unit) {
+        if (value > 1000000) {
+            return String.format(Locale.ENGLISH, "%.2fm %s", value / 1000000.0, unit);
+        }
+        else {
+            NumberFormat formatter = new DecimalFormat("#,##0.00");
+            return formatter.format(value) + " " + unit;
+        }
     }
 
     @Override
@@ -82,11 +98,14 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
                 if (data instanceof TypeInfo) {
                     TypeInfo info = (TypeInfo) data;
 
+                    NumberFormat formatter = new DecimalFormat("#,###");
+                    String capacityValue = formatter.format(info.getCapacity()) + " m3";
+
                     description.setText(Html.fromHtml(info.getDescription()));
-                    mass.setText(String.valueOf(info.getMass()));
-                    capacity.setText(String.valueOf(info.getCapacity()));
+                    mass.setText(formatNumberValue(info.getMass(), "kg"));
+                    capacity.setText(capacityValue);
                     portion.setText(String.valueOf(info.getPortionSize()));
-                    volume.setText(String.valueOf(info.getVolume()));
+                    volume.setText(formatNumberValue(info.getVolume(), "m3"));
                 }
             }
         };

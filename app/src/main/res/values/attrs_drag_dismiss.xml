@@ -26,9 +26,4 @@
         <attr name="dragElasticity" format="float" />
     </declare-styleable>
 
-    <declare-styleable name="BottomSheet">
-        <attr name="scrollingChild" format="reference" />
-        <attr name="dragDismissDistance" />
-    </declare-styleable>
-
 </resources>

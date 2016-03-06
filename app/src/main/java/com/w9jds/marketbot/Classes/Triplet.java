@@ -1,6 +1,6 @@
 package com.w9jds.marketbot.classes;
 
-public class Triplet<T, U, V> {
+public final class Triplet<T, U, V> {
     T a;
     U b;
     V c;

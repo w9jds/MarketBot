@@ -128,8 +128,8 @@ public final class Crest {
         });
     }
 
-    public void getOrders(Region region, Type type, OrderType orderType, final Callback<MarketOrders> callback) {
-        Call<MarketOrders> call = crestEndpoint.getMarketOrders(region.getId(), orderType.toString(), type.getHref());
+    public void getOrders(long regionId, String typeHref, OrderType orderType, final Callback<MarketOrders> callback) {
+        Call<MarketOrders> call = crestEndpoint.getMarketOrders(regionId, orderType.toString(), typeHref);
         call.enqueue(new retrofit2.Callback<MarketOrders>() {
             @Override
             public void onResponse(Call<MarketOrders> call, Response<MarketOrders> response) {
@@ -222,7 +222,6 @@ public final class Crest {
 
         return parentFound;
     }
-
 
     public static class Builder {
 

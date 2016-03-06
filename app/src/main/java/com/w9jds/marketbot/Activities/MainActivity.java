@@ -1,6 +1,5 @@
 package com.w9jds.marketbot.activities;
 
-import android.animation.Animator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,16 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
-import com.w9jds.eveapi.Models.Region;
-import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
@@ -63,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("");
+            // needs to be space so toolbar doesn't remove it from the view hierarchy
+            actionBar.setTitle(" ");
         }
 
         layoutManager = new LinearLayoutManager(this);
@@ -131,12 +128,18 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             }
         }
 
+
         animateTitleChange();
 //        showToolbar();
-        layoutManager.scrollToPosition(0);
+        recyclerView.smoothScrollToPosition(0);
     }
 
+    /**
+     * Since we don't have access ot the views inside the toolbar we need to find the title view
+     * @return Toolbar Title
+     */
     private View getToolbarTitle() {
+
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             View child = toolbar.getChildAt(i);
             if (child instanceof TextView) {
@@ -151,63 +154,41 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         final View view = getToolbarTitle();
 
         if (view instanceof TextView) {
-            view.animate()
-                    .alpha(0f)
-                    .setDuration(250)
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
+            AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
+            fadeOut.setDuration(250);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-                        }
+                }
 
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            if (currentParent != null) {
-                                actionBar.setTitle(currentParent.getName());
-                                actionBar.setDisplayShowHomeEnabled(true);
-                                actionBar.setDisplayHomeAsUpEnabled(true);
-                            }
-                            else {
-                                actionBar.setTitle("");
-                                actionBar.setDisplayShowHomeEnabled(false);
-                                actionBar.setDisplayHomeAsUpEnabled(false);
-                            }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (currentParent != null) {
+                        actionBar.setTitle(currentParent.getName());
+                        actionBar.setDisplayShowHomeEnabled(true);
+                        actionBar.setDisplayHomeAsUpEnabled(true);
+                    }
+                    else {
+                        actionBar.setTitle(" ");
+                        actionBar.setDisplayShowHomeEnabled(false);
+                        actionBar.setDisplayHomeAsUpEnabled(false);
+                    }
 
-                            view.animate()
-                                    .alpha(1f)
-                                    .setDuration(250)
-                                    .start();
-                        }
+                    AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
+                    fadeIn.setDuration(250);
+                    view.startAnimation(fadeIn);
+                }
 
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-                        }
+                }
+            });
 
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    })
-                    .start();
+            view.startAnimation(fadeOut);
         }
     }
-
-//    private void showToolbar() {
-//        toolbar
-//                .animate()
-//                .translationY(0)
-//                .setInterpolator(new DecelerateInterpolator())
-//                .start();
-//    }
-
-//    private void hideToolbar() {
-//        toolbar
-//                .animate()
-//                .translationY(-toolbar.getBottom())
-//                .setInterpolator(new AccelerateInterpolator())
-//                .start();
-//    }
 
     @Override
     public void onBackPressed() {

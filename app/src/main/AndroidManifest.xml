@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/MarketBot">
 
-        <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.MainActivity"
+            android:theme="@style/MarketBot.Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +22,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.ItemActivity">
+        <activity
+            android:name=".activities.ItemActivity"
+            android:theme="@style/MarketBot.Activities.ItemActivity">
 
         </activity>
 
