@@ -1,10 +1,8 @@
-package com.w9jds.marketbot.data;
+package com.w9jds.marketbot.data.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.w9jds.marketbot.data.DataContracts.MarketBotEntry;
 
 public final class Database {
 
@@ -35,7 +33,7 @@ public final class Database {
         public void onCreate(SQLiteDatabase database) {
             database.beginTransaction();
 
-            database.execSQL(MarketBotEntry.CREATE_TABLE);
+            database.execSQL(DataContracts.BotEntry.CREATE_TABLE);
 
             database.setTransactionSuccessful();
             database.endTransaction();
@@ -45,7 +43,7 @@ public final class Database {
         public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
             database.beginTransaction();
 
-            database.execSQL("DROP TABLE IF EXISTS " + MarketBotEntry.TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + DataContracts.BotEntry.TABLE_NAME);
 
             database.setTransactionSuccessful();
             database.endTransaction();

@@ -1,7 +1,6 @@
 package com.w9jds.marketbot.adapters;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.android.internal.util.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.Region;
 import com.w9jds.marketbot.R;

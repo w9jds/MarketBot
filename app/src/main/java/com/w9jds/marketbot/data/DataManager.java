@@ -24,6 +24,8 @@ public abstract class DataManager extends BaseDataManager {
 
     }
 
+
+
     public void loadMarketGroups() {
         loadStarted();
         getPublicCrestApi().getMarketGroups(new Callback<Hashtable<Long, MarketGroup>>() {
