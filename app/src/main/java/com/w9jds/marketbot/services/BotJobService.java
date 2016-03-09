@@ -50,7 +50,7 @@ public final class BotJobService extends JobService {
 
             publicCrestApi = new Crest.Builder()
                     .setPublicTranquilityEndpoint()
-                    .build();
+                    .build(context);
         }
 
         @Override

@@ -1,12 +1,14 @@
 package com.w9jds.eveapi.Client;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.OrderType;
-import com.w9jds.eveapi.Models.Type;
 import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.eveapi.Models.containers.MarketGroups;
 import com.w9jds.eveapi.Models.Region;
@@ -14,12 +16,19 @@ import com.w9jds.eveapi.Models.containers.MarketOrders;
 import com.w9jds.eveapi.Models.containers.Regions;
 import com.w9jds.eveapi.Models.containers.Types;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -39,9 +48,16 @@ public final class Crest {
     public static final String PUBLIC_TRANQUILITY = "https://public-crest.eveonline.com/";
     public static final String TRANQUILITY = "https://crest-tq.eveonline.com/";
 
-    Endpoint crestEndpoint = new Builder()
-            .setTranquilityEndpoint()
-            .buildEndpoint();
+    final Context context;
+    Endpoint crestEndpoint;
+
+    public Crest (Context context) {
+        this.context = context;
+
+        this.crestEndpoint = new Builder()
+                .setTranquilityEndpoint()
+                .buildEndpoint(context);
+    }
 
     public void setCrestEndpoint(Endpoint crestEndpoint) {
         this.crestEndpoint = crestEndpoint;
@@ -227,6 +243,30 @@ public final class Crest {
 
         private String basePath;
 
+        private Interceptor FORCE_CACHE_INTERCEPTOR = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+
+                request.newBuilder()
+                        .cacheControl(CacheControl.FORCE_CACHE)
+                        .build();
+
+                return chain.proceed(request);
+            }
+        };
+
+        private Interceptor CACHE_2MONTHS_INTERCEPTOR = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Response response = chain.proceed(chain.request());
+
+                return response.newBuilder()
+                    .header("Cache-Control", "private, max-age=5184000")
+                    .build();
+            }
+        };
+
         public Builder setSingularityEndpoint() {
             this.basePath = SINGULARITY;
             return this;
@@ -247,16 +287,42 @@ public final class Crest {
             return this;
         }
 
-        public Crest build() {
-            Crest crest = new Crest();
-            crest.setCrestEndpoint(buildEndpoint());
+        public Crest build(Context context) {
+            Crest crest = new Crest(context);
+            crest.setCrestEndpoint(buildEndpoint(context));
             return crest;
         }
 
-        public Endpoint buildEndpoint() {
+        private boolean isConnected(final Context context) {
+            ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+
+        private OkHttpClient createCachedClient(final Context context) {
+            File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+            int cacheSize = 10 * 1024 * 1024;
+            Cache cache = new Cache(httpCacheDirectory, cacheSize);
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .cache(cache);
+
+            if (!isConnected(context)) {
+                builder.addNetworkInterceptor(FORCE_CACHE_INTERCEPTOR);
+            }
+            else {
+                builder.addNetworkInterceptor(CACHE_2MONTHS_INTERCEPTOR);
+            }
+
+            return builder.build();
+        }
+
+        public Endpoint buildEndpoint(Context context) {
             return new Retrofit.Builder()
                     .baseUrl(basePath)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(createCachedClient(context))
                     .build()
                     .create(Endpoint.class);
         }

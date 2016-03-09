@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class BaseDataManager implements DataLoadingSubject {
 
+    private Context context;
     private Crest publicCrestApi;
 
     private AtomicInteger loadingCount;
@@ -23,7 +24,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
 
     public BaseDataManager(Context context) {
         // setup the API access objects
-
+        this.context = context;
         createPublicCrestApi();
         loadingCount = new AtomicInteger(0);
     }
@@ -51,7 +52,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     private void createPublicCrestApi() {
         publicCrestApi = new Crest.Builder()
                 .setPublicTranquilityEndpoint()
-                .build();
+                .build(context);
     }
 
     public Crest getPublicCrestApi() {
