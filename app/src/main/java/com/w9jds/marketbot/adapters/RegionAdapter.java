@@ -88,22 +88,11 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
 
     public void addAllItems(Collection<? extends MarketItemBase> regions) {
         for (MarketItemBase item : regions) {
-            this.regions.add((Region)item);
+            Region region = (Region)item;
+            if (!region.getName().matches("[A-Z]-R\\w+")) {
+                this.regions.add(region);
+            }
         }
-
-//        final String regex = "[A-Z]-R\\w+";
-//
-//        Predicate<Region> wormholeRegex = new Predicate<Region>() {
-//            @Override
-//            public boolean apply(Region region) {
-//                return region.getName().matches(regex);
-//            }
-//        };
-//
-//        Iterables.filter(this.regions, wormholeRegex)
-//
-//        Iterable<Region> iterable = Iterables.filter(this.regions, wormholeRegex);
-//        this.regions = Lists.newArrayList(iterable);
 
         notifyDataSetChanged();
     }
