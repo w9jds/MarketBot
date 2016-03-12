@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        dataManager = new DataManager(this) {
+        dataManager = new DataManager(this, getApplication()) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 if (marketGroupList == null) {

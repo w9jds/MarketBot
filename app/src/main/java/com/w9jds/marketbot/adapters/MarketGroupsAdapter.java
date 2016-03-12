@@ -128,7 +128,9 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
                 intent.putExtra("currentType", type);
 
                 final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
-                        Pair.create(host.findViewById(R.id.app_bar), host.getString(R.string.toolbar_transition_name)));
+                        new Pair(host.findViewById(R.id.app_bar), host.getString(R.string.toolbar_transition_name)),
+                        new Pair(holder.image, host.getString(R.string.type_icon_transition)),
+                        new Pair(holder.title, host.getString(R.string.type_name_transition)));
 
                 ActivityCompat.startActivity(host, intent, options.toBundle());
 //                host.startActivity(intent);

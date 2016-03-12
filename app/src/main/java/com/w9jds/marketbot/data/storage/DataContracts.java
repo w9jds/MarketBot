@@ -38,7 +38,7 @@ public final class DataContracts {
                 + COLUMN_IS_ABOVE + " BOOLEAN,"
                 + " UNIQUE (" + _ID + ") ON CONFLICT REPLACE);";
 
-        public static long createNewMarketBot(Context context, Bot bot) {
+        public static long createNewBot(Context context, Bot bot) {
             SQLiteDatabase database = new Database(context).getWritableDatabaseHelper();
             long newId;
 
@@ -61,7 +61,7 @@ public final class DataContracts {
             return newId;
         }
 
-        public static Bot getMarketBot(Context context, long id) {
+        public static Bot getBot(Context context, long id) {
             SQLiteDatabase database = new Database(context).getWritableDatabaseHelper();
 
             database.beginTransaction();
@@ -131,6 +131,31 @@ public final class DataContracts {
             database.endTransaction();
             database.close();
             return newId;
+        }
+
+        public static void createNewMarketGroups(SQLiteDatabase database, ArrayList<MarketGroup> groups) {
+            long newId;
+
+            database.beginTransaction();
+
+            int count = groups.size();
+            for (int i = 0; i < count; i++) {
+                MarketGroup group = groups.get(i);
+
+                ContentValues thisItem = new ContentValues();
+                thisItem.put(_ID, group.getId());
+                thisItem.put(COLUMN_NAME, group.getName());
+                thisItem.put(COLUMN_HREF, group.getHref());
+                thisItem.put(COLUMN_DESCRIPTION, group.getDescription());
+                thisItem.put(COLUMN_PARENT_ID, group.getParentGroupId());
+                thisItem.put(COLUMN_TYPES_LOCATION, group.getTypesLocation());
+
+                newId = database.insertWithOnConflict(TABLE_NAME, null, thisItem, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            database.close();
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.w9jds.marketbot.data;
 
+import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Models.MarketGroup;
@@ -10,24 +12,38 @@ import com.w9jds.eveapi.Models.Type;
 import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.eveapi.Models.containers.MarketOrders;
 import com.w9jds.eveapi.Models.containers.Types;
+import com.w9jds.marketbot.classes.MarketBot;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by Jeremy Shore on 2/19/16.
  */
 public abstract class DataManager extends BaseDataManager {
 
-    public DataManager(Context context) {
-        super(context);
+    @Inject @Named("read")
+    SQLiteDatabase readDatabase;
+    @Inject @Named("write")
+    SQLiteDatabase writeDatabase;
 
+    public DataManager(Context context, Application application) {
+        super(context);
+        ((MarketBot)application).getDatabaseComponent().inject(this);
     }
 
-
+    public DataManager(Context context) {
+        super(context);
+    }
 
     public void loadMarketGroups() {
         loadStarted();
+
+
+
         getPublicCrestApi().getMarketGroups(new Callback<Hashtable<Long, MarketGroup>>() {
 
             @Override

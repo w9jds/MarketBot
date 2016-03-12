@@ -69,7 +69,7 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
 
         currentType = getIntent().getParcelableExtra("currentType");
         regionAdapter = new RegionAdapter(this);
-        dataManager = new DataManager(this) {
+        dataManager = new DataManager(this, getApplication()) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 if (data.size() > 0) {
@@ -94,6 +94,7 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
         pager.setOffscreenPageLimit(4);
         pager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(pager);
+
         tabLayout.setTabsFromPagerAdapter(tabAdapter);
 
         dataManager.loadRegions();

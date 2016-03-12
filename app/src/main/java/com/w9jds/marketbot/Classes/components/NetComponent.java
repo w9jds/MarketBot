@@ -1,7 +1,10 @@
 package com.w9jds.marketbot.classes.components;
 
+import com.w9jds.marketbot.activities.ItemActivity;
+import com.w9jds.marketbot.activities.MainActivity;
 import com.w9jds.marketbot.classes.modules.ApplicationModule;
 import com.w9jds.marketbot.classes.modules.NetModule;
+import com.w9jds.marketbot.data.DataManager;
 
 import javax.inject.Singleton;
 import dagger.Component;
@@ -12,17 +15,6 @@ import dagger.Component;
 @Singleton
 @Component(modules={ApplicationModule.class, NetModule.class})
 public interface NetComponent {
-//    void inject(DataManager dataManager);
+    void inject(MainActivity activity);
+    void inject(ItemActivity activity);
 }
-
-//@Component(modules = {Modules.ApplicationModule.class, Modules.NetModule.class})
-//interface MyComponent {
-//    MyWidget myWidget();
-//
-//    @Component.Builder
-//    interface Builder {
-//        MyComponent build();
-//        Builder backendModule(BackendModule bm);
-//        Builder frontendModule(FrontendModule fm);
-//    }
-//}

@@ -19,6 +19,7 @@ import com.w9jds.eveapi.Models.containers.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -53,7 +54,6 @@ public final class Crest {
 
     public Crest (Context context) {
         this.context = context;
-
         this.crestEndpoint = new Builder()
                 .setTranquilityEndpoint()
                 .buildEndpoint(context);
@@ -103,6 +103,8 @@ public final class Crest {
         call.enqueue(new retrofit2.Callback<MarketGroups>() {
             @Override
             public void onResponse(Call<MarketGroups> call, Response<MarketGroups> response) {
+
+//                callback.success(response.body().groups);
 
                 new buildMarketGroupTree(response.body().groups, callback).execute();
             }
