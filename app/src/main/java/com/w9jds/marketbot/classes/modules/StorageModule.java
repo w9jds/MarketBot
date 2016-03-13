@@ -1,6 +1,5 @@
 package com.w9jds.marketbot.classes.modules;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +20,7 @@ import dagger.Provides;
 public class StorageModule {
 
     private Context context;
+    private SharedPreferences sharedPreferences;
 
     public StorageModule(Context context) {
         this.context = context;
@@ -28,8 +28,15 @@ public class StorageModule {
 
     @Provides
     @Singleton
-    SharedPreferences provideSharedPreferences(Application application) {
-        return PreferenceManager.getDefaultSharedPreferences(application);
+    SharedPreferences provideSharedPreferences() {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences;
+    }
+
+    @Provides
+    @Singleton
+    String provideServerVersion() {
+        return sharedPreferences.getString("serverVersion", "");
     }
 
     @Provides @Named("write")

@@ -12,8 +12,10 @@ import dagger.Component;
  * Created by Jeremy Shore on 3/10/16.
  */
 @Singleton
-@Component(modules={ StorageModule.class })
+@Component(modules={StorageModule.class})
 public interface StorageComponent {
+
     void inject(DataManager dataManager);
     void inject(Crest crest);
+
 }

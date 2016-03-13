@@ -11,6 +11,7 @@ import com.w9jds.marketbot.classes.utils.StorageUtils;
 import com.w9jds.marketbot.data.models.Bot;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public final class DataContracts {
 
@@ -111,8 +112,7 @@ public final class DataContracts {
                 + COLUMN_TYPES_LOCATION + " TEXT,"
                 + " UNIQUE (" + _ID + ") ON CONFLICT REPLACE);";
 
-        public static long createNewMarketGroup(Context context, MarketGroup group) {
-            SQLiteDatabase database = new Database(context).getWritableDatabaseHelper();
+        public static long createNewMarketGroup(SQLiteDatabase database, MarketGroup group) {
             long newId;
 
             database.beginTransaction();
@@ -133,15 +133,11 @@ public final class DataContracts {
             return newId;
         }
 
-        public static void createNewMarketGroups(SQLiteDatabase database, ArrayList<MarketGroup> groups) {
+        public static void createNewMarketGroups(SQLiteDatabase database, Collection<MarketGroup> groups) {
             long newId;
-
             database.beginTransaction();
 
-            int count = groups.size();
-            for (int i = 0; i < count; i++) {
-                MarketGroup group = groups.get(i);
-
+            for (MarketGroup group : groups) {
                 ContentValues thisItem = new ContentValues();
                 thisItem.put(_ID, group.getId());
                 thisItem.put(COLUMN_NAME, group.getName());
@@ -150,7 +146,7 @@ public final class DataContracts {
                 thisItem.put(COLUMN_PARENT_ID, group.getParentGroupId());
                 thisItem.put(COLUMN_TYPES_LOCATION, group.getTypesLocation());
 
-                newId = database.insertWithOnConflict(TABLE_NAME, null, thisItem, SQLiteDatabase.CONFLICT_IGNORE);
+                database.insertWithOnConflict(TABLE_NAME, null, thisItem, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
             database.setTransactionSuccessful();

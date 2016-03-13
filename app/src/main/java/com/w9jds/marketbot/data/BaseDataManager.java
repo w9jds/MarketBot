@@ -25,7 +25,6 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     public BaseDataManager(Context context) {
         // setup the API access objects
         this.context = context;
-        createPublicCrestApi();
         loadingCount = new AtomicInteger(0);
     }
 
@@ -48,17 +47,6 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     protected void resetLoadingCount() {
         loadingCount.set(0);
     }
-
-    private void createPublicCrestApi() {
-        publicCrestApi = new Crest.Builder()
-                .setPublicTranquilityEndpoint()
-                .build(context);
-    }
-
-    public Crest getPublicCrestApi() {
-        return publicCrestApi;
-    }
-
 
     @Override
     public void registerCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
