@@ -1,7 +1,10 @@
 package com.w9jds.marketbot.classes.modules;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 
 import com.w9jds.marketbot.data.storage.Database;
 
@@ -15,12 +18,18 @@ import dagger.Provides;
  * Created by Jeremy Shore on 3/10/16.
  */
 @Module
-public class DatabaseModule {
+public class StorageModule {
 
     private Context context;
 
-    public DatabaseModule(Context context) {
+    public StorageModule(Context context) {
         this.context = context;
+    }
+
+    @Provides
+    @Singleton
+    SharedPreferences provideSharedPreferences(Application application) {
+        return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
     @Provides @Named("write")

@@ -3,12 +3,12 @@ package com.w9jds.marketbot.classes;
 import android.app.Application;
 
 import com.w9jds.eveapi.Client.Crest;
-import com.w9jds.marketbot.classes.components.DaggerDatabaseComponent;
 import com.w9jds.marketbot.classes.components.DaggerNetComponent;
-import com.w9jds.marketbot.classes.components.DatabaseComponent;
+import com.w9jds.marketbot.classes.components.DaggerStorageComponent;
 import com.w9jds.marketbot.classes.components.NetComponent;
+import com.w9jds.marketbot.classes.components.StorageComponent;
 import com.w9jds.marketbot.classes.modules.ApplicationModule;
-import com.w9jds.marketbot.classes.modules.DatabaseModule;
+import com.w9jds.marketbot.classes.modules.StorageModule;
 import com.w9jds.marketbot.classes.modules.NetModule;
 
 /**
@@ -16,7 +16,7 @@ import com.w9jds.marketbot.classes.modules.NetModule;
  */
 public final class MarketBot extends Application {
 
-    private DatabaseComponent databaseComponent;
+    private StorageComponent storageComponent;
     private NetComponent netComponent;
 
     @Override
@@ -28,8 +28,8 @@ public final class MarketBot extends Application {
                 .netModule(new NetModule(Crest.PUBLIC_TRANQUILITY))
                 .build();
 
-        databaseComponent = DaggerDatabaseComponent.builder()
-                .databaseModule(new DatabaseModule(this))
+        storageComponent = DaggerStorageComponent.builder()
+                .storageModule(new StorageModule(this))
                 .build();
 
     }
@@ -38,7 +38,7 @@ public final class MarketBot extends Application {
         return netComponent;
     }
 
-    public DatabaseComponent getDatabaseComponent() {
-        return databaseComponent;
+    public StorageComponent getStorageComponent() {
+        return storageComponent;
     }
 }

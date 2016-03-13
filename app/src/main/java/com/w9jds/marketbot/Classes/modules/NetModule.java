@@ -27,12 +27,6 @@ public class NetModule {
 
     @Provides
     @Singleton
-    SharedPreferences provideSharedPreferences(Application application) {
-        return PreferenceManager.getDefaultSharedPreferences(application);
-    }
-
-    @Provides
-    @Singleton
     Cache provideOkHttpCache(Application application) {
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(application.getCacheDir(), cacheSize);

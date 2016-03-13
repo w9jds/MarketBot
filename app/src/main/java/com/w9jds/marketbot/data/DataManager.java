@@ -2,6 +2,7 @@ package com.w9jds.marketbot.data;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.w9jds.eveapi.Callback;
@@ -29,10 +30,12 @@ public abstract class DataManager extends BaseDataManager {
     SQLiteDatabase readDatabase;
     @Inject @Named("write")
     SQLiteDatabase writeDatabase;
+    @Inject
+    SharedPreferences sharedPreferences;
 
     public DataManager(Context context, Application application) {
         super(context);
-        ((MarketBot)application).getDatabaseComponent().inject(this);
+        ((MarketBot)application).getStorageComponent().inject(this);
     }
 
     public DataManager(Context context) {
