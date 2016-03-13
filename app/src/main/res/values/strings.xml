@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Market Bot</string>
+
+    <string name="sell_orders">Sell Orders</string>
+    <string name="buy_orders">Buy Orders</string>
+    <string name="type_info_label">Info</string>
+
+    <string name="mass_label">Mass: </string>
+    <string name="capacity_label">Capacity: </string>
+    <string name="portion_label">Portion Size: </string>
+    <string name="volume_label">Volume: </string>
+
+    <string name="price_format">$d ISK</string>
+    <string name="volume_progress_format">$s / $s</string>
+
+    <string name="toolbar_transition_name" translatable="false">transition_toolbar</string>
+    <string name="type_icon_transition" translatable="false">transition_type_icon</string>
+    <string name="type_name_transition" translatable="false">transition_type_name</string>
+    <string name="range_label">Range:</string>
+</resources>
