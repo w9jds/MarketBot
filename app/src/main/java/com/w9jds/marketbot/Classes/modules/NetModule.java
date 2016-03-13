@@ -29,37 +29,52 @@ public class NetModule {
         this.mBaseUrl = baseUrl;
     }
 
-    private Interceptor FORCE_CACHE_INTERCEPTOR = new Interceptor() {
-        @Override
-        public okhttp3.Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
+//    private Interceptor FORCE_CACHE_INTERCEPTOR = new Interceptor() {
+//        @Override
+//        public okhttp3.Response intercept(Chain chain) throws IOException {
+//            Request request = chain.request();
+//
+//            request.newBuilder()
+//
+//                    .cacheControl(CacheControl.FORCE_CACHE)
+//                    .build();
+//
+//            return chain.proceed(request);
+//        }
+//    };
+//
+//    private Interceptor CACHE_2MONTHS_INTERCEPTOR = new Interceptor() {
+//        @Override
+//        public okhttp3.Response intercept(Chain chain) throws IOException {
+//            okhttp3.Response response = chain.proceed(chain.request());
+//
+//            return response.newBuilder()
+//                    .header("Cache-Control", "private, max-age=5184000")
+//                    .build();
+//        }
+//    };
 
-            request.newBuilder()
+    @Provides
+    @Singleton
+    Interceptor provideInterceptor() {
+        return new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Response response = chain.proceed(chain.request());
 
-                    .cacheControl(CacheControl.FORCE_CACHE)
-                    .build();
-
-            return chain.proceed(request);
-        }
-    };
-
-    private Interceptor CACHE_2MONTHS_INTERCEPTOR = new Interceptor() {
-        @Override
-        public okhttp3.Response intercept(Chain chain) throws IOException {
-            okhttp3.Response response = chain.proceed(chain.request());
-
-            return response.newBuilder()
-                    .header("Cache-Control", "private, max-age=5184000")
-                    .build();
-        }
-    };
+                return response.newBuilder()
+                        .addHeader("User-Agent", "MarketBot by Jeremy Shore")
+//                        .header("Cache-Control", "private, max-age=5184000")
+                        .build();
+            }
+        };
+    }
 
     @Provides
     @Singleton
     Cache provideOkHttpCache(Application application) {
         int cacheSize = 10 * 1024 * 1024;
-        Cache cache = new Cache(application.getCacheDir(), cacheSize);
-        return cache;
+        return new Cache(application.getCacheDir(), cacheSize);
     }
 
     @Provides

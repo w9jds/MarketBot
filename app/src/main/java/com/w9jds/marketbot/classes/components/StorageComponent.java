@@ -1,6 +1,8 @@
 package com.w9jds.marketbot.classes.components;
 
 import com.w9jds.eveapi.Client.Crest;
+import com.w9jds.marketbot.activities.MainActivity;
+import com.w9jds.marketbot.classes.modules.ApplicationModule;
 import com.w9jds.marketbot.classes.modules.StorageModule;
 import com.w9jds.marketbot.data.DataManager;
 
@@ -15,7 +17,6 @@ import dagger.Component;
 @Component(modules={StorageModule.class})
 public interface StorageComponent {
 
-    void inject(DataManager dataManager);
+    void inject(DataManager manager);
     void inject(Crest crest);
-
 }

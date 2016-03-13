@@ -46,15 +46,13 @@ public abstract class DataManager extends BaseDataManager {
 
     Context context;
     Crest crest;
-    boolean isConnected;
 
-    public DataManager(Context context, Application application) {
-        super(context);
+    public DataManager(Application application) {
+        super();
         ((MarketBot)application).getStorageComponent().inject(this);
 
-        this.context = context;
+        this.context = application;
         crest = new Crest(retrofit);
-        isConnected = isConnected();
     }
 
     private boolean isConnected() {
@@ -65,7 +63,7 @@ public abstract class DataManager extends BaseDataManager {
     }
 
     public void loadMarketGroups() {
-        if (isConnected) {
+        if (isConnected()) {
             crest.getServerVersion(new Callback<ServerInfo>() {
                 @Override
                 public void success(ServerInfo serverInfo) {
@@ -86,6 +84,8 @@ public abstract class DataManager extends BaseDataManager {
 
                 }
             });
+        } else {
+            loadMarketGroups(null);
         }
     }
 

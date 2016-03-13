@@ -153,5 +153,15 @@ public final class DataContracts {
             database.endTransaction();
             database.close();
         }
+
+        public static void getMarketGroupsforParent(SQLiteDatabase database, Long parentId) {
+
+            String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PARENT_ID + "='" +
+                        parentId + "'";
+
+
+
+
+        }
     }
 }

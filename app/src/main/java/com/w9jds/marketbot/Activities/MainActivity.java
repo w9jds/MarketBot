@@ -18,6 +18,7 @@ import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
+import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
 
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        ((MarketBot)getApplication()).getStorageComponent().inject(this);
+
+
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
 
@@ -67,21 +71,21 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        dataManager = new DataManager(this, getApplication()) {
-            @Override
-            public void onDataLoaded(List<? extends MarketItemBase> data) {
-                if (marketGroupList == null) {
-                    marketGroupList = new ArrayList<>(data);
-                }
-
-                adapter.addAndResort(data);
-            }
-
-            @Override
-            public void onDataLoaded(Object data) {
-                // never fired
-            }
-        };
+//        dataManager = new DataManager(this, getApplication()) {
+//            @Override
+//            public void onDataLoaded(List<? extends MarketItemBase> data) {
+//                if (marketGroupList == null) {
+//                    marketGroupList = new ArrayList<>(data);
+//                }
+//
+//                adapter.addAndResort(data);
+//            }
+//
+//            @Override
+//            public void onDataLoaded(Object data) {
+//                // never fired
+//            }
+//        };
 
         dataManager.registerCallback(this);
 

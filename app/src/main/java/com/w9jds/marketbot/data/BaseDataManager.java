@@ -1,13 +1,9 @@
 package com.w9jds.marketbot.data;
 
-import android.content.Context;
-
 import com.w9jds.eveapi.Client.Crest;
 import com.w9jds.eveapi.Models.MarketItemBase;
-import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,15 +12,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class BaseDataManager implements DataLoadingSubject {
 
-    private Context context;
+//    private Context context;
     private Crest publicCrestApi;
 
     private AtomicInteger loadingCount;
     private List<DataLoadingCallbacks> loadingCallbacks;
 
-    public BaseDataManager(Context context) {
+    public BaseDataManager() {
         // setup the API access objects
-        this.context = context;
         loadingCount = new AtomicInteger(0);
     }
 
