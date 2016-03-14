@@ -35,10 +35,6 @@ public abstract class DataManager extends BaseDataManager {
 
     @Inject @Named("public_traq")
     Crest publicCrest;
-    @Inject @Named("read")
-    SQLiteDatabase readDatabase;
-    @Inject @Named("write")
-    SQLiteDatabase writeDatabase;
     @Inject
     SharedPreferences sharedPreferences;
     @Inject
@@ -95,18 +91,17 @@ public abstract class DataManager extends BaseDataManager {
             loadStarted();
         }
 
-        DataContracts.MarketGroupEntry.getMarketGroupsforParent(readDatabase, parentId);
-
+        onDataLoaded(DataContracts.MarketGroupEntry.getMarketGroupsforParent(context, parentId));
         decrementLoadingCount();
         loadFinished();
     }
 
     private void updateMarketGroups() {
-        publicCrest.getMarketGroups(new Callback<Hashtable<Long, MarketGroup>>() {
+        publicCrest.getMarketGroups(new Callback<ArrayList<MarketGroup>>() {
 
             @Override
-            public void success(Hashtable<Long, MarketGroup> groups) {
-                DataContracts.MarketGroupEntry.createNewMarketGroups(writeDatabase, groups.values());
+            public void success(ArrayList<MarketGroup> groups) {
+                DataContracts.MarketGroupEntry.createNewMarketGroups(context, groups);
 
                 loadMarketGroups(null, false);
             }
@@ -120,15 +115,15 @@ public abstract class DataManager extends BaseDataManager {
         });
     }
 
-    public void loadGroupTypes(String targetLocation) {
+    public void loadGroupTypes(String targetLocation, long groupId) {
         loadStarted();
         incrementLoadingCount();
 
-        publicCrest.getMarketTypes(targetLocation, new Callback<Types>() {
+        publicCrest.getMarketTypes(targetLocation, groupId, new Callback<ArrayList<Type>>() {
             @Override
-            public void success(Types types) {
+            public void success(ArrayList<Type> types) {
                 if (types != null) {
-                    onDataLoaded(types.items);
+                    onDataLoaded(types);
                 }
 
                 decrementLoadingCount();

@@ -64,7 +64,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     protected void dispatchLoadingStartedCallbacks() {
-        if (loadingCount.intValue() == ) {
+        if (loadingCount.intValue() == 0) {
             if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
                 for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
                     loadingCallback.dataStartedLoading();
@@ -74,7 +74,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     protected void dispatchLoadingFinishedCallbacks() {
-        if (loadingCount.intValue() == ) {
+        if (loadingCount.intValue() == 0) {
             if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
                 for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
                     loadingCallback.dataFinishedLoading();

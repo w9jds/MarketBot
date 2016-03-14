@@ -29,9 +29,6 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
     @SerializedName("types")
     private Reference types;
 
-    public HashMap<Long, MarketGroup> children = new HashMap<>();
-    public Map<Integer, Type> items = new HashMap<>();
-
     public MarketGroup() {
 
     }
@@ -68,6 +65,31 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
         return this.parentGroup != null && !this.parentGroup.href.equals("");
     }
 
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @Override
+    public void setId(long id) {
+        super.setId(id);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public void setParentGroup(Reference parentGroup) {
+        this.parentGroup = parentGroup;
+    }
+
+    public void setTypes(Reference types) {
+        this.types = types;
+    }
 
     @Override
     public int describeContents() {
@@ -83,10 +105,6 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
         dest.writeString(this.description);
         dest.writeParcelable(this.types, 0);
 
-        dest.writeInt(children.size());
-        for (MarketGroup group : children.values()) {
-            dest.writeParcelable(group, 0);
-        }
     }
 
     protected MarketGroup(Parcel in) {
@@ -97,11 +115,6 @@ public final class MarketGroup extends MarketItemBase implements Parcelable {
         this.description = in.readString();
         this.types = in.readParcelable(Reference.class.getClassLoader());
 
-        int size = in.readInt();
-        for (int i = 0; i < size; i++) {
-            MarketGroup child = in.readParcelable(MarketGroup.class.getClassLoader());
-            this.children.put(child.getId(), child);
-        }
     }
 
     public static final Creator<MarketGroup> CREATOR = new Creator<MarketGroup>() {

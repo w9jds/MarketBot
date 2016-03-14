@@ -34,6 +34,7 @@ public final class Database {
             database.beginTransaction();
 
             database.execSQL(DataContracts.BotEntry.CREATE_TABLE);
+            database.execSQL(DataContracts.MarketGroupEntry.CREATE_TABLE);
 
             database.setTransactionSuccessful();
             database.endTransaction();

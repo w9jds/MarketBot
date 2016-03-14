@@ -69,23 +69,23 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
 
         currentType = getIntent().getParcelableExtra("currentType");
         regionAdapter = new RegionAdapter(this);
-//        dataManager = new DataManager(this, getApplication()) {
-//            @Override
-//            public void onDataLoaded(List<? extends MarketItemBase> data) {
-//                if (data.size() > 0) {
-//                    if (data.get(0) instanceof Region) {
-//                        regionAdapter.addAllItems(data);
-//
-//                        regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onDataLoaded(Object data) {
-//                // never fired
-//            }
-//        };
+        dataManager = new DataManager(getApplication()) {
+            @Override
+            public void onDataLoaded(List<? extends MarketItemBase> data) {
+                if (data.size() > 0) {
+                    if (data.get(0) instanceof Region) {
+                        regionAdapter.addAllItems(data);
+
+                        regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
+                    }
+                }
+            }
+
+            @Override
+            public void onDataLoaded(Object data) {
+                // never fired
+            }
+        };
 
         regionSpinner.setAdapter(regionAdapter);
         regionSpinner.setOnItemSelectedListener(this);

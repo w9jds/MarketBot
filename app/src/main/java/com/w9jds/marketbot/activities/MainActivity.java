@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
         adapter.setToClear(true);
         dataManager.loadMarketGroups(group.getId(), true);
-        dataManager.loadGroupTypes(group.getTypesLocation());
+        dataManager.loadGroupTypes(group.getTypesLocation(), group.getId());
 
         animateTitleChange();
         recyclerView.smoothScrollToPosition(0);
@@ -168,8 +168,10 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
     @Override
     public void onBackPressed() {
+        adapter.setToClear(true);
+
         if (!dataManager.isDataLoading()) {
-            if (currentParent != null && currentParent.hasParent()) {
+            if (history.size() > 1) {
                 long parentId = currentParent.getParentGroupId();
 
                 currentParent = (MarketGroup)history.get(parentId);

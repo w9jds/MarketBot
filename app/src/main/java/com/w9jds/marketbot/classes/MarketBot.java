@@ -30,7 +30,7 @@ public class MarketBot extends Application {
 
         storageComponent = DaggerStorageComponent.builder()
                 .netComponent(netComponent)
-                .storageModule(new StorageModule(this))
+                .storageModule(new StorageModule())
                 .build();
 
     }

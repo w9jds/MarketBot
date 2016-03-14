@@ -21,11 +21,10 @@ import retrofit2.Retrofit;
 @Module
 public class StorageModule {
 
-    private Context context;
     private SharedPreferences sharedPreferences;
 
-    public StorageModule(Context context) {
-        this.context = context;
+    public StorageModule() {
+
     }
 
     @Provides
@@ -41,17 +40,17 @@ public class StorageModule {
         return sharedPreferences.getString("serverVersion", "");
     }
 
-    @Provides @Named("write")
-    @StorageScope
-    public SQLiteDatabase provideWritableDatabase() {
-        return new Database(context).getWritableDatabaseHelper();
-    }
-
-    @Provides @Named("read")
-    @StorageScope
-    public SQLiteDatabase provideReadableDatabase() {
-        return new Database(context).getReadableDatabaseHelper();
-    }
+//    @Provides @Named("write")
+//    @StorageScope
+//    public SQLiteDatabase provideWritableDatabase() {
+//        return new Database(context).getWritableDatabaseHelper();
+//    }
+//
+//    @Provides @Named("read")
+//    @StorageScope
+//    public SQLiteDatabase provideReadableDatabase() {
+//        return new Database(context).getReadableDatabaseHelper();
+//    }
 
     @Provides @Named("public_traq")
     @StorageScope

@@ -7,11 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 import com.w9jds.eveapi.Models.MarketGroup;
+import com.w9jds.eveapi.Models.Reference;
 import com.w9jds.marketbot.classes.utils.StorageUtils;
 import com.w9jds.marketbot.data.models.Bot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public final class DataContracts {
 
@@ -99,6 +102,9 @@ public final class DataContracts {
         public static final String COLUMN_PARENT_ID = "parentId";
         public static final String COLUMN_TYPES_LOCATION = "typesHref";
 
+        public static final List<String> columns = Arrays.asList(COLUMN_NAME, COLUMN_HREF,
+                COLUMN_DESCRIPTION, COLUMN_PARENT_ID, COLUMN_TYPES_LOCATION);
+
         // Table name
         public static final String TABLE_NAME = "MarketGroups";
 
@@ -122,7 +128,9 @@ public final class DataContracts {
             thisItem.put(COLUMN_NAME, group.getName());
             thisItem.put(COLUMN_HREF, group.getHref());
             thisItem.put(COLUMN_DESCRIPTION, group.getDescription());
-            thisItem.put(COLUMN_PARENT_ID, group.getParentGroupId());
+            if (group.hasParent()) {
+                thisItem.put(COLUMN_PARENT_ID, group.getParentGroupId());
+            }
             thisItem.put(COLUMN_TYPES_LOCATION, group.getTypesLocation());
 
             newId = database.insertWithOnConflict(TABLE_NAME, null, thisItem, SQLiteDatabase.CONFLICT_IGNORE);
@@ -133,7 +141,9 @@ public final class DataContracts {
             return newId;
         }
 
-        public static void createNewMarketGroups(SQLiteDatabase database, Collection<MarketGroup> groups) {
+        public static void createNewMarketGroups(Context context, Collection<MarketGroup> groups) {
+            SQLiteDatabase database = new Database(context).getWritableDatabaseHelper();
+
             long newId;
             database.beginTransaction();
 
@@ -143,7 +153,9 @@ public final class DataContracts {
                 thisItem.put(COLUMN_NAME, group.getName());
                 thisItem.put(COLUMN_HREF, group.getHref());
                 thisItem.put(COLUMN_DESCRIPTION, group.getDescription());
-                thisItem.put(COLUMN_PARENT_ID, group.getParentGroupId());
+                if (group.hasParent()) {
+                    thisItem.put(COLUMN_PARENT_ID, group.getParentGroupId());
+                }
                 thisItem.put(COLUMN_TYPES_LOCATION, group.getTypesLocation());
 
                 database.insertWithOnConflict(TABLE_NAME, null, thisItem, SQLiteDatabase.CONFLICT_REPLACE);
@@ -154,14 +166,63 @@ public final class DataContracts {
             database.close();
         }
 
-        public static void getMarketGroupsforParent(SQLiteDatabase database, Long parentId) {
+        public static ArrayList<MarketGroup> getMarketGroupsforParent(Context context, Long parentId) {
+            SQLiteDatabase database = new Database(context).getReadableDatabaseHelper();
 
-            String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PARENT_ID + "='" +
-                        parentId + "'";
+            ArrayList<MarketGroup> groups = new ArrayList<>();
+            String query = "SELECT * FROM " + TABLE_NAME + " WHERE ";
 
+            if (parentId == null) {
+                query += COLUMN_PARENT_ID + " IS NULL";
+            }
+            else {
+                query += COLUMN_PARENT_ID + "='" + parentId + "'";
+            }
 
+            database.beginTransaction();
+            Cursor cursor = database.rawQuery(query, null);
 
+            if (cursor.moveToFirst()) {
+                while(!cursor.isAfterLast()) {
+                    MarketGroup group = new MarketGroup();
+                    group.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
 
+                    for (String column : columns) {
+                        int columnIndex = cursor.getColumnIndex(column);
+                        if (columnIndex != -1) {
+                            switch(column) {
+                                case COLUMN_NAME:
+                                    group.setName(cursor.getString(columnIndex));
+                                    break;
+                                case COLUMN_PARENT_ID:
+                                    long id = cursor.getLong(columnIndex);
+
+                                    if (id != 0) {
+                                        group.setParentGroup(new Reference("https://public-crest.eveonline.com/market/groups/" +
+                                                id + "/"));
+                                    }
+                                    break;
+                                case COLUMN_HREF:
+                                    group.setHref(cursor.getString(columnIndex));
+                                    break;
+                                case COLUMN_TYPES_LOCATION:
+                                    group.setTypes(new Reference(cursor.getString(columnIndex)));
+                                    break;
+                                case COLUMN_DESCRIPTION:
+                                    group.setDescription(cursor.getString(columnIndex));
+                                    break;
+                            }
+                        }
+                    }
+                    groups.add(group);
+                    cursor.moveToNext();
+                }
+            }
+
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            database.close();
+            return groups;
         }
     }
 }
