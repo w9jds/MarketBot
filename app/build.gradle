@@ -9,8 +9,8 @@ android {
         applicationId "com.w9jds.marketbot"
         minSdkVersion 21
         minSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "v0.3"
     }
     buildTypes {
         release {
