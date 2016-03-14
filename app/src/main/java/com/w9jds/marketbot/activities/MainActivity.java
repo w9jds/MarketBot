@@ -1,5 +1,6 @@
 package com.w9jds.marketbot.activities;
 
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,14 +19,10 @@ import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
-import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     private MarketGroupsAdapter adapter;
     private LinearLayoutManager layoutManager;
 
-    private ArrayList<? extends MarketItemBase> marketGroupList;
+    private ArrayMap history = new ArrayMap();
     private MarketGroup currentParent;
 
     @Override
@@ -55,9 +52,6 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        ((MarketBot)getApplication()).getStorageComponent().inject(this);
-
 
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
@@ -71,21 +65,17 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-//        dataManager = new DataManager(this, getApplication()) {
-//            @Override
-//            public void onDataLoaded(List<? extends MarketItemBase> data) {
-//                if (marketGroupList == null) {
-//                    marketGroupList = new ArrayList<>(data);
-//                }
-//
-//                adapter.addAndResort(data);
-//            }
-//
-//            @Override
-//            public void onDataLoaded(Object data) {
-//                // never fired
-//            }
-//        };
+        dataManager = new DataManager(getApplication()) {
+            @Override
+            public void onDataLoaded(List<? extends MarketItemBase> data) {
+                adapter.updateCollection(data);
+            }
+
+            @Override
+            public void onDataLoaded(Object data) {
+                // never fired
+            }
+        };
 
         dataManager.registerCallback(this);
 
@@ -110,31 +100,13 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     public void updateSelectedParentGroup(MarketGroup group) {
         currentParent = group;
 
-        if (group.items.size() > 0) {
-            adapter.updateCollection(group.items.values());
-        }
+        history.put(group.getId(), group);
 
-        if (currentParent != null) {
-            if (group.children.size() > 0) {
-                if (group.items.size() > 0) {
-                    adapter.addAndResort(group.children.values());
-                }
-                else {
-                    adapter.clear();
-                    adapter.updateCollection(group.children.values());
-                }
-            } else {
-                if (group.items.size() < 1) {
-                    adapter.clear();
-                }
-
-                dataManager.loadGroupTypes(currentParent.getTypesLocation());
-            }
-        }
-
+        adapter.setToClear(true);
+        dataManager.loadMarketGroups(group.getId(), true);
+        dataManager.loadGroupTypes(group.getTypesLocation());
 
         animateTitleChange();
-//        showToolbar();
         recyclerView.smoothScrollToPosition(0);
     }
 
@@ -198,12 +170,19 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     public void onBackPressed() {
         if (!dataManager.isDataLoading()) {
             if (currentParent != null && currentParent.hasParent()) {
-                bfsForParent(currentParent.getParentGroupId());
-                adapter.updateCollection(currentParent.children.values());
-            } else if (currentParent != null) {
-                adapter.updateCollection(marketGroupList);
+                long parentId = currentParent.getParentGroupId();
+
+                currentParent = (MarketGroup)history.get(parentId);
+                history.remove(parentId);
+
+                dataManager.loadMarketGroups(parentId, true);
+            }
+            else if (currentParent != null) {
+                history.clear();
+                dataManager.loadMarketGroups(null, true);
                 currentParent = null;
-            } else {
+            }
+            else {
                 super.onBackPressed();
             }
 
@@ -223,30 +202,30 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         progressBar.setVisibility(View.GONE);
     }
 
-    private void bfsForParent(long parentId) {
-        boolean parentFound = false;
-        Queue queue = new LinkedList();
-
-        for (MarketItemBase group : marketGroupList) {
-            if (parentFound) {
-                break;
-            }
-
-            queue.add(group);
-
-            while(!queue.isEmpty()) {
-                MarketGroup node = (MarketGroup)queue.remove();
-                if (node.getId() == parentId) {
-                    currentParent = node;
-                    parentFound = true;
-                    queue.clear();
-                }
-                else {
-                    for (MarketGroup child : node.children.values()) {
-                        queue.add(child);
-                    }
-                }
-            }
-        }
-    }
+//    private void bfsForParent(long parentId) {
+//        boolean parentFound = false;
+//        Queue queue = new LinkedList();
+//
+//        for (MarketItemBase group : marketGroupList) {
+//            if (parentFound) {
+//                break;
+//            }
+//
+//            queue.add(group);
+//
+//            while(!queue.isEmpty()) {
+//                MarketGroup node = (MarketGroup)queue.remove();
+//                if (node.getId() == parentId) {
+//                    currentParent = node;
+//                    parentFound = true;
+//                    queue.clear();
+//                }
+//                else {
+//                    for (MarketGroup child : node.children.values()) {
+//                        queue.add(child);
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

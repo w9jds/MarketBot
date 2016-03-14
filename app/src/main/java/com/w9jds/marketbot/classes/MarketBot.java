@@ -14,7 +14,7 @@ import com.w9jds.marketbot.classes.modules.NetModule;
 /**
  * Created by Jeremy Shore on 3/9/16.
  */
-public final class MarketBot extends Application {
+public class MarketBot extends Application {
 
     private StorageComponent storageComponent;
     private NetComponent netComponent;
@@ -29,6 +29,7 @@ public final class MarketBot extends Application {
                 .build();
 
         storageComponent = DaggerStorageComponent.builder()
+                .netComponent(netComponent)
                 .storageModule(new StorageModule(this))
                 .build();
 

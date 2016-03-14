@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 'android-N'
+    compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.w9jds.marketbot"
         minSdkVersion 21
-        minSdkVersion 'N'
+        minSdkVersion 23
         versionCode 1
         versionName "1.0"
     }

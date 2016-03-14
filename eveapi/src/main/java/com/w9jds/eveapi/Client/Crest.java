@@ -51,7 +51,7 @@ public final class Crest {
 
     interface Endpoint {
 
-        @GET
+        @GET("/")
         Call<ServerInfo> getServer();
 
         @GET

@@ -48,9 +48,9 @@ public final class BotJobService extends JobService {
         public CheckMarketOrders(Context context) {
             this.context = context;
 
-            publicCrestApi = new Crest.Builder()
-                    .setPublicTranquilityEndpoint()
-                    .build(context);
+//            publicCrestApi = new Crest.Builder()
+//                    .setPublicTranquilityEndpoint()
+//                    .build(context);
         }
 
         @Override

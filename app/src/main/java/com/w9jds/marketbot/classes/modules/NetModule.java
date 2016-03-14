@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.w9jds.eveapi.Client.Crest;
 
 import java.io.IOException;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -28,31 +30,6 @@ public class NetModule {
     public NetModule(String baseUrl) {
         this.mBaseUrl = baseUrl;
     }
-
-//    private Interceptor FORCE_CACHE_INTERCEPTOR = new Interceptor() {
-//        @Override
-//        public okhttp3.Response intercept(Chain chain) throws IOException {
-//            Request request = chain.request();
-//
-//            request.newBuilder()
-//
-//                    .cacheControl(CacheControl.FORCE_CACHE)
-//                    .build();
-//
-//            return chain.proceed(request);
-//        }
-//    };
-//
-//    private Interceptor CACHE_2MONTHS_INTERCEPTOR = new Interceptor() {
-//        @Override
-//        public okhttp3.Response intercept(Chain chain) throws IOException {
-//            okhttp3.Response response = chain.proceed(chain.request());
-//
-//            return response.newBuilder()
-//                    .header("Cache-Control", "private, max-age=5184000")
-//                    .build();
-//        }
-//    };
 
     @Provides
     @Singleton
@@ -88,9 +65,9 @@ public class NetModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
+    Retrofit providePublicRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .baseUrl(mBaseUrl)
+                .baseUrl(Crest.PUBLIC_TRANQUILITY)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();

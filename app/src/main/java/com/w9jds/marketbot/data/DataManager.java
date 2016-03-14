@@ -33,8 +33,8 @@ import retrofit2.Retrofit;
  */
 public abstract class DataManager extends BaseDataManager {
 
-    @Inject
-    Retrofit retrofit;
+    @Inject @Named("public_traq")
+    Crest publicCrest;
     @Inject @Named("read")
     SQLiteDatabase readDatabase;
     @Inject @Named("write")
@@ -45,14 +45,12 @@ public abstract class DataManager extends BaseDataManager {
     String serverVersion;
 
     Context context;
-    Crest crest;
 
     public DataManager(Application application) {
         super();
         ((MarketBot)application).getStorageComponent().inject(this);
 
         this.context = application;
-        crest = new Crest(retrofit);
     }
 
     private boolean isConnected() {
@@ -63,12 +61,15 @@ public abstract class DataManager extends BaseDataManager {
     }
 
     public void loadMarketGroups() {
+        loadStarted();
+        incrementLoadingCount();
+
         if (isConnected()) {
-            crest.getServerVersion(new Callback<ServerInfo>() {
+            publicCrest.getServerVersion(new Callback<ServerInfo>() {
                 @Override
                 public void success(ServerInfo serverInfo) {
                     if (serverInfo.getServerVersion().equals(serverVersion)) {
-                        loadMarketGroups(null);
+                        loadMarketGroups(null, false);
                     }
                     else {
                         sharedPreferences.edit()
@@ -85,30 +86,35 @@ public abstract class DataManager extends BaseDataManager {
                 }
             });
         } else {
-            loadMarketGroups(null);
+            loadMarketGroups(null, false);
         }
     }
 
-    public void loadMarketGroups(Long parentId) {
-//        onDataLoaded();
+    public void loadMarketGroups(Long parentId, boolean isDirectCall) {
+        if (isDirectCall) {
+            loadStarted();
+        }
 
+        DataContracts.MarketGroupEntry.getMarketGroupsforParent(readDatabase, parentId);
+
+        decrementLoadingCount();
         loadFinished();
     }
 
     private void updateMarketGroups() {
-        loadStarted();
-        crest.getMarketGroups(new Callback<Hashtable<Long, MarketGroup>>() {
+        publicCrest.getMarketGroups(new Callback<Hashtable<Long, MarketGroup>>() {
 
             @Override
             public void success(Hashtable<Long, MarketGroup> groups) {
                 DataContracts.MarketGroupEntry.createNewMarketGroups(writeDatabase, groups.values());
 
-                loadMarketGroups(null);
+                loadMarketGroups(null, false);
             }
 
             @Override
             public void failure(String error) {
                 // failed to update marketgroups
+                decrementLoadingCount();
                 loadFinished();
             }
         });
@@ -116,18 +122,22 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadGroupTypes(String targetLocation) {
         loadStarted();
-        crest.getMarketTypes(targetLocation, new Callback<Types>() {
+        incrementLoadingCount();
+
+        publicCrest.getMarketTypes(targetLocation, new Callback<Types>() {
             @Override
             public void success(Types types) {
                 if (types != null) {
                     onDataLoaded(types.items);
                 }
 
+                decrementLoadingCount();
                 loadFinished();
             }
 
             @Override
             public void failure(String error) {
+                decrementLoadingCount();
                 loadFinished();
             }
         });
@@ -135,18 +145,21 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadTypeInfo(long typeId) {
         loadStarted();
-        crest.getTypeInfo(typeId, new Callback<TypeInfo>() {
+        incrementLoadingCount();
+        publicCrest.getTypeInfo(typeId, new Callback<TypeInfo>() {
             @Override
             public void success(TypeInfo typeInfo) {
                 if (typeInfo != null) {
                     onDataLoaded(typeInfo);
                 }
 
+                decrementLoadingCount();
                 loadFinished();
             }
 
             @Override
             public void failure(String error) {
+                decrementLoadingCount();
                 loadFinished();
             }
         });
@@ -154,18 +167,21 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadRegions() {
         loadStarted();
-        crest.getRegions(new Callback<ArrayList<Region>>() {
+        incrementLoadingCount();
+        publicCrest.getRegions(new Callback<ArrayList<Region>>() {
             @Override
             public void success(ArrayList<Region> regions) {
                 if (regions != null) {
                     onDataLoaded(regions);
                 }
 
+                decrementLoadingCount();
                 loadFinished();
             }
 
             @Override
             public void failure(String error) {
+                decrementLoadingCount();
                 loadFinished();
             }
         });
@@ -173,18 +189,22 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadSellOrders(Region region, Type type) {
         loadStarted();
-        crest.getOrders(region.getId(), type.getHref(), OrderType.sell, new Callback<MarketOrders>() {
+        incrementLoadingCount();
+
+        publicCrest.getOrders(region.getId(), type.getHref(), OrderType.sell, new Callback<MarketOrders>() {
             @Override
             public void success(MarketOrders marketOrders) {
                 if (marketOrders != null) {
                     onDataLoaded(marketOrders.orders);
                 }
 
+                decrementLoadingCount();
                 loadFinished();
             }
 
             @Override
             public void failure(String error) {
+                decrementLoadingCount();
                 loadFinished();
             }
         });
@@ -192,18 +212,22 @@ public abstract class DataManager extends BaseDataManager {
 
     public void loadBuyOrders(Region region, Type type) {
         loadStarted();
-        crest.getOrders(region.getId(), type.getHref(), OrderType.buy, new Callback<MarketOrders>() {
+        incrementLoadingCount();
+
+        publicCrest.getOrders(region.getId(), type.getHref(), OrderType.buy, new Callback<MarketOrders>() {
             @Override
             public void success(MarketOrders marketOrders) {
                 if (marketOrders != null) {
                     onDataLoaded(marketOrders.orders);
                 }
 
+                decrementLoadingCount();
                 loadFinished();
             }
 
             @Override
             public void failure(String error) {
+                decrementLoadingCount();
                 loadFinished();
             }
         });

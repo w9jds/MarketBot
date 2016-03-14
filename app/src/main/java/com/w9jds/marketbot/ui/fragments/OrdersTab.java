@@ -74,7 +74,7 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
         position = args.getInt(ARG_PAGE);
 
         adapter = new OrdersAdapter(getContext());
-        dataManager = new DataManager(getContext()) {
+        dataManager = new DataManager(getActivity().getApplication()) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 if (data.size() > 0) {

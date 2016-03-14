@@ -87,7 +87,7 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
         position = args.getInt(ARG_PAGE);
         typeId = args.getLong(ARG_TYPEID);
 
-        dataManager = new DataManager(getContext()) {
+        dataManager = new DataManager(getActivity().getApplication()) {
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
 

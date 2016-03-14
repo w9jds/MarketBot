@@ -40,6 +40,14 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         loadingCount.set(0);
     }
 
+    protected void incrementLoadingCount() {
+        loadingCount.incrementAndGet();
+    }
+
+    protected void decrementLoadingCount() {
+        loadingCount.decrementAndGet();
+    }
+
     @Override
     public void registerCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
         if (loadingCallbacks == null) {
@@ -56,17 +64,21 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     protected void dispatchLoadingStartedCallbacks() {
-        if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
-            for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
-                loadingCallback.dataStartedLoading();
+        if (loadingCount.intValue() == ) {
+            if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
+                for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
+                    loadingCallback.dataStartedLoading();
+                }
             }
         }
     }
 
     protected void dispatchLoadingFinishedCallbacks() {
-        if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
-            for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
-                loadingCallback.dataFinishedLoading();
+        if (loadingCount.intValue() == ) {
+            if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
+                for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
+                    loadingCallback.dataFinishedLoading();
+                }
             }
         }
     }

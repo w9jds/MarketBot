@@ -43,8 +43,9 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
     private final LayoutInflater layoutInflater;
     private final @Nullable DataLoadingSubject dataLoading;
 
+    private boolean toClear = false;
     private onMarketGroupChanged groupChangedListener;
-    private List<? extends MarketItemBase> items = new ArrayList<>();
+    private ArrayList<MarketItemBase> items = new ArrayList<>();
 
     public interface onMarketGroupChanged {
         void updateSelectedParentGroup(MarketGroup group);
@@ -197,29 +198,37 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
                 .into(holder.image);
     }
 
-    public void addAndResort(Collection<? extends MarketItemBase> newItems) {
-        ArrayList<MarketItemBase> groups = new ArrayList<>(newItems);
-        groups.addAll(items);
-        int oldSize = items.size();
-        Collections.sort(groups, new Comparitor());
-
-        items = groups;
-
-        if (items.size() > 0) {
-            notifyItemRangeChanged(0, oldSize);
-        }
-
-        notifyItemRangeInserted(oldSize, items.size() - oldSize);
-    }
+//    public void addAndResort(Collection<? extends MarketItemBase> newItems) {
+//        ArrayList<MarketItemBase> groups = new ArrayList<>(newItems);
+//        groups.addAll(items);
+//        int oldSize = items.size();
+//        Collections.sort(groups, new Comparitor());
+//
+//        items = groups;
+//
+//        if (items.size() > 0) {
+//            notifyItemRangeChanged(0, oldSize);
+//        }
+//
+//        notifyItemRangeInserted(oldSize, items.size() - oldSize);
+//    }
 
     public void updateCollection(Collection<? extends MarketItemBase> newChildren) {
         ArrayList<MarketItemBase> groups = new ArrayList<>(newChildren);
         Collections.sort(groups, new Comparitor());
 
-        int newSize = groups.size();
+        int newSize;
         int oldSize = items.size();
 
-        items = groups;
+        if (toClear) {
+            toClear = false;
+            newSize = groups.size();
+            items = groups;
+        }
+        else {
+            newSize = oldSize + groups.size();
+            items.addAll(groups);
+        }
 
         if (newSize < oldSize) {
             notifyItemRangeRemoved(newSize, oldSize - newSize);
@@ -239,6 +248,10 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
 
         items.clear();
         notifyItemRangeRemoved(0, oldSize);
+    }
+
+    public void setToClear(boolean clear) {
+        toClear = clear;
     }
 
     private class Comparitor implements Comparator<MarketItemBase> {
