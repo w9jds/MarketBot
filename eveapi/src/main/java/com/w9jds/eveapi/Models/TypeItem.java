@@ -20,6 +20,18 @@ public final class TypeItem implements Parcelable {
 
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public void setIcon(Reference icon) {
+        this.icon = icon;
+    }
+
     protected TypeItem(Parcel in) {
         this.name = in.readString();
         this.href = in.readString();

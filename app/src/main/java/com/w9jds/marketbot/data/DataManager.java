@@ -56,7 +56,7 @@ public abstract class DataManager extends BaseDataManager {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public void loadMarketGroups() {
+    public void updateAndLoad() {
         loadStarted();
         incrementLoadingCount();
 
@@ -73,6 +73,7 @@ public abstract class DataManager extends BaseDataManager {
                                 .apply();
 
                         updateMarketGroups();
+                        updateMarketTypes();
                     }
                 }
 
@@ -115,23 +116,61 @@ public abstract class DataManager extends BaseDataManager {
         });
     }
 
-    public void loadGroupTypes(String targetLocation, long groupId) {
-        loadStarted();
+    public void updateMarketTypes() {
         incrementLoadingCount();
 
-        publicCrest.getMarketTypes(targetLocation, groupId, new Callback<ArrayList<Type>>() {
+        publicCrest.getAllMarketTypes(new Callback<Types>() {
             @Override
-            public void success(ArrayList<Type> types) {
-                if (types != null) {
-                    onDataLoaded(types);
+            public void success(Types types) {
+                DataContracts.MarketTypeEntry.createNewMarketTypes(context, types.items);
+
+                for (Type type : types.items) {
+
                 }
 
-                decrementLoadingCount();
-                loadFinished();
+                if (types.next != null && !types.next.href.equals("")) {
+                    loadNextPageTypes(types.next.href);
+                }
             }
 
             @Override
             public void failure(String error) {
+                // failed to update types
+            }
+        });
+    }
+
+    public void loadMarketTypes(long groupId) {
+        loadStarted();
+        incrementLoadingCount();
+
+        onDataLoaded(DataContracts.MarketTypeEntry.getMarketTypes(context, groupId));
+        decrementLoadingCount();
+        loadFinished();
+    }
+
+    public void loadNextPageTypes(String targetLocation) {
+        publicCrest.getMarketTypes(targetLocation,  new Callback<Types>() {
+            @Override
+            public void success(Types types) {
+                DataContracts.MarketTypeEntry.createNewMarketTypes(context, types.items);
+
+                for (Type type : types.items) {
+
+                }
+
+                if (types.next != null && !types.next.href.equals("")) {
+                    loadNextPageTypes(types.next.href);
+                }
+                else {
+                    decrementLoadingCount();
+                    loadFinished();
+                }
+            }
+
+            @Override
+            public void failure(String error) {
+                //  update types failed
                 decrementLoadingCount();
                 loadFinished();
             }

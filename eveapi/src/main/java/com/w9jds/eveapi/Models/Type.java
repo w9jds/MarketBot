@@ -26,6 +26,19 @@ public final class Type extends MarketItemBase implements Parcelable {
 
     }
 
+    @Override
+    public void setId(long id) {
+        super.setId(id);
+    }
+
+    public void setType(TypeItem type) {
+        this.type = type;
+    }
+
+    public void setMarketGroup(Reference marketGroup) {
+        this.marketGroup = marketGroup;
+    }
+
     protected Type(Parcel in) {
         this.setId(in.readLong());
         this.type = in.readParcelable(TypeItem.class.getClassLoader());

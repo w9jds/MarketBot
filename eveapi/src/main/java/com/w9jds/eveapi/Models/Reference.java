@@ -23,6 +23,11 @@ public final class Reference extends MarketItemBase implements Parcelable {
     }
 
     @Override
+    public void setId(long id) {
+        super.setId(id);
+    }
+
+    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(getId());
         dest.writeString(getName());

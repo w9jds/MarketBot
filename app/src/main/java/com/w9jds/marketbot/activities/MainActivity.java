@@ -21,6 +21,7 @@ import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataManager;
+import com.w9jds.marketbot.data.storage.DataContracts;
 
 import java.util.List;
 
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     private MarketGroupsAdapter adapter;
     private LinearLayoutManager layoutManager;
 
-    private ArrayMap history = new ArrayMap();
     private MarketGroup currentParent;
 
     @Override
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         adapter = new MarketGroupsAdapter(this, dataManager, this);
         recyclerView.setAdapter(adapter);
 
-        dataManager.loadMarketGroups();
+        dataManager.updateAndLoad();
     }
 
     @Override
@@ -100,11 +100,9 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     public void updateSelectedParentGroup(MarketGroup group) {
         currentParent = group;
 
-        history.put(group.getId(), group);
-
         adapter.setToClear(true);
         dataManager.loadMarketGroups(group.getId(), true);
-        dataManager.loadGroupTypes(group.getTypesLocation(), group.getId());
+        dataManager.loadMarketTypes(group.getId());
 
         animateTitleChange();
         recyclerView.smoothScrollToPosition(0);
@@ -171,16 +169,14 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         adapter.setToClear(true);
 
         if (!dataManager.isDataLoading()) {
-            if (history.size() > 1) {
+            if (currentParent != null && currentParent.hasParent()) {
                 long parentId = currentParent.getParentGroupId();
 
-                currentParent = (MarketGroup)history.get(parentId);
-                history.remove(parentId);
-
+                currentParent = DataContracts.MarketGroupEntry.getMarketGroup(this, parentId);
                 dataManager.loadMarketGroups(parentId, true);
+                dataManager.loadMarketTypes(parentId);
             }
             else if (currentParent != null) {
-                history.clear();
                 dataManager.loadMarketGroups(null, true);
                 currentParent = null;
             }
@@ -204,30 +200,4 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         progressBar.setVisibility(View.GONE);
     }
 
-//    private void bfsForParent(long parentId) {
-//        boolean parentFound = false;
-//        Queue queue = new LinkedList();
-//
-//        for (MarketItemBase group : marketGroupList) {
-//            if (parentFound) {
-//                break;
-//            }
-//
-//            queue.add(group);
-//
-//            while(!queue.isEmpty()) {
-//                MarketGroup node = (MarketGroup)queue.remove();
-//                if (node.getId() == parentId) {
-//                    currentParent = node;
-//                    parentFound = true;
-//                    queue.clear();
-//                }
-//                else {
-//                    for (MarketGroup child : node.children.values()) {
-//                        queue.add(child);
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

@@ -29,23 +29,47 @@ public final class TypeInfo extends MarketItemBase {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public double getCapacity() {
         return capacity;
+    }
+
+    public void setCapacity(double capacity) {
+        this.capacity = capacity;
     }
 
     public double getMass() {
         return mass;
     }
 
+    public void setMass(double mass) {
+        this.mass = mass;
+    }
+
     public double getPortionSize() {
         return portionSize;
+    }
+
+    public void setPortionSize(double portionSize) {
+        this.portionSize = portionSize;
     }
 
     public double getRadius() {
         return radius;
     }
 
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
     public double getVolume() {
         return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 }

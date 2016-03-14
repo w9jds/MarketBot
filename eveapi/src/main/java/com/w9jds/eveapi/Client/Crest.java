@@ -55,6 +55,9 @@ public final class Crest {
         @GET("/")
         Call<ServerInfo> getServer();
 
+        @GET("/market/types/")
+        Call<Types> getAllMarketTypes();
+
         @GET
         Call<Types> getMarketTypes(@Url String url);
 
@@ -118,20 +121,27 @@ public final class Crest {
         });
     }
 
-    public void getMarketTypes(String href, final long groupId, final Callback<ArrayList<Type>> callback) {
+    public void getAllMarketTypes(final Callback<Types> callback) {
+        Call<Types> call = crestEndpoint.getAllMarketTypes();
+        call.enqueue(new retrofit2.Callback<Types>() {
+            @Override
+            public void onResponse(Call<Types> call, Response<Types> response) {
+                callback.success(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Types> call, Throwable t) {
+                callback.failure(t.getMessage());
+            }
+        });
+    }
+
+    public void getMarketTypes(String href, final Callback<Types> callback) {
         Call<Types> call = crestEndpoint.getMarketTypes(href);
         call.enqueue(new retrofit2.Callback<Types>() {
             @Override
             public void onResponse(Call<Types> call, Response<Types> response) {
-                ArrayList<Type> items = new ArrayList<>();
-
-                for (Type type : response.body().items) {
-                    if (type.marketGroup.getId() == groupId) {
-                        items.add(type);
-                    }
-                }
-
-                callback.success(items);
+                callback.success(response.body());
             }
 
             @Override

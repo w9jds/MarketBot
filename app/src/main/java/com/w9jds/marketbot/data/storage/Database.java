@@ -35,6 +35,8 @@ public final class Database {
 
             database.execSQL(DataContracts.BotEntry.CREATE_TABLE);
             database.execSQL(DataContracts.MarketGroupEntry.CREATE_TABLE);
+            database.execSQL(DataContracts.MarketTypeEntry.CREATE_TABLE);
+            database.execSQL(DataContracts.MarketTypeInfoEntry.CREATE_TABLE);
 
             database.setTransactionSuccessful();
             database.endTransaction();
@@ -45,6 +47,9 @@ public final class Database {
             database.beginTransaction();
 
             database.execSQL("DROP TABLE IF EXISTS " + DataContracts.BotEntry.TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + DataContracts.MarketGroupEntry.TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + DataContracts.MarketTypeEntry.TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + DataContracts.MarketTypeInfoEntry.TABLE_NAME);
 
             database.setTransactionSuccessful();
             database.endTransaction();
