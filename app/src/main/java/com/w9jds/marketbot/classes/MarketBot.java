@@ -16,8 +16,8 @@ import com.w9jds.marketbot.classes.modules.NetModule;
  */
 public class MarketBot extends Application {
 
-    private StorageComponent storageComponent;
-    private NetComponent netComponent;
+    private static StorageComponent storageComponent;
+    private static NetComponent netComponent;
 
     @Override
     public void onCreate() {
@@ -35,11 +35,11 @@ public class MarketBot extends Application {
 
     }
 
-    public NetComponent getNetComponent() {
+    public static NetComponent getNetComponent() {
         return netComponent;
     }
 
-    public StorageComponent getStorageComponent() {
+    public static StorageComponent getStorageComponent() {
         return storageComponent;
     }
 }

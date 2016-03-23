@@ -41,7 +41,6 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private final Activity host;
     private final LayoutInflater layoutInflater;
-    private final @Nullable DataLoadingSubject dataLoading;
 
     private boolean toClear = false;
     private onMarketGroupChanged groupChangedListener;
@@ -51,11 +50,16 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
         void updateSelectedParentGroup(MarketGroup group);
     }
 
-    public MarketGroupsAdapter(Activity host, DataLoadingSubject dataLoading, onMarketGroupChanged changed) {
+    public MarketGroupsAdapter(Activity host, onMarketGroupChanged changed) {
         this.groupChangedListener = changed;
         this.host = host;
         this.layoutInflater = LayoutInflater.from(host);
-        this.dataLoading = dataLoading;
+        this.items = new ArrayList<>();
+    }
+
+    public MarketGroupsAdapter(Activity host) {
+        this.host = host;
+        this.layoutInflater = LayoutInflater.from(host);
         this.items = new ArrayList<>();
     }
 

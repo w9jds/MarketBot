@@ -25,7 +25,7 @@
     </style>
 
     <style name="MarketBot.Activities.ItemActivity">
-        <item name="android:windowEnterTransition">@transition/item_enter</item>
+        <!--<item name="android:windowEnterTransition">@transition/item_enter</item>-->
     </style>
 
     <style name="Widget.Light.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
