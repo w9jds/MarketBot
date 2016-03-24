@@ -53,6 +53,11 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <receiver android:name=".services.receivers.OpenItemReceiver" android:enabled="true">
+            <intent-filter>
+                <action android:name="com.w9jds.marketbot.intent.action.OPEN_TYPE" />
+            </intent-filter>
+        </receiver>
 
 
     </application>

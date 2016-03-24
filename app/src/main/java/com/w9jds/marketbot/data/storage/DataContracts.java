@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
+import android.support.annotation.Nullable;
 
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.Reference;
@@ -291,6 +292,35 @@ public final class DataContracts {
             database.endTransaction();
             database.close();
             return types;
+        }
+
+        @Nullable
+        public static Type getType(Context context, long typeId) {
+            SQLiteDatabase database = new Database(context).getReadableDatabaseHelper();
+            ArrayList<Type> types = new ArrayList<>();
+
+            database.beginTransaction();
+
+            Cursor cursor = database.query(TABLE_NAME, null, _ID + "=?",
+                    new String[]{String.valueOf(typeId)}, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                while(!cursor.isAfterLast()) {
+                    types.add(buildType(cursor));
+                    cursor.moveToNext();
+                }
+            }
+
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            database.close();
+
+            if (types.size() > 0) {
+                return null;
+            }
+            else {
+                return types.get(0);
+            }
         }
 
         private static Type buildType(Cursor cursor) {

@@ -1,5 +1,6 @@
 package com.w9jds.marketbot.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -46,6 +47,7 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
     private Type currentType;
     private RegionAdapter regionAdapter;
     private OrdersTabAdapter tabAdapter;
+    private int defaultRegionId;
 
     private HashMap<Integer, OrdersTab> orderTabs = new HashMap<>();
 
@@ -67,7 +69,13 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
             actionBar.setHomeButtonEnabled(true);
         }
 
-        currentType = getIntent().getParcelableExtra("currentType");
+        Intent intent = getIntent();
+        currentType = intent.getParcelableExtra("currentType");
+
+        if (intent.hasExtra("selectedRegion")) {
+            defaultRegionId = intent.getIntExtra("selectedRegion", -1);
+        }
+
         regionAdapter = new RegionAdapter(this);
         dataManager = new DataManager(getApplication()) {
             @Override
@@ -76,7 +84,12 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
                     if (data.get(0) instanceof Region) {
                         regionAdapter.addAllItems(data);
 
-                        regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
+                        if (defaultRegionId == -1) {
+                            regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
+                        }
+                        else {
+                            regionSpinner.setSelection(regionAdapter.getPositionfromId(defaultRegionId), true);
+                        }
                     }
                 }
             }
