@@ -84,7 +84,7 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
                     if (data.get(0) instanceof Region) {
                         regionAdapter.addAllItems(data);
 
-                        if (defaultRegionId == -1) {
+                        if (defaultRegionId == 0) {
                             regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
                         }
                         else {
