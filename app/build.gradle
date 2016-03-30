@@ -8,8 +8,8 @@ android {
     defaultConfig {
         applicationId "com.w9jds.marketbot"
         minSdkVersion 21
-        versionCode 3
-        versionName "v0.3"
+        versionCode 5
+        versionName "v1.0.0"
     }
     buildTypes {
         release {

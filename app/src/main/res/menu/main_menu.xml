@@ -9,4 +9,10 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
 
+    <item
+        android:id="@+id/info"
+        android:icon="@drawable/ic_info"
+        android:title="@string/info_label"
+        app:showAsAction="never"/>
+
 </menu>

@@ -202,21 +202,6 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
                 .into(holder.image);
     }
 
-//    public void addAndResort(Collection<? extends MarketItemBase> newItems) {
-//        ArrayList<MarketItemBase> groups = new ArrayList<>(newItems);
-//        groups.addAll(items);
-//        int oldSize = items.size();
-//        Collections.sort(groups, new Comparitor());
-//
-//        items = groups;
-//
-//        if (items.size() > 0) {
-//            notifyItemRangeChanged(0, oldSize);
-//        }
-//
-//        notifyItemRangeInserted(oldSize, items.size() - oldSize);
-//    }
-
     public void updateCollection(Collection<? extends MarketItemBase> newChildren) {
         ArrayList<MarketItemBase> groups = new ArrayList<>(newChildren);
         Collections.sort(groups, new Comparitor());

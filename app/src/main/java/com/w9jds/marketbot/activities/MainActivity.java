@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -108,6 +109,12 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.info:
+                Intent infoIntent = new Intent();
+                infoIntent.setClass(this, InfoActivity.class);
+
+                startActivity(infoIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

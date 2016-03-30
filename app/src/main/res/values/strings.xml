@@ -19,4 +19,11 @@
 
     <string name="range_label">Range:</string>
     <string name="search_hint">Search Market…</string>
+    <string name="eternal_gratitude">For creating the application icon, eternal gratitude goes to:</string>
+    <string name="crest_version">Crest Version:</string>
+    <string name="marketbot_version">MarketBot Version:</string>
+    <string name="rixx_javix">Rixx Javix</string>
+    <string name="ign_chingy_chonga">IGN: Chingy Chonga</string>
+    <string name="jeremy_shore">Jeremy Shore</string>
+    <string name="info_label">Info</string>
 </resources>
