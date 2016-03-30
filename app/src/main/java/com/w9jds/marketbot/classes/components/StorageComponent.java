@@ -1,5 +1,6 @@
 package com.w9jds.marketbot.classes.components;
 
+import com.w9jds.marketbot.activities.InfoActivity;
 import com.w9jds.marketbot.classes.modules.StorageModule;
 import com.w9jds.marketbot.data.DataManager;
 
@@ -13,5 +14,6 @@ import dagger.Component;
 public interface StorageComponent {
 
     void inject(DataManager manager);
+    void inject(InfoActivity infoActivity);
 
 }

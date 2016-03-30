@@ -13,11 +13,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class BaseDataManager implements DataLoadingSubject {
 
     private AtomicInteger loadingCount;
+    private AtomicInteger updatingCount;
     private List<DataLoadingCallbacks> loadingCallbacks;
+    private List<DataUpdatingCallbacks> updatingCallbacks;
 
     public BaseDataManager() {
         // setup the API access objects
         loadingCount = new AtomicInteger(0);
+        updatingCount = new AtomicInteger(0);
     }
 
     public abstract void onDataLoaded(List<? extends MarketItemBase> data);
@@ -36,6 +39,14 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         dispatchLoadingFinishedCallbacks();
     }
 
+    protected void updateStarted() {
+        dispatchUpdateStartedCallbacks();
+    }
+
+    protected void updateFinished() {
+        dispatchUpdateFinishedCallbacks();
+    }
+
     protected void resetLoadingCount() {
         loadingCount.set(0);
     }
@@ -48,18 +59,47 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         loadingCount.decrementAndGet();
     }
 
+    protected void incrementUpdatingCount() {
+        updatingCount.incrementAndGet();
+    }
+
+    protected void incrementUpdatingCount(int count) {
+        updatingCount.set(count);
+    }
+
+    protected void decrementUpdatingCount() {
+        updatingCount.decrementAndGet();
+    }
+
     @Override
     public void registerCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
         if (loadingCallbacks == null) {
             loadingCallbacks = new ArrayList<>(1);
         }
+
         loadingCallbacks.add(callback);
+    }
+
+    @Override
+    public void registerCallback(DataLoadingSubject.DataUpdatingCallbacks callback) {
+        if (updatingCallbacks == null) {
+            updatingCallbacks = new ArrayList<>(1);
+        }
+
+        updatingCallbacks.add(callback);
     }
 
     @Override
     public void unregisterCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
         if (loadingCallbacks.contains(callback)) {
             loadingCallbacks.remove(callback);
+        }
+    }
+
+    @Override
+    public void unregisterCallback(DataLoadingSubject.DataUpdatingCallbacks callback) {
+        if (updatingCallbacks.contains(callback)) {
+            updatingCallbacks.remove(callback);
         }
     }
 
@@ -78,6 +118,26 @@ public abstract class BaseDataManager implements DataLoadingSubject {
             if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
                 for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
                     loadingCallback.dataFinishedLoading();
+                }
+            }
+        }
+    }
+
+    protected void dispatchUpdateStartedCallbacks() {
+        if (updatingCount.intValue() == 0) {
+            if (updatingCallbacks != null && !updatingCallbacks.isEmpty()) {
+                for (DataUpdatingCallbacks updatingCallback : updatingCallbacks) {
+                    updatingCallback.dataUpdatingStarted();
+                }
+            }
+        }
+    }
+
+    protected void dispatchUpdateFinishedCallbacks() {
+        if (updatingCount.intValue() == 0) {
+            if (updatingCallbacks != null && !updatingCallbacks.isEmpty()) {
+                for (DataUpdatingCallbacks updatingCallback : updatingCallbacks) {
+                    updatingCallback.dataUpdatingFinished();
                 }
             }
         }

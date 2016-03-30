@@ -1,9 +1,7 @@
 package com.w9jds.marketbot.data;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -21,32 +19,26 @@ import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.data.storage.DataContracts;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import retrofit2.Retrofit;
 
 /**
  * Created by Jeremy Shore on 2/19/16.
  */
 public abstract class DataManager extends BaseDataManager {
 
-    @Inject @Named("public_traq")
-    Crest publicCrest;
-    @Inject
-    SharedPreferences sharedPreferences;
-    @Inject
-    String serverVersion;
+    @Inject @Named("public_traq") Crest publicCrest;
+    @Inject SharedPreferences sharedPreferences;
+    @Inject String serverVersion;
 
     Context context;
 
-    public DataManager(Application application) {
+    public DataManager(Context context) {
         super();
-        ((MarketBot)application).getStorageComponent().inject(this);
 
-        this.context = application;
+        MarketBot.getStorageComponent().inject(this);
+        this.context = context;
     }
 
     private boolean isConnected() {
@@ -68,9 +60,15 @@ public abstract class DataManager extends BaseDataManager {
                         loadMarketGroups(null, false);
                     }
                     else {
+                        resetLoadingCount();
+                        loadFinished();
+
                         sharedPreferences.edit()
                                 .putString("serverVersion", serverInfo.getServerVersion())
                                 .apply();
+
+                        updateStarted();
+                        incrementUpdatingCount(2);
 
                         updateMarketGroups();
                         updateMarketTypes();
@@ -90,6 +88,7 @@ public abstract class DataManager extends BaseDataManager {
     public void loadMarketGroups(Long parentId, boolean isDirectCall) {
         if (isDirectCall) {
             loadStarted();
+            incrementLoadingCount();
         }
 
         onDataLoaded(DataContracts.MarketGroupEntry.getMarketGroupsforParent(context, parentId));
@@ -105,18 +104,23 @@ public abstract class DataManager extends BaseDataManager {
                 DataContracts.MarketGroupEntry.createNewMarketGroups(context, groups);
 
                 loadMarketGroups(null, false);
+
+                decrementUpdatingCount();
+                updateFinished();
             }
 
             @Override
             public void failure(String error) {
                 // failed to update marketgroups
-                decrementLoadingCount();
-                loadFinished();
+                loadMarketGroups(null, false);
+
+                decrementUpdatingCount();
+                updateFinished();
             }
         });
     }
 
-    public void updateMarketTypes() {
+    private void updateMarketTypes() {
         incrementLoadingCount();
 
         publicCrest.getAllMarketTypes(new Callback<Types>() {
@@ -124,27 +128,33 @@ public abstract class DataManager extends BaseDataManager {
             public void success(Types types) {
                 DataContracts.MarketTypeEntry.createNewMarketTypes(context, types.items);
 
-                for (Type type : types.items) {
-
-                }
-
                 if (types.next != null && !types.next.href.equals("")) {
                     loadNextPageTypes(types.next.href);
+                }
+                else {
+                    decrementUpdatingCount();
+                    updateFinished();
                 }
             }
 
             @Override
             public void failure(String error) {
                 // failed to update types
+
+                decrementUpdatingCount();
+                updateFinished();
             }
         });
     }
 
-    public void loadMarketTypes(long groupId) {
-        loadStarted();
-        incrementLoadingCount();
+    public void loadMarketTypes(long groupId, boolean isDirectCall) {
+        if (isDirectCall) {
+            loadStarted();
+            incrementLoadingCount();
+        }
 
         onDataLoaded(DataContracts.MarketTypeEntry.getMarketTypes(context, groupId));
+
         decrementLoadingCount();
         loadFinished();
     }
@@ -155,24 +165,20 @@ public abstract class DataManager extends BaseDataManager {
             public void success(Types types) {
                 DataContracts.MarketTypeEntry.createNewMarketTypes(context, types.items);
 
-                for (Type type : types.items) {
-
-                }
-
                 if (types.next != null && !types.next.href.equals("")) {
                     loadNextPageTypes(types.next.href);
                 }
                 else {
-                    decrementLoadingCount();
-                    loadFinished();
+                    decrementUpdatingCount();
+                    updateFinished();
                 }
             }
 
             @Override
             public void failure(String error) {
                 //  update types failed
-                decrementLoadingCount();
-                loadFinished();
+                decrementUpdatingCount();
+                updateFinished();
             }
         });
     }
@@ -265,5 +271,15 @@ public abstract class DataManager extends BaseDataManager {
                 loadFinished();
             }
         });
+    }
+
+    public void searchMarketTypes(String queryString) {
+        loadStarted();
+        incrementLoadingCount();
+
+        onDataLoaded(DataContracts.MarketTypeEntry.searchMarketTypes(context, queryString));
+
+        decrementLoadingCount();
+        loadFinished();
     }
 }

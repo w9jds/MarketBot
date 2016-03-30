@@ -35,11 +35,8 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
 
     static final String ARG_PAGE = "ARG_PAGE";
 
-    @Bind(R.id.swipe_refresh)
-    SwipeRefreshLayout refreshLayout;
-
-    @Bind(R.id.orders_list)
-    RecyclerView orders;
+    @Bind(R.id.swipe_refresh) SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.orders_list) RecyclerView orders;
 
     private int position;
 
