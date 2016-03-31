@@ -28,7 +28,7 @@ import javax.inject.Named;
  */
 public abstract class DataManager extends BaseDataManager {
 
-    @Inject @Named("public_traq") Crest publicCrest;
+    @Inject Crest publicCrest;
     @Inject SharedPreferences sharedPreferences;
     @Inject String serverVersion;
 
@@ -37,7 +37,7 @@ public abstract class DataManager extends BaseDataManager {
     public DataManager(Context context) {
         super();
 
-        MarketBot.getStorageComponent().inject(this);
+        MarketBot.createNewStorageSession().inject(this);
         this.context = context;
     }
 
