@@ -15,4 +15,17 @@ public final class Region extends MarketItemBase {
         return href;
     }
 
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    @Override
+    public void setId(long id) {
+        super.setId(id);
+    }
+
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+    }
 }

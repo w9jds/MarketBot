@@ -12,22 +12,33 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MarketBot">
+
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/MarketBot.Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
 
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".activities.SearchActivity" />
         </activity>
+
         <activity
             android:name=".activities.ItemActivity"
-            android:theme="@style/MarketBot.Activities.ItemActivity"></activity>
+
+            android:theme="@style/MarketBot.Activities.ItemActivity">
+
+            <intent-filter>
+                <action android:name="com.w9jds.marketbot.intent.action.OPEN_TYPE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".activities.SearchActivity"
             android:label="@string/app_name"
@@ -35,9 +46,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -46,15 +57,10 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <receiver
-            android:name=".services.receivers.OpenItemReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.w9jds.marketbot.intent.action.OPEN_TYPE" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".activities.InfoActivity">
 
-        <activity android:name=".activities.InfoActivity"></activity>
+        </activity>
+
     </application>
 
 </manifest>

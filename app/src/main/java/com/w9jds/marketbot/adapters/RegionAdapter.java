@@ -8,12 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.Region;
+import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -88,10 +92,7 @@ public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
 
     public void addAllItems(Collection<? extends MarketItemBase> regions) {
         for (MarketItemBase item : regions) {
-            Region region = (Region)item;
-            if (!region.getName().matches("[A-Z]-R\\w+")) {
-                this.regions.add(region);
-            }
+            this.regions.add((Region)item);
         }
 
         notifyDataSetChanged();

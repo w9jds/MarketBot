@@ -32,4 +32,5 @@ public class MarketBot extends Application {
                 .storageModule(new StorageModule())
                 .build();
     }
+
 }

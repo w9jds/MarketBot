@@ -81,8 +81,6 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
         ImageView image;
         @Bind(R.id.item_title)
         TextView title;
-//        @Bind(R.id.item_subtitle)
-//        TextView subtitle;
 
         public MarketTypeHolder(View itemView) {
             super(itemView);

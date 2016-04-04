@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 
 import com.w9jds.marketbot.classes.StorageScope;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -21,6 +23,12 @@ public class StorageModule {
     @StorageScope
     String provideServerVersion(SharedPreferences sharedPreferences) {
         return sharedPreferences.getString("serverVersion", "");
+    }
+
+    @Provides
+    @StorageScope
+    boolean provideFirstRun(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getBoolean("isFirstRun", true);
     }
 
 }

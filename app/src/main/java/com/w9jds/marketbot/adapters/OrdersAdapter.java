@@ -1,19 +1,12 @@
 package com.w9jds.marketbot.adapters;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
-import com.w9jds.eveapi.Models.MarketGroup;
-import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.eveapi.Models.MarketOrder;
 import com.w9jds.marketbot.R;
 
@@ -43,23 +36,11 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.inventory)
-        TextView volume;
-        @Bind(R.id.price)
-        TextView price;
-        @Bind(R.id.location)
-        TextView location;
-        @Bind(R.id.range)
-        TextView range;
-        @Bind(R.id.details_pane)
-        View details;
-//        @Bind(R.id.sales_progress)
-//        View salesProgress;
-        @Bind(R.id.range_container)
-        View rangeContainer;
-
-        boolean isOpen;
-        boolean animationRunning;
+        @Bind(R.id.inventory) TextView volume;
+        @Bind(R.id.price) TextView price;
+        @Bind(R.id.location) TextView location;
+        @Bind(R.id.range) TextView range;
+        @Bind(R.id.range_container) View rangeContainer;
 
         public OrderViewHolder(View view) {
             super(view);
@@ -67,105 +48,10 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-//    private void animateSalesProgressBar(final OrderViewHolder viewHolder, MarketOrder order) {
-//        ValueAnimator slideAnimation = ValueAnimator
-//                .ofInt(0, calculateSalesProgress(viewHolder, order))
-//                .setDuration(250);
-//
-//        slideAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                viewHolder.salesProgress.getLayoutParams().width = (int)animation.getAnimatedValue();
-//                viewHolder.salesProgress.requestLayout();
-//            }
-//        });
-//
-//        AnimatorSet set = new AnimatorSet();
-//        set.play(slideAnimation);
-//        set.setInterpolator(new AccelerateInterpolator());
-//        set.start();
-//    }
-
-    private void animateDetailsPane(final OrderViewHolder holder) {
-        ValueAnimator slideOpen;
-
-        if (!holder.isOpen) {
-            slideOpen = ValueAnimator
-                    .ofInt(0, calculateDetailsPaneHeight(holder))
-                    .setDuration(250);
-        }
-        else {
-            slideOpen = ValueAnimator
-                    .ofInt(calculateDetailsPaneHeight(holder), 0)
-                    .setDuration(250);
-        }
-
-        slideOpen.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                holder.details.getLayoutParams().height = (int) animation.getAnimatedValue();
-                holder.details.requestLayout();
-            }
-        });
-
-        slideOpen.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                holder.animationRunning = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                holder.animationRunning = false;
-                holder.isOpen = !holder.isOpen;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(slideOpen);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.start();
-    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final OrderViewHolder holder = new OrderViewHolder(LayoutInflater.from(context).inflate(
+        return new OrderViewHolder(LayoutInflater.from(context).inflate(
                 R.layout.market_order_item, parent, false));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!holder.animationRunning) {
-                    animateDetailsPane(holder);
-                }
-            }
-        });
-
-        return holder;
-    }
-
-    private int calculateDetailsPaneHeight(OrderViewHolder holder) {
-        int widthSpec = View.MeasureSpec.makeMeasureSpec(holder.itemView.getWidth(), View.MeasureSpec.EXACTLY);
-        int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-
-        holder.details.measure(widthSpec, heightSpec);
-        return holder.details.getMeasuredHeight();
-    }
-
-    private int calculateSalesProgress(OrderViewHolder holder, MarketOrder order) {
-        double percentage = (double)order.getVolume() / (double)order.getVolumeStart();
-
-        return (int)(holder.itemView.getWidth() * percentage);
     }
 
     @Override
@@ -197,19 +83,6 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.rangeContainer.setVisibility(View.GONE);
         }
 
-        viewHolder.details.getLayoutParams().height = 0;
-        viewHolder.details.requestLayout();
-
-        holder.itemView.post(new Runnable() {
-            @Override
-            public void run() {
-//                animateSalesProgressBar(viewHolder, order);
-
-                if (viewHolder.isOpen) {
-                    animateDetailsPane(viewHolder);
-                }
-            }
-        });
     }
 
     @Override

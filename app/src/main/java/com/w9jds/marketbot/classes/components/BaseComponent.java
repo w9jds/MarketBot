@@ -2,6 +2,7 @@ package com.w9jds.marketbot.classes.components;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.w9jds.eveapi.Client.Crest;
 import com.w9jds.marketbot.classes.modules.ApplicationModule;

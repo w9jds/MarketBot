@@ -17,7 +17,7 @@ import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
 import com.w9jds.marketbot.data.DataLoadingSubject;
-import com.w9jds.marketbot.data.DataManager;
+import com.w9jds.marketbot.data.loader.DataManager;
 
 import java.util.List;
 
@@ -68,6 +68,11 @@ public class SearchActivity extends AppCompatActivity implements DataLoadingSubj
 
         dataManager = new DataManager(getApplication()) {
             @Override
+            public void onProgressUpdate(int page, int totalPages) {
+
+            }
+
+            @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 adapter.updateCollection(data);
             }
@@ -104,6 +109,11 @@ public class SearchActivity extends AppCompatActivity implements DataLoadingSubj
     @Override
     public void dataFinishedLoading() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void dataFailedLoading(String errorMessage) {
+
     }
 
     @Override
