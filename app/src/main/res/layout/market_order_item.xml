@@ -3,7 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
     android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
@@ -14,8 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:layout_gravity="top|end"
-        android:layout_marginEnd="16dp" />
+        android:layout_gravity="top|end" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,58 +28,36 @@
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             style="@style/TextAppearance.AppCompat.Medium"/>
 
-
-
         <LinearLayout
-            android:id="@+id/details_pane"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:id="@+id/range_container"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="24dp">
-
-            <LinearLayout
-                android:id="@+id/range_container"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/range_label"/>
-
-                <TextView
-                    android:id="@+id/range"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <TextView
-                android:id="@+id/location"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                style="@style/TextAppearance.AppCompat.Subhead"/>
+                android:text="@string/range_label"/>
+
+            <TextView
+                android:id="@+id/range"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            style="@style/TextAppearance.AppCompat.Subhead"/>
 
-    <View
-        android:id="@+id/sales_progress"
-        android:background="@color/search_background_scrim"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom|center_horizontal"/>
+    </LinearLayout>
 
 </FrameLayout>

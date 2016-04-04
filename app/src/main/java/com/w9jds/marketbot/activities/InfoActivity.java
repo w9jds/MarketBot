@@ -42,7 +42,7 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
         ButterKnife.bind(this);
 
-        MarketBot.getStorageComponent().inject(this);
+        MarketBot.createNewStorageSession().inject(this);
 
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();

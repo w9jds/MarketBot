@@ -1,19 +1,13 @@
 package com.w9jds.marketbot.classes.modules;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 
-import com.w9jds.eveapi.Client.Crest;
-import com.w9jds.marketbot.classes.components.StorageScope;
-import com.w9jds.marketbot.data.storage.Database;
+import com.w9jds.marketbot.classes.StorageScope;
 
 import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
-import retrofit2.Retrofit;
 
 /**
  * Created by Jeremy Shore on 3/10/16.
@@ -21,40 +15,20 @@ import retrofit2.Retrofit;
 @Module
 public class StorageModule {
 
-    private SharedPreferences sharedPreferences;
-
     public StorageModule() {
 
     }
 
     @Provides
     @StorageScope
-    SharedPreferences provideSharedPreferences(Application application) {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(application);
-        return sharedPreferences;
+    String provideServerVersion(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getString("serverVersion", "");
     }
 
     @Provides
     @StorageScope
-    String provideServerVersion() {
-        return sharedPreferences.getString("serverVersion", "");
+    boolean provideFirstRun(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getBoolean("isFirstRun", true);
     }
 
-//    @Provides @Named("write")
-//    @StorageScope
-//    public SQLiteDatabase provideWritableDatabase() {
-//        return new Database(context).getWritableDatabaseHelper();
-//    }
-//
-//    @Provides @Named("read")
-//    @StorageScope
-//    public SQLiteDatabase provideReadableDatabase() {
-//        return new Database(context).getReadableDatabaseHelper();
-//    }
-
-    @Provides @Named("public_traq")
-    @StorageScope
-    public Crest providePublicCrest(Retrofit retrofit) {
-        return new Crest(retrofit);
-    }
 }

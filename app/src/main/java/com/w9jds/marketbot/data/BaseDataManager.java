@@ -1,11 +1,16 @@
 package com.w9jds.marketbot.data;
 
-import com.w9jds.eveapi.Client.Crest;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.w9jds.eveapi.Models.MarketItemBase;
+import com.w9jds.marketbot.classes.MarketBot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.inject.Inject;
 
 /**
  * Created by Jeremy on 2/19/2016.
@@ -31,6 +36,10 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         return loadingCount.get() > 0;
     }
 
+    protected int updatingCount() {
+        return updatingCount.intValue();
+    }
+
     protected void loadStarted() {
         dispatchLoadingStartedCallbacks();
     }
@@ -39,12 +48,16 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         dispatchLoadingFinishedCallbacks();
     }
 
+    protected  void loadFailed(String errorMessage) {
+        dispatchLoadingFailedCallbacks(errorMessage);
+    }
+
     protected void updateStarted() {
         dispatchUpdateStartedCallbacks();
     }
 
-    protected void updateFinished() {
-        dispatchUpdateFinishedCallbacks();
+    protected void updateFinished(SQLiteDatabase database) {
+        dispatchUpdateFinishedCallbacks(database);
     }
 
     protected void resetLoadingCount() {
@@ -123,6 +136,14 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         }
     }
 
+    protected void dispatchLoadingFailedCallbacks(String errorMessage) {
+        if (loadingCallbacks != null && !loadingCallbacks.isEmpty()) {
+            for (DataLoadingCallbacks loadingCallback : loadingCallbacks) {
+                loadingCallback.dataFailedLoading(errorMessage);
+            }
+        }
+    }
+
     protected void dispatchUpdateStartedCallbacks() {
         if (updatingCount.intValue() == 0) {
             if (updatingCallbacks != null && !updatingCallbacks.isEmpty()) {
@@ -133,7 +154,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         }
     }
 
-    protected void dispatchUpdateFinishedCallbacks() {
+    protected void dispatchUpdateFinishedCallbacks(SQLiteDatabase database) {
         if (updatingCount.intValue() == 0) {
             if (updatingCallbacks != null && !updatingCallbacks.isEmpty()) {
                 for (DataUpdatingCallbacks updatingCallback : updatingCallbacks) {

@@ -1,21 +1,15 @@
 package com.w9jds.marketbot.classes.modules;
 
 import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.google.gson.Gson;
 import com.w9jds.eveapi.Client.Crest;
 
 import java.io.IOException;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,12 +31,13 @@ public class NetModule {
         return new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                okhttp3.Response response = chain.proceed(chain.request());
+                Request request = chain.request();
 
-                return response.newBuilder()
+                request = request.newBuilder()
                         .addHeader("User-Agent", "MarketBot by Jeremy Shore")
-//                        .header("Cache-Control", "private, max-age=5184000")
                         .build();
+
+                return chain.proceed(request);
             }
         };
     }
@@ -59,7 +54,7 @@ public class NetModule {
     OkHttpClient provideOkHttpClient(Cache cache, Interceptor interceptor) {
         return new OkHttpClient.Builder()
                 .cache(cache)
-                .addNetworkInterceptor(interceptor)
+                .addInterceptor(interceptor)
                 .build();
     }
 
@@ -71,5 +66,11 @@ public class NetModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    public Crest providePublicCrest(Retrofit retrofit) {
+        return new Crest(retrofit);
     }
 }

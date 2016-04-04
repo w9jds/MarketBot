@@ -4,7 +4,11 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,12 +30,15 @@ import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketItemBase;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.adapters.MarketGroupsAdapter;
+import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.DataLoadingSubject;
-import com.w9jds.marketbot.data.DataManager;
-import com.w9jds.marketbot.data.storage.DataContracts;
+import com.w9jds.marketbot.data.loader.DataManager;
+import com.w9jds.marketbot.data.storage.MarketGroupEntry;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
     @Bind(R.id.market_groups) RecyclerView recyclerView;
     @Bind(R.id.dataloading_progress) ProgressBar progressBar;
+    @Bind(R.id.main_content) CoordinatorLayout baseView;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     private ProgressDialog progressDialog;
@@ -71,6 +79,22 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
         dataManager = new DataManager(this) {
             @Override
+            public void onProgressUpdate(final int page, final int totalPages) {
+                if (progressDialog.isIndeterminate()) {
+                    progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            updateProgressDialog(page, totalPages, true);
+                        }
+                    });
+
+                    progressDialog.dismiss();
+                }
+
+                updateProgressDialog(page, totalPages, false);
+            }
+
+            @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 adapter.updateCollection(data);
             }
@@ -88,6 +112,24 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         recyclerView.setAdapter(adapter);
 
         dataManager.updateAndLoad();
+    }
+
+    private void updateProgressDialog(int page, int max, boolean isNewWindow) {
+        if (isNewWindow) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setMessage("Updating Items Cache...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCancelable(false);
+        }
+
+        progressDialog.setMax(max);
+        progressDialog.setProgress(page);
+
+        if (isNewWindow) {
+            progressDialog.show();
+        }
     }
 
     @Override
@@ -197,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             if (currentParent != null && currentParent.hasParent()) {
                 long parentId = currentParent.getParentGroupId();
 
-                currentParent = DataContracts.MarketGroupEntry.getMarketGroup(this, parentId);
+                currentParent = MarketGroupEntry.getMarketGroup(this, parentId);
                 dataManager.loadMarketGroups(parentId, true);
                 dataManager.loadMarketTypes(parentId, true);
             }
@@ -223,6 +265,12 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     @Override
     public void dataFinishedLoading() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void dataFailedLoading(String errorMessage) {
+        Snackbar.make(baseView, errorMessage, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     @Override

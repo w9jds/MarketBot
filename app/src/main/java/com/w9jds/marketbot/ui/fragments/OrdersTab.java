@@ -18,9 +18,8 @@ import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.activities.ItemActivity;
 import com.w9jds.marketbot.adapters.OrdersAdapter;
-import com.w9jds.marketbot.classes.Triplet;
 import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.DataManager;
+import com.w9jds.marketbot.data.loader.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +71,11 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
 
         adapter = new OrdersAdapter(getContext());
         dataManager = new DataManager(getActivity().getApplication()) {
+            @Override
+            public void onProgressUpdate(int page, int totalPages) {
+
+            }
+
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 if (data.size() > 0) {
@@ -150,5 +154,9 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
         }
     }
 
+    @Override
+    public void dataFailedLoading(String errorMessage) {
+
+    }
 
 }
