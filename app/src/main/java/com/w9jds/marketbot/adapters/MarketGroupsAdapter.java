@@ -77,10 +77,8 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
 
     public static class MarketTypeHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.item_image)
-        ImageView image;
-        @Bind(R.id.item_title)
-        TextView title;
+        @Bind(R.id.item_image) ImageView image;
+        @Bind(R.id.item_title) TextView title;
 
         public MarketTypeHolder(View itemView) {
             super(itemView);
@@ -88,6 +86,7 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    @Nullable
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch(viewType) {

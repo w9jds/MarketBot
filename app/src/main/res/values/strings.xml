@@ -14,8 +14,8 @@
     <string name="volume_progress_format">$s / $s</string>
 
     <string name="toolbar_transition_name" translatable="false">transition_toolbar</string>
-    <string name="type_icon_transition" translatable="false">transition_type_icon</string>
-    <string name="type_name_transition" translatable="false">transition_type_name</string>
+    <string name="type_icon_transition" >transition_type_icon</string>
+    <string name="type_name_transition" >transition_type_name</string>
 
     <string name="range_label">Range:</string>
     <string name="search_hint">Search Market…</string>
