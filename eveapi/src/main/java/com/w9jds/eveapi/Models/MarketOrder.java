@@ -13,6 +13,9 @@ public final class MarketOrder extends MarketItemBase {
     @SerializedName("buy")
     private boolean isBuyOrder;
 
+    @SerializedName("margin")
+    private boolean isMarginOrder;
+
 //    @SerializedName("issued")
 //    private Date issued;
 
@@ -82,6 +85,16 @@ public final class MarketOrder extends MarketItemBase {
     public boolean isBuyOrder() {
         return isBuyOrder;
     }
+
+    public void setIsMarginOrder(boolean isMarginOrder){
+        this.isMarginOrder = isMarginOrder;
+    }
+
+    public boolean isMarginOrder() {
+        return isMarginOrder;
+    }
+
+
 
 
 }

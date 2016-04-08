@@ -413,6 +413,7 @@ public abstract class DataManager extends BaseDataManager {
                 //(sales price - taxes and fees - purchase price) / purchase price
                 double price = (sellOrder.getPrice() - buyOrder.getPrice()) / buyOrder.getPrice();
                 buyOrder.setPrice(price);
+                buyOrder.setIsMarginOrder(true);
                 finalOrderList.add(buyOrder);
             }
         }

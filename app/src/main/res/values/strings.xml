@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Market Bot</string>
 
-    <string name="margins">Margins</string>
+    <string name="margins">Station Margins</string>
     <string name="sell_orders">Sell Orders</string>
     <string name="buy_orders">Buy Orders</string>
     <string name="type_info_label">Info</string>
