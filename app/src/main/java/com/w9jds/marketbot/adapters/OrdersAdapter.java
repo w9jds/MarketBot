@@ -26,8 +26,9 @@ import butterknife.ButterKnife;
 /**
  * Created by Jeremy on 3/1/2016.
  *
- * Modified by Alexander Whipp on 4/4/2016.
+ * Modified by Alexander Whipp on 4/8/2016.
  */
+
 public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;

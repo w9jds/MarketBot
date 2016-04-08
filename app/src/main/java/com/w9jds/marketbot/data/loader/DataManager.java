@@ -13,7 +13,6 @@ import com.w9jds.eveapi.Client.Crest;
 import com.w9jds.eveapi.Models.MarketGroup;
 import com.w9jds.eveapi.Models.MarketOrder;
 import com.w9jds.eveapi.Models.OrderType;
-import com.w9jds.eveapi.Models.Reference;
 import com.w9jds.eveapi.Models.Region;
 import com.w9jds.eveapi.Models.ServerInfo;
 import com.w9jds.eveapi.Models.Type;
@@ -32,13 +31,13 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by Jeremy Shore on 2/19/16.
  *
- * Modified by Alexander Whipp on 4/7/2016
+ * Modified by Alexander Whipp on 4/8/2016
  */
+
 public abstract class DataManager extends BaseDataManager {
 
     @Inject Crest publicCrest;

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jeremy on 3/1/2016.
  *
- * Modified by Alexander Whipp on 4/7/2016.
+ * Modified by Alexander Whipp on 4/8/2016.
  */
 
 public final class MarketOrder extends MarketItemBase {

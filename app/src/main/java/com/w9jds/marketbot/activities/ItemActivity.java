@@ -41,7 +41,10 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jeremy Shore on 2/22/16.
+ *
+ * Modified by Alexander Whipp on 4/8/16.
  */
+
 public class ItemActivity extends AppCompatActivity implements BaseDataManager.DataUpdatingCallbacks,
         AdapterView.OnItemSelectedListener {
 
