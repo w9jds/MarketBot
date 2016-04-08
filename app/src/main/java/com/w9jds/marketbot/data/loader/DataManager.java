@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.provider.ContactsContract;
 
 import com.w9jds.eveapi.Callback;
 import com.w9jds.eveapi.Client.Crest;
 import com.w9jds.eveapi.Models.MarketGroup;
+import com.w9jds.eveapi.Models.MarketOrder;
 import com.w9jds.eveapi.Models.OrderType;
 import com.w9jds.eveapi.Models.Region;
 import com.w9jds.eveapi.Models.ServerInfo;
@@ -28,13 +28,16 @@ import com.w9jds.marketbot.data.storage.RegionEntry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by Jeremy Shore on 2/19/16.
+ *
+ * Modified by Alexander Whipp on 4/8/2016
  */
+
 public abstract class DataManager extends BaseDataManager {
 
     @Inject Crest publicCrest;
@@ -218,7 +221,7 @@ public abstract class DataManager extends BaseDataManager {
     }
 
     public void loadNextPageTypes(String targetLocation) {
-        publicCrest.getMarketTypes(targetLocation,  marketTypeCallback);
+        publicCrest.getMarketTypes(targetLocation, marketTypeCallback);
     }
 
     private void updateRegions() {
@@ -338,6 +341,88 @@ public abstract class DataManager extends BaseDataManager {
                 loadFinished();
             }
         });
+    }
+
+    public void loadMarginOrders(final Region region, final Type type){
+        loadStarted();
+        incrementLoadingCount();
+
+        publicCrest.getOrders(region.getId(), type.getHref(), OrderType.buy, new Callback<MarketOrders>() {
+            @Override
+            public void success(final MarketOrders marketBuyOrders) {
+                if (marketBuyOrders != null) {
+
+                    publicCrest.getOrders(region.getId(), type.getHref(), OrderType.sell, new Callback<MarketOrders>() {
+                        @Override
+                        public void success(MarketOrders marketSellOrders) {
+                            if (marketSellOrders != null) {
+                                onDataLoaded(combineOrders(marketBuyOrders, marketSellOrders).orders);
+                            }
+                            decrementLoadingCount();
+                            loadFinished();
+                        }
+
+                        @Override
+                        public void failure(String error) {
+                            decrementLoadingCount();
+                            loadFinished();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void failure(String error) {
+                decrementLoadingCount();
+                loadFinished();
+            }
+        });
+
+    }
+
+    private MarketOrders combineOrders(MarketOrders buyOrders, MarketOrders sellOrders){
+        HashMap<String, MarketOrder> buyOrderMaximums = new HashMap<>();
+        for(MarketOrder m: buyOrders.orders){
+            if(buyOrderMaximums.containsKey(m.getLocation().getName())){
+                if(buyOrderMaximums.get(m.getLocation().getName()).getPrice() < m.getPrice()){
+                    buyOrderMaximums.put(m.getLocation().getName(), m);
+                }
+            }else{
+                buyOrderMaximums.put(m.getLocation().getName(), m);
+            }
+        }
+
+        HashMap<String, MarketOrder> sellOrderMinimums = new HashMap<>();
+        for(MarketOrder m: sellOrders.orders){
+            if(sellOrderMinimums.containsKey(m.getLocation().getName())){
+                if(sellOrderMinimums.get(m.getLocation().getName()).getPrice() > m.getPrice()){
+                    sellOrderMinimums.put(m.getLocation().getName(), m);
+                }
+            }else{
+                sellOrderMinimums.put(m.getLocation().getName(), m);
+            }
+        }
+
+        ArrayList<MarketOrder> finalOrderList = new ArrayList<>();
+
+        for(String station_name : buyOrderMaximums.keySet()){
+            if(sellOrderMinimums.containsKey(station_name)){
+                MarketOrder buyOrder = buyOrderMaximums.get(station_name);
+                MarketOrder sellOrder = sellOrderMinimums.get(station_name);
+                //(sales price - taxes and fees - purchase price) / purchase price
+                double price = (sellOrder.getPrice() - buyOrder.getPrice()) / buyOrder.getPrice();
+                buyOrder.setPrice(price);
+                buyOrder.setIsMarginOrder(true);
+                finalOrderList.add(buyOrder);
+            }
+        }
+
+        MarketOrders finalOrders = new MarketOrders();
+        finalOrders.orders = finalOrderList;
+        finalOrders.size = finalOrderList.size();
+
+        return finalOrders;
+
     }
 
     public void searchMarketTypes(String queryString) {

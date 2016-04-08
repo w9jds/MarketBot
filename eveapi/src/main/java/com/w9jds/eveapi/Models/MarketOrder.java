@@ -2,15 +2,19 @@ package com.w9jds.eveapi.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 /**
  * Created by Jeremy on 3/1/2016.
+ *
+ * Modified by Alexander Whipp on 4/8/2016.
  */
+
 public final class MarketOrder extends MarketItemBase {
 
     @SerializedName("buy")
     private boolean isBuyOrder;
+
+    @SerializedName("margin")
+    private boolean isMarginOrder;
 
 //    @SerializedName("issued")
 //    private Date issued;
@@ -52,6 +56,8 @@ public final class MarketOrder extends MarketItemBase {
         return price;
     }
 
+    public void setPrice(double price) { this.price = price; }
+
     public int getDuration() {
         return duration;
     }
@@ -79,4 +85,16 @@ public final class MarketOrder extends MarketItemBase {
     public boolean isBuyOrder() {
         return isBuyOrder;
     }
+
+    public void setIsMarginOrder(boolean isMarginOrder){
+        this.isMarginOrder = isMarginOrder;
+    }
+
+    public boolean isMarginOrder() {
+        return isMarginOrder;
+    }
+
+
+
+
 }
