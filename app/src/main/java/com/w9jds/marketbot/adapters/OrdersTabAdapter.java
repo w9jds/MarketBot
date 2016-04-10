@@ -15,13 +15,15 @@ import com.w9jds.marketbot.ui.fragments.TypeInfoTab;
 
 /**
  * Created by Jeremy on 3/1/2016.
+ *
+ * Modified by Alexander Whipp on 4/7/2016.
  */
 public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
 
     private Resources resources;
     private long typeId;
 
-    final int PAGE_COUNT = 3;
+    final int PAGE_COUNT = 4;
 
     public OrdersTabAdapter(FragmentManager fragmentManager, Context context, long typeId) {
         super(fragmentManager);
@@ -44,6 +46,8 @@ public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
                 return resources.getString(R.string.sell_orders);
             case 2:
                 return resources.getString(R.string.buy_orders);
+            case 3:
+                return resources.getString(R.string.margins);
             default:
                 return "";
         }

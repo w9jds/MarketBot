@@ -1,6 +1,7 @@
 package com.w9jds.marketbot.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,10 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jeremy on 3/1/2016.
+ *
+ * Modified by Alexander Whipp on 4/8/2016.
  */
+
 public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
@@ -59,15 +63,33 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final OrderViewHolder viewHolder = (OrderViewHolder) holder;
         final MarketOrder order = (MarketOrder) getItem(position);
 
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
-        String price = formatter.format(order.getPrice()) + " ISK";
+        DecimalFormat formatter;
+        String price;
+        int color = -1;
+        if(order.isMarginOrder()){
+            formatter = new DecimalFormat("##0.00");
+            price = formatter.format(order.getPrice()) + "%";
+            if(order.getPrice() <= 20){
+                color = 0xAAAA0000;
+            }else{
+                color = 0xAA00AA00;
+            }
+        }else{
+            formatter = new DecimalFormat("#,###.00");
+            price = formatter.format(order.getPrice()) + " ISK";
+        }
 
         formatter = new DecimalFormat("#,###");
         String volume = formatter.format(order.getVolume());
 
         viewHolder.location.setText(order.getLocation().getName());
         viewHolder.price.setText(price);
-        viewHolder.volume.setText(volume);
+        if(color != -1) {
+            viewHolder.price.setTextColor(color);
+        }
+        if(!order.isMarginOrder()) {
+            viewHolder.volume.setText(volume);
+        }
 
         if (order.isBuyOrder()) {
             String range = order.getRange();

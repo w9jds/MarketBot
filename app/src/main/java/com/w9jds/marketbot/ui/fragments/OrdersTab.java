@@ -29,7 +29,10 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jeremy on 3/1/2016.
+ *
+ * Modified by Alexander Whipp on 4/8/2016.
  */
+
 public final class OrdersTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
 
     static final String ARG_PAGE = "ARG_PAGE";
@@ -136,6 +139,9 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
                 break;
             case 2:
                 dataManager.loadBuyOrders(region, type);
+                break;
+            case 3:
+                dataManager.loadMarginOrders(region, type);
                 break;
         }
     }
