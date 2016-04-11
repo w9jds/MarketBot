@@ -1,7 +1,7 @@
 package com.w9jds.marketbot.ui.fragments;
 
-import com.w9jds.eveapi.Models.Region;
-import com.w9jds.eveapi.Models.Type;
+import com.w9jds.marketbot.classes.models.Region;
+import com.w9jds.marketbot.classes.models.Type;
 
 /**
  * Created by Jeremy on 3/1/2016.

@@ -1,0 +1,101 @@
+package com.w9jds.marketbot.classes.models;
+
+/**
+ * Created by Jeremy on 2/17/2016.
+ */
+public final class MarketGroup extends MarketItemBase  {
+
+    private String parentGroup;
+    private String href;
+    private String description;
+    private String types;
+
+    public MarketGroup() {
+
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public String getTypesLocation() {
+        return types;
+    }
+
+    public String getParentGroup() {
+        return parentGroup;
+    }
+
+    public Long getParentGroupId() {
+        String[] query = this.parentGroup.split("/");
+
+        for (int i = query.length; i > 0; i--) {
+            if (!query[i-1].equals("")) {
+                return Long.parseLong(query[i-1]);
+            }
+        }
+
+        return 0L;
+    }
+
+    public boolean hasParent() {
+        return this.parentGroup != null && !this.parentGroup.equals("");
+    }
+
+    public static class Builder {
+
+        private long id;
+        private String name;
+        private String parentGroup;
+        private String href;
+        private String description;
+        private String types;
+
+        public Builder setParentGroup(String parentGroup) {
+            this.parentGroup = parentGroup;
+            return this;
+        }
+
+        public Builder setHref(String href) {
+            this.href = href;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setTypes(String types) {
+            this.types = types;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public MarketGroup build() {
+            MarketGroup group = new MarketGroup();
+            group.id = id;
+            group.name = name;
+            group.parentGroup = this.parentGroup;
+            group.href = this.href;
+            group.description = this.description;
+            group.types = this.types;
+
+            return group;
+        }
+    }
+
+}

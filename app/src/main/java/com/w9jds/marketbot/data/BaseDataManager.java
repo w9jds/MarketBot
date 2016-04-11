@@ -1,43 +1,41 @@
 package com.w9jds.marketbot.data;
 
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-
-import com.w9jds.eveapi.Models.MarketItemBase;
-import com.w9jds.marketbot.classes.MarketBot;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.inject.Inject;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Jeremy on 2/19/2016.
  */
 public abstract class BaseDataManager implements DataLoadingSubject {
 
-    private AtomicInteger loadingCount;
-    private AtomicInteger updatingCount;
-    private List<DataLoadingCallbacks> loadingCallbacks;
-    private List<DataUpdatingCallbacks> updatingCallbacks;
+    private Context context;
+    private CompositeSubscription subscriptions;
 
-    public BaseDataManager() {
-        // setup the API access objects
+    private AtomicInteger loadingCount;
+    private List<DataLoadingCallbacks> loadingCallbacks;
+
+    protected AtomicInteger updatingCount;
+    protected List<DataUpdatingCallbacks> updatingCallbacks;
+
+    public BaseDataManager(Context context) {
+        this.context = context;
+        this.subscriptions = new CompositeSubscription();
+
         loadingCount = new AtomicInteger(0);
         updatingCount = new AtomicInteger(0);
     }
 
-    public abstract void onDataLoaded(List<? extends MarketItemBase> data);
-    public abstract void onDataLoaded(Object data);
-
     @Override
     public boolean isDataLoading() {
         return loadingCount.get() > 0;
-    }
-
-    protected int updatingCount() {
-        return updatingCount.intValue();
     }
 
     protected void loadStarted() {
@@ -52,14 +50,6 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         dispatchLoadingFailedCallbacks(errorMessage);
     }
 
-    protected void updateStarted() {
-        dispatchUpdateStartedCallbacks();
-    }
-
-    protected void updateFinished(SQLiteDatabase database) {
-        dispatchUpdateFinishedCallbacks(database);
-    }
-
     protected void resetLoadingCount() {
         loadingCount.set(0);
     }
@@ -72,20 +62,20 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         loadingCount.decrementAndGet();
     }
 
-    protected void incrementUpdatingCount() {
-        updatingCount.incrementAndGet();
+    protected void updateFinished() {
+        dispatchUpdateFinishedCallbacks();
     }
 
-    protected void incrementUpdatingCount(int count) {
-        updatingCount.set(count);
-    }
+    protected boolean isConnected() {
+        ConnectivityManager manager = (ConnectivityManager)context.getSystemService(
+                Context.CONNECTIVITY_SERVICE);
 
-    protected void decrementUpdatingCount() {
-        updatingCount.decrementAndGet();
+        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     @Override
-    public void registerCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
+    public void registerLoadingCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
         if (loadingCallbacks == null) {
             loadingCallbacks = new ArrayList<>(1);
         }
@@ -94,7 +84,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     @Override
-    public void registerCallback(DataLoadingSubject.DataUpdatingCallbacks callback) {
+    public void registerUpdatingCallback(DataLoadingSubject.DataUpdatingCallbacks callback) {
         if (updatingCallbacks == null) {
             updatingCallbacks = new ArrayList<>(1);
         }
@@ -103,16 +93,16 @@ public abstract class BaseDataManager implements DataLoadingSubject {
     }
 
     @Override
-    public void unregisterCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
-        if (loadingCallbacks.contains(callback)) {
-            loadingCallbacks.remove(callback);
+    public void unregisterUpdatingCallback(DataLoadingSubject.DataUpdatingCallbacks callback) {
+        if (updatingCallbacks.contains(callback)) {
+            updatingCallbacks.remove(callback);
         }
     }
 
     @Override
-    public void unregisterCallback(DataLoadingSubject.DataUpdatingCallbacks callback) {
-        if (updatingCallbacks.contains(callback)) {
-            updatingCallbacks.remove(callback);
+    public void unregisterLoadingCallback(DataLoadingSubject.DataLoadingCallbacks callback) {
+        if (loadingCallbacks.contains(callback)) {
+            loadingCallbacks.remove(callback);
         }
     }
 
@@ -144,17 +134,7 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         }
     }
 
-    protected void dispatchUpdateStartedCallbacks() {
-        if (updatingCount.intValue() == 0) {
-            if (updatingCallbacks != null && !updatingCallbacks.isEmpty()) {
-                for (DataUpdatingCallbacks updatingCallback : updatingCallbacks) {
-                    updatingCallback.dataUpdatingStarted();
-                }
-            }
-        }
-    }
-
-    protected void dispatchUpdateFinishedCallbacks(SQLiteDatabase database) {
+    protected void dispatchUpdateFinishedCallbacks() {
         if (updatingCount.intValue() == 0) {
             if (updatingCallbacks != null && !updatingCallbacks.isEmpty()) {
                 for (DataUpdatingCallbacks updatingCallback : updatingCallbacks) {
@@ -163,4 +143,5 @@ public abstract class BaseDataManager implements DataLoadingSubject {
             }
         }
     }
+
 }

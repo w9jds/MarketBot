@@ -61,8 +61,7 @@ public final class ColorUtils {
      * @param ratio of which to blend. 0.0 will return {@code color1}, 0.5 will give an even blend,
      *              1.0 will return {@code color2}.
      */
-    public static @ColorInt int blendColors(@ColorInt int color1,
-                                            @ColorInt int color2,
+    public static @ColorInt int blendColors(@ColorInt int color1, @ColorInt int color2,
                                             @FloatRange(from = 0f, to = 1f) float ratio) {
         final float inverseRatio = 1f - ratio;
         float a = (Color.alpha(color1) * inverseRatio) + (Color.alpha(color2) * ratio);

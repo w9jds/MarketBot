@@ -11,17 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.w9jds.eveapi.Models.MarketItemBase;
-import com.w9jds.eveapi.Models.MarketOrder;
-import com.w9jds.eveapi.Models.Region;
-import com.w9jds.eveapi.Models.Type;
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.activities.ItemActivity;
-import com.w9jds.marketbot.adapters.OrdersAdapter;
+import com.w9jds.marketbot.classes.models.MarketOrder;
+import com.w9jds.marketbot.classes.models.Region;
+import com.w9jds.marketbot.classes.models.Type;
+import com.w9jds.marketbot.data.loader.OrdersLoader;
+import com.w9jds.marketbot.ui.ItemActivity;
+import com.w9jds.marketbot.ui.adapters.OrdersAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.loader.DataManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -43,7 +41,7 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
     private int position;
 
     private OrdersAdapter adapter;
-    private DataManager dataManager;
+    private OrdersLoader loader;
 
     private Region currentRegion;
     private Type currentType;
@@ -73,33 +71,15 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
         position = args.getInt(ARG_PAGE);
 
         adapter = new OrdersAdapter(getContext());
-        dataManager = new DataManager(getActivity().getApplication()) {
+
+        loader = new OrdersLoader(getContext()) {
             @Override
-            public void onProgressUpdate(int page, int totalPages) {
-
-            }
-
-            @Override
-            public void onDataLoaded(List<? extends MarketItemBase> data) {
-                if (data.size() > 0) {
-                    if (data.get(0) instanceof MarketOrder) {
-                        ArrayList<MarketOrder> orders = new ArrayList<>();
-                        for (MarketItemBase base : data) {
-                            orders.add((MarketOrder) base);
-                        }
-
-                        adapter.updateCollection(orders);
-                    }
-                }
-            }
-
-            @Override
-            public void onDataLoaded(Object data) {
-                // never fired
+            public void onDataLoaded(List<MarketOrder> orders) {
+                adapter.updateCollection(orders);
             }
         };
 
-        dataManager.registerCallback(this);
+        loader.registerLoadingCallback(this);
         ((ItemActivity)getActivity()).addOrdersFragment(position, this);
     }
 
@@ -112,13 +92,7 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
         orders.setItemAnimator(new DefaultItemAnimator());
         orders.setAdapter(adapter);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateOrdersList(currentRegion, currentType);
-            }
-        });
-
+        refreshLayout.setOnRefreshListener(() -> updateOrdersList(currentRegion, currentType));
         return view;
     }
 
@@ -135,13 +109,13 @@ public final class OrdersTab extends Fragment implements BaseDataManager.DataLoa
         adapter.clear();
         switch(position) {
             case 1:
-                dataManager.loadSellOrders(region, type);
+                loader.loadSellOrders(region, type);
                 break;
             case 2:
-                dataManager.loadBuyOrders(region, type);
+                loader.loadBuyOrders(region, type);
                 break;
             case 3:
-                dataManager.loadMarginOrders(region, type);
+                loader.loadMarginOrders(region, type);
                 break;
         }
     }

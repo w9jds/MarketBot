@@ -11,16 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.w9jds.eveapi.Models.MarketItemBase;
-import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.activities.ItemActivity;
-import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.loader.DataManager;
+import com.w9jds.marketbot.classes.models.TypeInfo;
+import com.w9jds.marketbot.data.DataLoadingSubject;
+import com.w9jds.marketbot.data.loader.TypeLoader;
+import com.w9jds.marketbot.ui.ItemActivity;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -29,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Jeremy Shore on 3/3/16.
  */
-public final class TypeInfoTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
+public final class TypeInfoTab extends Fragment implements DataLoadingSubject.DataLoadingCallbacks {
 
     static final String ARG_PAGE = "ARG_PAGE";
     static final String ARG_TYPEID = "ARG_TYPEID";
@@ -55,7 +53,7 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
 
     private int position;
     private long typeId;
-    private DataManager dataManager;
+    private TypeLoader loader;
 
     /**
      * TODO: Possibly show ship 3d view using webresource
@@ -87,35 +85,21 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
         position = args.getInt(ARG_PAGE);
         typeId = args.getLong(ARG_TYPEID);
 
-        dataManager = new DataManager(getActivity().getApplication()) {
+        loader = new TypeLoader(getContext()) {
             @Override
-            public void onProgressUpdate(int page, int totalPages) {
+            public void onDataLoaded(TypeInfo info) {
+                NumberFormat formatter = new DecimalFormat("#,###");
+                String capacityValue = formatter.format(info.getCapacity()) + " m3";
 
-            }
-
-            @Override
-            public void onDataLoaded(List<? extends MarketItemBase> data) {
-
-            }
-
-            @Override
-            public void onDataLoaded(Object data) {
-                if (data instanceof TypeInfo) {
-                    TypeInfo info = (TypeInfo) data;
-
-                    NumberFormat formatter = new DecimalFormat("#,###");
-                    String capacityValue = formatter.format(info.getCapacity()) + " m3";
-
-                    description.setText(Html.fromHtml(info.getDescription()));
-                    mass.setText(formatNumberValue(info.getMass(), "kg"));
-                    capacity.setText(capacityValue);
-                    portion.setText(String.valueOf(info.getPortionSize()));
-                    volume.setText(formatNumberValue(info.getVolume(), "m3"));
-                }
+                description.setText(Html.fromHtml(info.getDescription()));
+                mass.setText(formatNumberValue(info.getMass(), "kg"));
+                capacity.setText(capacityValue);
+                portion.setText(String.valueOf(info.getPortionSize()));
+                volume.setText(formatNumberValue(info.getVolume(), "m3"));
             }
         };
 
-        dataManager.registerCallback(this);
+        loader.registerLoadingCallback(this);
     }
 
     @Override
@@ -125,11 +109,11 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
 
         ItemActivity host = (ItemActivity) getActivity();
         name.setText(host.getCurrentTypeName());
-        Glide.with(host)
-                .load(host.getCurrentTypeIcon())
-                .into(icon);
+//        Glide.with(host)
+//                .load(host)
+//                .into(icon);
 
-        dataManager.loadTypeInfo(typeId);
+        loader.loadTypeInfo(typeId);
         return view;
     }
 

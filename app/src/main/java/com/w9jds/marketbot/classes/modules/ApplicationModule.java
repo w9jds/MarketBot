@@ -2,13 +2,8 @@ package com.w9jds.marketbot.classes.modules;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 
-import com.w9jds.marketbot.classes.StorageScope;
-import com.w9jds.marketbot.data.Database;
-
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;

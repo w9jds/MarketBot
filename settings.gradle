@@ -1,1 +1,1 @@
-include ':app', ':eveapi'
+include ':app', ':eve'
