@@ -6,8 +6,14 @@ import android.provider.BaseColumns;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.w9jds.marketbot.classes.models.MarketGroup;
 import com.w9jds.marketbot.data.MarketDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(database = MarketDatabase.class)
 public final class MarketGroupEntry extends BaseModel {
@@ -29,6 +35,15 @@ public final class MarketGroupEntry extends BaseModel {
 
     @Column
     String location;
+
+    public static ArrayList<MarketGroup> getMarketGroupsForParent(long parentId) {
+        List<MarketGroupEntry> groups = new Select()
+                .from(MarketGroupEntry.class)
+                .where(MarketGroupEntry_Table.parentId.eq(parentId))
+                .queryList();
+
+        
+    }
 
 //    private static MarketGroup buildMarketGroup(Cursor cursor) {
 //        MarketGroup group = new MarketGroup();
