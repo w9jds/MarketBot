@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -86,8 +87,10 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
         }
 
         Intent intent = getIntent();
+        SharedPreferences settings = getSharedPreferences("temporary", 0);
+
         typeIdExtra = intent.getLongExtra("typeId", -1);
-        defaultRegionId = intent.getLongExtra("regionId", -1);
+        defaultRegionId = settings.getLong("regionId", -1);
 
         regionAdapter = new RegionAdapter(this);
         dataManager = new DataManager(getApplication()) {
@@ -223,6 +226,11 @@ public class ItemActivity extends AppCompatActivity implements BaseDataManager.D
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Region region = (Region) regionAdapter.getItem(position);
+
+        SharedPreferences settings = getSharedPreferences("temporary", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong("regionId", region.getId());
+        editor.apply();
 
         for (OrdersTab tab : orderTabs.values()) {
             tab.updateOrdersList(region, currentType);
