@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     private ActionBar actionBar;
     private GroupsLoader groupsLoader;
     private MarketGroupsAdapter adapter;
-    private LinearLayoutManager layoutManager;
-
     private MarketGroup currentParent;
 
     @Override
@@ -62,11 +60,11 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            // needs to be space so toolbar doesn't remove it from the view hierarchy
+            // needs to be a space so toolbar doesn't remove it from the view hierarchy
             actionBar.setTitle(" ");
         }
 
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -74,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             @Override
             public void onProgressUpdate(final int page, final int totalPages) {
                 if (progressDialog.isIndeterminate()) {
-                    progressDialog.setOnDismissListener(dialog -> updateProgressDialog(page, totalPages, true));
+                    progressDialog.setOnDismissListener(dialog ->
+                            updateProgressDialog(page, totalPages, true));
 
                     progressDialog.dismiss();
                 }
@@ -86,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             public void onDataLoaded(List<? extends MarketItemBase> data) {
                 adapter.updateCollection(data);
             }
-
         };
 
         groupsLoader.registerLoadingCallback(this);
@@ -94,8 +92,12 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
         adapter = new MarketGroupsAdapter(this, this);
         recyclerView.setAdapter(adapter);
+    }
 
-        groupsLoader.updateAndLoad();
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        groupsLoader.loadMarketGroups(null);
     }
 
     private void updateProgressDialog(int page, int max, boolean isNewWindow) {
@@ -152,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         currentParent = group;
 
         adapter.setToClear(true);
-        groupsLoader.loadMarketGroups(group.getId(), true);
-        groupsLoader.loadMarketTypes(group.getId(), true);
+        groupsLoader.loadMarketGroups(group.getId());
+        groupsLoader.loadMarketTypes(group.getId());
 
         animateTitleChange();
         recyclerView.smoothScrollToPosition(0);
@@ -223,12 +225,11 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             if (currentParent != null && currentParent.hasParent()) {
                 long parentId = currentParent.getParentGroupId();
 
-//                currentParent = MarketGroupEntry.getMarketGroup(this, parentId);
-                groupsLoader.loadMarketGroups(parentId, true);
-                groupsLoader.loadMarketTypes(parentId, true);
+                groupsLoader.loadMarketGroups(parentId);
+                groupsLoader.loadMarketTypes(parentId);
             }
             else if (currentParent != null) {
-                groupsLoader.loadMarketGroups(null, true);
+                groupsLoader.loadMarketGroups(null);
                 currentParent = null;
             }
             else {

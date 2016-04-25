@@ -9,6 +9,7 @@ public final class Type extends MarketItemBase {
     private String href;
     private String icon;
     private String marketGroup;
+    private long groupId;
 
     public String getHref() {
         return href;
@@ -16,6 +17,10 @@ public final class Type extends MarketItemBase {
 
     public String getIcon() {
         return icon;
+    }
+
+    public long getGroupId() {
+        return groupId;
     }
 
     public String getMarketGroup() {
@@ -29,6 +34,7 @@ public final class Type extends MarketItemBase {
         private String href;
         private String icon;
         private String marketGroup;
+        private long groupId;
 
         public Builder setId(long id) {
             this.id = id;
@@ -55,6 +61,11 @@ public final class Type extends MarketItemBase {
             return this;
         }
 
+        public Builder setGroupId(long groupId) {
+            this.groupId = groupId;
+            return this;
+        }
+
         public Type build() {
             Type type = new Type();
             type.id = this.id;
@@ -62,6 +73,7 @@ public final class Type extends MarketItemBase {
             type.href = this.href;
             type.icon = this.icon;
             type.marketGroup = this.marketGroup;
+            type.groupId = this.groupId;
 
             return type;
         }

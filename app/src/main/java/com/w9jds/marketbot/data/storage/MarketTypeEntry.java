@@ -1,19 +1,17 @@
 package com.w9jds.marketbot.data.storage;
 
-import android.provider.BaseColumns;
-
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.data.MarketDatabase;
 
-import java.util.ArrayList;
+import org.devfleet.crest.model.CrestType;
 
-import rx.Observable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(database = MarketDatabase.class)
 public final class MarketTypeEntry extends BaseModel {
@@ -30,116 +28,56 @@ public final class MarketTypeEntry extends BaseModel {
     @Column
     String name;
 
-    @Column
-    String icon;
-
-    public static void buildNewMarketTypes(ArrayList<Type> types) {
-
+    public static void addNewMarketTypes(List<CrestType> types) {
         int size = types.size();
         for (int i = 0; i < size; i++) {
-            Type type = types.get(i);
+            CrestType type = types.get(i);
 
             MarketTypeEntry entry = new MarketTypeEntry();
             entry.id = type.getId();
-
+//            entry.groupId = ;
             entry.href = type.getHref();
             entry.name = type.getName();
-            entry.icon = type.getIcon();
             entry.save();
         }
-
     }
 
-//    public static ArrayList<Type> getMarketTypes(long groupId) {
-//        SQLite.select().from(MarketTypeEntry.class).where()
-//    }
+    private static Type buildMarketType(MarketTypeEntry entry) {
+        return new Type.Builder()
+            .setGroupId(entry.groupId)
+            .setHref(entry.href)
+            .setId(entry.id)
+            .build();
+    }
 
-//    public static ArrayList<Type> getMarketTypes(Context context, long groupId) {
-//        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
-//        ArrayList<Type> types = new ArrayList<>();
-//
-//        database.beginTransaction();
-//
-//        Cursor cursor = database.query(TABLE_NAME, null, COLUMN_GROUP_ID + "=?",
-//                new String[]{String.valueOf(groupId)}, null, null, null);
-//
-//        if (cursor.moveToFirst()) {
-//            while(!cursor.isAfterLast()) {
-//                types.add(buildType(cursor));
-//                cursor.moveToNext();
-//            }
-//        }
-//
-//        database.setTransactionSuccessful();
-//        database.endTransaction();
-//        database.close();
-//        return types;
-//    }
+    private static List<Type> buildMarketTypes(List<MarketTypeEntry> entries) {
+        int size = entries.size();
+        List<Type> types = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            types.add(buildMarketType(entries.get(i)));
+        }
 
-//    @Nullable
-//    public static Type getType(Context context, long typeId) {
-//        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
-//        ArrayList<Type> types = new ArrayList<>();
-//
-//        database.beginTransaction();
-//
-//        Cursor cursor = database.query(TABLE_NAME, null, _ID + "=?",
-//                new String[]{String.valueOf(typeId)}, null, null, null);
-//
-//        if (cursor.moveToFirst()) {
-//            while(!cursor.isAfterLast()) {
-//                types.add(buildType(cursor));
-//                cursor.moveToNext();
-//            }
-//        }
-//
-//        database.setTransactionSuccessful();
-//        database.endTransaction();
-//        database.close();
-//
-//        if (types.size() > 0) {
-//            return types.get(0);
-//        }
-//        else {
-//            return null;
-//        }
-//    }
+        return types;
+    }
 
-//    private static Type buildType(Cursor cursor) {
-//        Type type = new Type();
-//        type.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
-//
-//        TypeItem item = new TypeItem();
-//        item.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-//        item.setHref(cursor.getString(cursor.getColumnIndex(COLUMN_HREF)));
-//        item.setIcon(new Reference(cursor.getString(cursor.getColumnIndex(COLUMN_ICON_LOC))));
-//        type.setType(item);
-//        long marketGroupId = cursor.getLong(cursor.getColumnIndex(COLUMN_GROUP_ID));
-//
-//        Reference group = new Reference("https://public-crest.eveonline.com/market/groups/" + marketGroupId + "/");
-//        group.setId(marketGroupId);
-//        type.setMarketGroup(group);
-//        return type;
-//    }
+    public static List<Type> getMarketTypes(long groupId) {
+        return buildMarketTypes(new Select()
+            .from(MarketTypeEntry.class)
+            .where(MarketTypeEntry_Table.groupId.eq(groupId))
+            .queryList());
+    }
 
-//    public static ArrayList<Type> searchMarketTypes(Context context, String queryString) {
-//        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
-//        ArrayList<Type> types = new ArrayList<>();
-//
-//        database.beginTransaction();
-//
-//        Cursor cursor = database.query(TABLE_NAME, null, COLUMN_NAME + " LIKE ?",
-//                new String[]{"%" + queryString + "%"}, null, null, null);
-//
-//        if (cursor.moveToFirst()) {
-//            while(!cursor.isAfterLast()) {
-//                types.add(buildType(cursor));
-//                cursor.moveToNext();
-//            }
-//        }
-//
-//        database.setTransactionSuccessful();
-//        database.endTransaction();
-//        return types;
-//    }
+    public static Type getType(long typeId) {
+        return buildMarketType(new Select()
+            .from(MarketTypeEntry.class)
+            .where(MarketTypeEntry_Table.id.eq(typeId))
+            .querySingle());
+    }
+
+    public static List<Type> searchMarketTypes(String queryString) {
+        return buildMarketTypes(new Select()
+            .from(MarketTypeEntry.class)
+            .where(MarketTypeEntry_Table.name.like("%" + queryString + "%"))
+            .queryList());
+    }
 }

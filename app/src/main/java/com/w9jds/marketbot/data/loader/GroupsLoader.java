@@ -2,22 +2,26 @@ package com.w9jds.marketbot.data.loader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.w9jds.marketbot.classes.CrestService;
 import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.DataLoadingSubject;
+import com.w9jds.marketbot.data.storage.MarketGroupEntry;
+import com.w9jds.marketbot.data.storage.MarketTypeEntry;
+import com.w9jds.marketbot.data.storage.RegionEntry;
 
-import java.util.ArrayList;
+import org.devfleet.crest.model.CrestDictionary;
+import org.devfleet.crest.model.CrestItem;
+import org.devfleet.crest.model.CrestMarketGroup;
+import org.devfleet.crest.model.CrestServerStatus;
+import org.devfleet.crest.model.CrestType;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
-import core.eve.crest.CrestDictionary;
-import core.eve.crest.CrestServerStatus;
-import core.eve.crest.CrestType;
 import retrofit2.Response;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -69,7 +73,7 @@ public abstract class GroupsLoader extends BaseDataManager {
 
         if (!updateFailed && isFirstRun && updatingCount() == 0) {
             sharedPreferences.edit().putBoolean("isFirstRun", false).apply();
-            loadMarketGroups(null, false);
+            loadMarketGroups(null);
         }
     }
 
@@ -83,12 +87,11 @@ public abstract class GroupsLoader extends BaseDataManager {
         }
     }
 
-    public void updateAndLoad() {
-        loadStarted();
-        incrementLoadingCount();
+    public void update() {
+        updateStarted();
+        incrementUpdatingCount(3);
 
         if (isConnected()) {
-
             publicCrest.getServer()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -97,10 +100,7 @@ public abstract class GroupsLoader extends BaseDataManager {
                     if (serverInfoResponse.isSuccessful() && serverInfoResponse.body() != null) {
                         CrestServerStatus serverInfo = serverInfoResponse.body();
 
-                        if (serverInfo.getServerVersion().equals(serverVersion) && !isFirstRun) {
-                            loadMarketGroups(null, false);
-                        }
-                        else {
+                        if (!serverInfo.getServerVersion().equals(serverVersion) && isFirstRun) {
                             resetLoadingCount();
                             loadFinished();
 
@@ -108,147 +108,136 @@ public abstract class GroupsLoader extends BaseDataManager {
                                     .putString("serverVersion", serverInfo.getServerVersion())
                                     .apply();
 
-                            updateStarted();
-                            incrementUpdatingCount(3);
+
 
                             updateMarketGroups();
                             updateMarketTypes();
                             updateRegions();
                         }
                     }
-                    else {
-                        loadMarketGroups(null, false);
-                    }
 
-                    //TODO if this fails I need to tell the user
-
+                    updateFailed = true;
+                    loadFailed("Failed to get the CREST server version");
+                    updateFinished();
                 }).subscribe();
 
         }
         else {
-            loadMarketGroups(null, false);
+            updateFailed = true;
+            loadFailed("Invalid Internet Connection");
+            updateFinished();
         }
     }
 
-
-
     private void updateMarketGroups() {
-//        publicCrest.getMarketGroups()
-//            .subscribeOn(Schedulers.newThread())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnError(error -> {
-//                updateFailed = true;
-//                loadFailed("Failed to update cached market groups.");
-//                decrementUpdatingCount();
-//                updateFinished(updateDatabase);
-//            })
-//            .doOnNext(crestResponse -> {
-//                if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-//                    CrestDictionary<CrestMarketGroup> marketGroups = crestResponse.body();
-//
-//                    createNewMarketGroups(marketGroups.getItems());
-//                    decrementUpdatingCount();
-//                    updateFinished(updateDatabase);
-//                }
-//                else {
-//                    updateFailed = true;
-//                    loadFailed("Failed to update cached market groups.");
-//                    decrementUpdatingCount();
-//                    updateFinished(updateDatabase);
-//                }
-//            }).subscribe();
+        publicCrest.getMarketGroups()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(error -> {
+                updateFailed = true;
+                loadFailed("Failed to update cached market groups.");
+                decrementUpdatingCount();
+                updateFinished();
+            })
+            .doOnNext(crestResponse -> {
+                if (crestResponse.isSuccessful() && crestResponse.body() != null) {
+                    CrestDictionary<CrestMarketGroup> marketGroups = crestResponse.body();
+
+                    MarketGroupEntry.addNewMarketGroups(marketGroups.getItems());
+                    decrementUpdatingCount();
+                    updateFinished();
+                }
+                else {
+                    updateFailed = true;
+                    loadFailed("Failed to update cached market groups.");
+                    decrementUpdatingCount();
+                    updateFinished();
+                }
+            }).subscribe();
     }
 
     private Action1<Response<CrestDictionary<CrestType>>> typeCallback = typesPage -> {
-//        if (typesPage.isSuccessful() && typesPage.body() != null) {
-//            CrestDictionary<CrestType> types = typesPage.body();
-//
-//            createNewMarketTypes(types.getItems());
-//            if (types.getPageNext() != null && !types.getPageNext().equals("")) {
-//                Uri uri = Uri.parse(types.getPageNext());
-//                onProgressUpdate(Integer.parseInt(uri.getQueryParameter("page")),
-//                        types.getPageCount());
-//
-//                loadNextPageTypes(types.getPageNext());
-//            }
-//            else {
-//                decrementUpdatingCount();
-//                updateFinished(updateDatabase);
-//            }
-//        }
-//        else {
-//            updateFailed = true;
-//            loadFailed("Failed to update cached market types.");
-//            decrementUpdatingCount();
-//            updateFinished(updateDatabase);
-//        }
+        if (typesPage.isSuccessful() && typesPage.body() != null) {
+            CrestDictionary<CrestType> types = typesPage.body();
+
+            MarketTypeEntry.addNewMarketTypes(types.getItems());
+            if (types.getPageNext() != null && !types.getPageNext().equals("")) {
+                Uri uri = Uri.parse(types.getPageNext());
+                onProgressUpdate(Integer.parseInt(uri.getQueryParameter("page")), types.getPageCount());
+                loadNextPageTypes(types.getPageNext());
+            }
+            else {
+                decrementUpdatingCount();
+                updateFinished();
+            }
+        }
+        else {
+            updateFailed = true;
+            loadFailed("Failed to update cached market types.");
+            decrementUpdatingCount();
+            updateFinished();
+        }
     };
 
     private void updateMarketTypes() {
-//        publicCrest.getAllMarketTypes(marketTypeCallback);
+
+
+
+        publicCrest.getMarketTypes();
     }
 
     public void loadNextPageTypes(String targetLocation) {
-//        publicCrest.getMarketTypes(targetLocation, marketTypeCallback);
+        publicCrest.getMarketTypes(targetLocation);
     }
 
     private void updateRegions() {
-//        publicCrest.getRegions()
-//            .subscribeOn(Schedulers.newThread())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnError(error -> {
-//                updateFailed = true;
-//                loadFailed("Failed to update cached regions.");
-//                decrementUpdatingCount();
-//                loadFinished();
-//            })
-//            .doOnNext(crestResponse -> {
-//                if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-//                    CrestDictionary<CrestItem> regions = crestResponse.body();
-//
-//                    createNewRegions(regions.getItems());
-//                    decrementUpdatingCount();
-//                    updateFinished(updateDatabase);
-//                }
-//                else {
-//                    updateFailed = true;
-//                    loadFailed("Failed to update cached regions.");
-//                    decrementUpdatingCount();
-//                    loadFinished();
-//                }
-//            }).subscribe();
+        publicCrest.getRegions()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(error -> {
+                updateFailed = true;
+                loadFailed("Failed to update cached regions.");
+                decrementUpdatingCount();
+                loadFinished();
+            })
+            .doOnNext(crestResponse -> {
+                if (crestResponse.isSuccessful() && crestResponse.body() != null) {
+                    CrestDictionary<CrestItem> regions = crestResponse.body();
+
+                    RegionEntry.addRegions(regions.getItems());
+                    decrementUpdatingCount();
+                    updateFinished();
+                }
+                else {
+                    updateFailed = true;
+                    loadFailed("Failed to update cached regions.");
+                    decrementUpdatingCount();
+                    updateFinished();
+                }
+            }).subscribe();
     }
 
-    public void loadMarketGroups(Long parentId, boolean isDirectCall) {
-        if (isDirectCall) {
-            loadStarted();
-            incrementLoadingCount();
-        }
-
-//        onDataLoaded(MarketGroupEntry.getMarketGroupsforParent(context, parentId));
+    public void loadMarketGroups(Long parentId) {
+        loadStarted();
+        incrementLoadingCount();
+        onDataLoaded(MarketGroupEntry.getMarketGroupsForParent(parentId));
         decrementLoadingCount();
         loadFinished();
     }
 
-    public void loadMarketTypes(long groupId, boolean isDirectCall) {
-        if (isDirectCall) {
-            loadStarted();
-            incrementLoadingCount();
-        }
-
-//        onDataLoaded(MarketTypeEntry.getMarketTypes(context, groupId));
+    public void loadMarketTypes(long groupId) {
+        loadStarted();
+        incrementLoadingCount();
+        onDataLoaded(MarketTypeEntry.getMarketTypes(groupId));
         decrementLoadingCount();
         loadFinished();
     }
-
 
     public void searchMarketTypes(String queryString) {
         loadStarted();
         incrementLoadingCount();
-
-//        onDataLoaded(MarketTypeEntry.searchMarketTypes(context, queryString));
+        onDataLoaded(MarketTypeEntry.searchMarketTypes(queryString));
         decrementLoadingCount();
         loadFinished();
     }
-
 }

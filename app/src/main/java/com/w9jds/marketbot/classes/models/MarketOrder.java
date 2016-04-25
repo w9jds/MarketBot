@@ -9,7 +9,6 @@ import java.util.Date;
  */
 public final class MarketOrder extends MarketItemBase {
 
-    private boolean isMarginOrder;
     private boolean isBuyOrder;
 
     private Date issued;
@@ -46,10 +45,6 @@ public final class MarketOrder extends MarketItemBase {
         return volumeStart;
     }
 
-    public boolean isMarginOrder() {
-        return isMarginOrder;
-    }
-
     public boolean isBuyOrder() {
         return isBuyOrder;
     }
@@ -69,7 +64,6 @@ public final class MarketOrder extends MarketItemBase {
     public static class Builder {
 
         private long id;
-        private boolean isMarginOrder;
         private boolean isBuyOrder;
         private Date issued;
         private double price;
@@ -110,11 +104,6 @@ public final class MarketOrder extends MarketItemBase {
             return this;
         }
 
-        public Builder setMarginOrder(boolean marginOrder) {
-            isMarginOrder = marginOrder;
-            return this;
-        }
-
         public Builder setPrice(double price) {
             this.price = price;
             return this;
@@ -143,7 +132,6 @@ public final class MarketOrder extends MarketItemBase {
         public MarketOrder build() {
             MarketOrder order = new MarketOrder();
             order.id = this.id;
-            order.isMarginOrder = this.isMarginOrder;
             order.isBuyOrder = this.isBuyOrder;
             order.issued = this.issued;
             order.price = this.price;

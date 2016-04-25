@@ -1,8 +1,5 @@
 package com.w9jds.marketbot.data.storage;
 
-import android.accounts.Account;
-import android.provider.BaseColumns;
-
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -14,6 +11,8 @@ import com.w9jds.marketbot.data.MarketDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import core.eve.crest.CrestMarketGroup;
 
 @Table(database = MarketDatabase.class)
 public final class MarketGroupEntry extends BaseModel {
@@ -31,101 +30,65 @@ public final class MarketGroupEntry extends BaseModel {
     String description;
 
     @Column
-    long parentId;
+    String parentId;
 
     @Column
-    String location;
+    String types;
 
-    public static ArrayList<MarketGroup> getMarketGroupsForParent(long parentId) {
-        List<MarketGroupEntry> groups = new Select()
-                .from(MarketGroupEntry.class)
-                .where(MarketGroupEntry_Table.parentId.eq(parentId))
-                .queryList();
+    public static void addNewMarketGroups(List<CrestMarketGroup> groups) {
+        int count = groups.size();
+        for (int i = 0; i < count; i++) {
+            CrestMarketGroup group = groups.get(i);
 
-        
+            MarketGroupEntry entry = new MarketGroupEntry();
+            entry.id = group.getId();
+            entry.description = group.getDescription();
+            entry.name = group.getName();
+            entry.href = group.getRef();
+            entry.parentId = group.getParent();
+            entry.types = group.getType();
+        }
     }
 
-//    private static MarketGroup buildMarketGroup(Cursor cursor) {
-//        MarketGroup group = new MarketGroup();
-//        group.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
-//
-//        for (String column : columns) {
-//            int columnIndex = cursor.getColumnIndex(column);
-//            if (columnIndex != -1) {
-//                switch(column) {
-//                    case COLUMN_NAME:
-//                        group.setName(cursor.getString(columnIndex));
-//                        break;
-//                    case COLUMN_PARENT_ID:
-//                        long id = cursor.getLong(columnIndex);
-//
-//                        if (id != 0) {
-//                            group.setParentGroup(new Reference("https://public-crest.eveonline.com/market/groups/" +
-//                                    id + "/"));
-//                        }
-//                        break;
-//                    case COLUMN_HREF:
-//                        group.setHref(cursor.getString(columnIndex));
-//                        break;
-//                    case COLUMN_TYPES_LOCATION:
-//                        group.setTypes(new Reference(cursor.getString(columnIndex)));
-//                        break;
-//                    case COLUMN_DESCRIPTION:
-//                        group.setDescription(cursor.getString(columnIndex));
-//                        break;
-//                }
-//            }
-//        }
-//
-//        return group;
-//    }
+    public static ArrayList<MarketGroup> getMarketGroupsForParent(Long parentId) {
+        Condition condition = MarketGroupEntry_Table.parentId.eq(buildParentGroupLink(parentId));
+        Condition nullCondition = MarketGroupEntry_Table.parentId.isNull();
 
-//    public static ArrayList<MarketGroup> getMarketGroupsforParent(Context context, Long parentId) {
-//        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
-//        ArrayList<MarketGroup> groups = new ArrayList<>();
-//        String query = "SELECT * FROM " + TABLE_NAME + " WHERE ";
-//
-//        if (parentId == null) {
-//            query += COLUMN_PARENT_ID + " IS NULL";
-//        }
-//        else {
-//            query += COLUMN_PARENT_ID + "='" + parentId + "'";
-//        }
-//
-//        database.beginTransaction();
-//        Cursor cursor = database.rawQuery(query, null);
-//
-//        if (cursor.moveToFirst()) {
-//            while(!cursor.isAfterLast()) {
-//                groups.add(buildMarketGroup(cursor));
-//                cursor.moveToNext();
-//            }
-//        }
-//
-//        database.setTransactionSuccessful();
-//        database.endTransaction();
-//        database.close();
-//        return groups;
-//    }
+        List<MarketGroupEntry> groups = new Select()
+                .from(MarketGroupEntry.class)
+                .where(parentId != null ? condition : nullCondition)
+                .queryList();
 
-//    public static MarketGroup getMarketGroup(Context context, long id) {
-//        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
-//        ArrayList<MarketGroup> groups = new ArrayList<>();
-//
-//        database.beginTransaction();
-//        Cursor cursor = database.query(TABLE_NAME, null, _ID + "=?",
-//                new String[]{String.valueOf(id)}, null, null, null);
-//
-//        if (cursor.moveToFirst()) {
-//            while(!cursor.isAfterLast()) {
-//                groups.add(buildMarketGroup(cursor));
-//                cursor.moveToNext();
-//            }
-//        }
-//
-//        database.setTransactionSuccessful();
-//        database.endTransaction();
-//        database.close();
-//        return groups.get(0);
-//    }
+        ArrayList<MarketGroup> builtGroups = new ArrayList<>(groups.size());
+        for (MarketGroupEntry entry : groups) {
+            builtGroups.add(buildMarketGroup(entry));
+        }
+
+        return builtGroups;
+    }
+
+    private static MarketGroup buildMarketGroup(MarketGroupEntry entry) {
+        return new MarketGroup.Builder()
+            .setDescription(entry.description)
+            .setHref(entry.href)
+            .setId(entry.id)
+            .setName(entry.name)
+            .setParentGroup(entry.parentId)
+            .setTypes(entry.types)
+            .build();
+    }
+
+    private static String buildParentGroupLink(long id) {
+        return "https://public-crest.eveonline.com/market/groups/" + id + "/";
+    }
+
+    public static MarketGroup getMarketGroup(long id) {
+        MarketGroupEntry group = new Select()
+                .from(MarketGroupEntry.class)
+                .where(MarketGroupEntry_Table.parentId.eq(buildParentGroupLink(id)))
+                .querySingle();
+
+        return buildMarketGroup(group);
+    }
+
 }

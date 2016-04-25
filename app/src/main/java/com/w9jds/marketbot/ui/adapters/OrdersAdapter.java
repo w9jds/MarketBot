@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.repacked.apache.commons.codec.binary.StringUtils;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 
@@ -61,38 +62,18 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         DecimalFormat formatter;
         String price;
-        int color = -1;
-        if(order.isMarginOrder()){
 
-            formatter = new DecimalFormat("##0.00");
-            price = formatter.format(order.getPrice()) + "%";
 
-            if (order.getPrice() <= 20) {
-                color = 0xAAAA0000;
-            }
-            else {
-                color = 0xAA00AA00;
-            }
+        formatter = new DecimalFormat("#,###.00");
+        price = formatter.format(order.getPrice()) + " ISK";
 
-        }
-        else {
-
-            formatter = new DecimalFormat("#,###.00");
-            price = formatter.format(order.getPrice()) + " ISK";
-
-        }
 
         formatter = new DecimalFormat("#,###");
         String volume = formatter.format(order.getVolume());
 
         viewHolder.location.setText(order.getLocation());
         viewHolder.price.setText(price);
-        if(color != -1) {
-            viewHolder.price.setTextColor(color);
-        }
-        if(!order.isMarginOrder()) {
-            viewHolder.volume.setText(volume);
-        }
+        viewHolder.volume.setText(volume);
 
         if (order.isBuyOrder()) {
             String range = order.getRange();
@@ -115,7 +96,7 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return orders.size();
     }
 
-    private class Comparitor implements Comparator<MarketOrder> {
+    private class PriceComparator implements Comparator<MarketOrder> {
         @Override
         public int compare(MarketOrder lhs, MarketOrder rhs) {
             if (lhs.isBuyOrder()) {
@@ -133,7 +114,7 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void updateCollection(Collection<MarketOrder> newChildren) {
         ArrayList<MarketOrder> newOrders = new ArrayList<>(newChildren);
-        Collections.sort(newOrders, new Comparitor());
+        Collections.sort(newOrders, new PriceComparator());
 
         int newSize = newOrders.size();
         int oldSize = orders.size();

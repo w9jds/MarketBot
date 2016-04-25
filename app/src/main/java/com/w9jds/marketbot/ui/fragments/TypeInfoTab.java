@@ -32,24 +32,14 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
     static final String ARG_PAGE = "ARG_PAGE";
     static final String ARG_TYPEID = "ARG_TYPEID";
 
-    @Bind(R.id.dataloading_progress)
-    ProgressBar loading;
-
-    @Bind(R.id.type_name)
-    TextView name;
-    @Bind(R.id.type_description)
-    TextView description;
-    @Bind(R.id.mass_value)
-    TextView mass;
-    @Bind(R.id.capacity_value)
-    TextView capacity;
-    @Bind(R.id.volume_value)
-    TextView volume;
-    @Bind(R.id.portion_value)
-    TextView portion;
-
-    @Bind(R.id.item_icon)
-    ImageView icon;
+    @Bind(R.id.dataloading_progress) ProgressBar loading;
+    @Bind(R.id.type_name) TextView name;
+    @Bind(R.id.type_description) TextView description;
+    @Bind(R.id.mass_value) TextView mass;
+    @Bind(R.id.capacity_value) TextView capacity;
+    @Bind(R.id.volume_value) TextView volume;
+    @Bind(R.id.portion_value) TextView portion;
+    @Bind(R.id.item_icon) ImageView icon;
 
     private int position;
     private long typeId;
@@ -109,9 +99,9 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
 
         ItemActivity host = (ItemActivity) getActivity();
         name.setText(host.getCurrentTypeName());
-//        Glide.with(host)
-//                .load(host)
-//                .into(icon);
+        Glide.with(host)
+            .load(host)
+            .into(icon);
 
         loader.loadTypeInfo(typeId);
         return view;
