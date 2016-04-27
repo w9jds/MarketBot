@@ -16,13 +16,10 @@ import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
-import com.w9jds.marketbot.data.loader.OrdersLoader;
-import com.w9jds.marketbot.data.loader.TabsLoader;
-import com.w9jds.marketbot.ui.ItemActivity;
-import com.w9jds.marketbot.ui.adapters.OrdersAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
+import com.w9jds.marketbot.data.loader.TabsLoader;
+import com.w9jds.marketbot.ui.adapters.OrdersAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -52,7 +49,7 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
     public static ListTab create(int page, List<MarketOrder> orders) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        args.putParcelableArrayList("orders", orders);
+//        args.putParcelableArrayList("orders", orders);
         ListTab fragment = new ListTab();
         fragment.setArguments(args);
         return fragment;
@@ -106,7 +103,7 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
 
 
 
-        adapter.updateCollection();
+//        adapter.updateCollection();
         return view;
     }
 

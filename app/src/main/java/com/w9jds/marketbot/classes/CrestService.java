@@ -3,6 +3,9 @@ package com.w9jds.marketbot.classes;
 import org.devfleet.crest.model.CrestDictionary;
 import org.devfleet.crest.model.CrestItem;
 import org.devfleet.crest.model.CrestMarketGroup;
+import org.devfleet.crest.model.CrestMarketHistory;
+import org.devfleet.crest.model.CrestMarketOrder;
+import org.devfleet.crest.model.CrestMarketType;
 import org.devfleet.crest.model.CrestServerStatus;
 import org.devfleet.crest.model.CrestType;
 
@@ -19,10 +22,10 @@ public interface CrestService {
     Observable<Response<CrestServerStatus>> getServer();
 
     @GET("/market/types/")
-    Observable<Response<CrestDictionary<CrestItem>>> getMarketTypes();
+    Observable<Response<CrestDictionary<CrestMarketType>>> getMarketTypes();
 
     @GET
-    Observable<Response<CrestDictionary<CrestItem>>> getMarketTypes(@Url String url);
+    Observable<Response<CrestDictionary<CrestMarketType>>> getMarketTypes(@Url String url);
 
     @GET("/types/{typeId}/")
     Observable<Response<CrestType>> getTypeInfo(@Path("typeId") long id);
@@ -34,12 +37,17 @@ public interface CrestService {
     Observable<Response<CrestDictionary<CrestItem>>> getRegions();
 
     @GET("/market/{regionId}/orders/{orderType}/")
-    Observable<Response<CrestDictionary<CrestOrder>>> getMarketOrders(@Path("regionId") long regionId,
-                                                       @Path("orderType") String orderType,
-                                                       @Query(value = "type", encoded = true) String typeId);
+    Observable<Response<CrestDictionary<CrestMarketOrder>>> getMarketOrders(@Path("regionId") long regionId,
+                                                                            @Path("orderType") String orderType,
+                                                                            @Query(value = "type", encoded = true) String typeId);
 
     @GET("/market/{regionId}/orders")
-    Observable<Response<CrestDictionary<CrestOrder>>> getMarketOrders(@Path("regionId") long regionId,
+    Observable<Response<CrestDictionary<CrestMarketOrder>>> getMarketOrders(@Path("regionId") long regionId,
                                                                       @Query(value = "type", encoded = true) String typeId);
+
+    @GET("/market/{regionId}/types/{itemId}/history/")
+    Observable<Response<CrestDictionary<CrestMarketHistory>>> getMarketHistory(@Path("regionId") final long regionId,
+                                                                               @Path("itemId") final long itemId,
+                                                                               @Query("page") final int page);
 
 }
