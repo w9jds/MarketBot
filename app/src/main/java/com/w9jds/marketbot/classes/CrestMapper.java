@@ -5,6 +5,7 @@ import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.TypeInfo;
 
 import org.devfleet.crest.model.CrestMarketGroup;
+import org.devfleet.crest.model.CrestMarketOrder;
 import org.devfleet.crest.model.CrestType;
 
 /**
@@ -31,13 +32,28 @@ public class CrestMapper {
             .setName(crestGroup.getName())
             .setDescription(crestGroup.getDescription())
             .setHref(crestGroup.getHref())
-            .setParentGroup(crestGroup.getParent())
-            .setTypes(crestGroup.getType())
+            .setParentGroup(crestGroup.getParentRef())
+            .setTypes(crestGroup.getTypeRef())
             .build();
     }
 
-    public static MarketOrder map() {
+    public static MarketOrder map(CrestMarketOrder order) {
         return new MarketOrder.Builder()
+                .setBuyOrder(order.isBuyOrder())
+                .setDuration(order.getDuration())
+                .setHref(order.getHref())
+                .setLocation(order.getLocationName())
+                .setLocationId(order.getLocationId())
+                .setVolume(order.getVolume())
+                .setVolumeStart(order.getVolumeEntered())
+//                .setIssued(order.getIssued())
+                .setPrice(order.getPrice())
+                .setRange(order.getRange())
+                .setType(order.getTypeName())
+                .setTypeId(order.getTypeId())
+                .build();
+
+
 
     }
 

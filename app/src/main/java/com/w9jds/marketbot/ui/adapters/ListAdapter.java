@@ -16,22 +16,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jeremy on 3/1/2016.
- *
- * Modified by Alexander Whipp on 4/8/2016.
- */
-
-public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
-    ArrayList<MarketOrder> orders = new ArrayList<>();
+    List<Object> items = new ArrayList<>();
 
-    public OrdersAdapter(Context context) {
+    public ListAdapter(Context context) {
         this.context = context;
     }
 
@@ -93,7 +88,7 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return orders.size();
+        return items.size();
     }
 
     private class PriceComparator implements Comparator<MarketOrder> {
@@ -109,17 +104,17 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public Object getItem(int position) {
-        return orders.get(position);
+        return items.get(position);
     }
 
-    public void updateCollection(Collection<MarketOrder> newChildren) {
-        ArrayList<MarketOrder> newOrders = new ArrayList<>(newChildren);
-        Collections.sort(newOrders, new PriceComparator());
+    public void updateCollection(List<?> newChildren) {
+        List<Object> newOrders = new ArrayList<>(newChildren);
+//        Collections.sort(newOrders, new PriceComparator());
 
         int newSize = newOrders.size();
-        int oldSize = orders.size();
+        int oldSize = items.size();
 
-        orders = newOrders;
+        items = newOrders;
 
         if (newSize < oldSize) {
             notifyItemRangeChanged(0, newSize);
@@ -135,9 +130,9 @@ public final class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void clear() {
-        int oldSize = orders.size();
+        int oldSize = items.size();
 
-        orders.clear();
+        items.clear();
         notifyItemRangeRemoved(0, oldSize);
     }
 

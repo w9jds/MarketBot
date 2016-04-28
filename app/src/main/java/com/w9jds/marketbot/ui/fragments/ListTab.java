@@ -17,19 +17,15 @@ import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.loader.TabsLoader;
-import com.w9jds.marketbot.ui.adapters.OrdersAdapter;
+import com.w9jds.marketbot.data.loader.OrdersLoader;
+import com.w9jds.marketbot.ui.adapters.ListAdapter;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-/**
- * Created by Jeremy on 3/1/2016.
- *
- * Modified by Alexander Whipp on 4/8/2016.
- */
+import rx.subjects.BehaviorSubject;
 
 public final class ListTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
 
@@ -38,22 +34,42 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.orders_list) RecyclerView orders;
 
-    private int position;
+    private final int position;
 
-    private OrdersAdapter adapter;
-    private TabsLoader loader;
+    private ListAdapter adapter;
+    private OrdersLoader loader;
 
     private Region currentRegion;
     private Type currentType;
 
-    public static ListTab create(int page, List<MarketOrder> orders) {
+    public static ListTab create(int page, BehaviorSubject<Map.Entry<Integer, List<?>>> behaviorSubject) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-//        args.putParcelableArrayList("orders", orders);
-        ListTab fragment = new ListTab();
+        ListTab fragment = new ListTab(behaviorSubject);
         fragment.setArguments(args);
         return fragment;
     }
+
+    public ListTab() {
+        super();
+
+        Bundle args = getArguments();
+        position = args.getInt(ARG_PAGE);
+    }
+
+    public ListTab(BehaviorSubject<Map.Entry<Integer, List<?>>> subject) {
+        this();
+
+        subject
+            .doOnError(Throwable::printStackTrace)
+            .doOnNext(marketOrders -> {
+                if (marketOrders.getKey() == position) {
+                    adapter.updateCollection(marketOrders.getValue());
+                }
+            })
+            .subscribe();
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -63,12 +79,9 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
 
-        position = args.getInt(ARG_PAGE);
-
-        adapter = new OrdersAdapter(getContext());
-        loader = new TabsLoader(getActivity()) {
+        adapter = new ListAdapter(getContext());
+        loader = new OrdersLoader(getActivity()) {
             @Override
             public void onSellOrdersLoaded(List<MarketOrder> orders) {
 
@@ -85,9 +98,7 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
             }
         };
 
-
         loader.registerLoadingCallback(this);
-//        ((ItemActivity)getActivity()).addOrdersFragment(position, this);
     }
 
     @Override
@@ -100,10 +111,6 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
         orders.setAdapter(adapter);
 
         refreshLayout.setOnRefreshListener(() -> updateOrdersList(currentRegion, currentType));
-
-
-
-//        adapter.updateCollection();
         return view;
     }
 

@@ -1,8 +1,8 @@
 package com.w9jds.marketbot.ui;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -18,25 +18,23 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.classes.models.MarketGroup;
+import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
+import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.classes.models.TypeInfo;
 import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.loader.GroupsLoader;
 import com.w9jds.marketbot.data.loader.OrdersLoader;
 import com.w9jds.marketbot.data.loader.TypeLoader;
-import com.w9jds.marketbot.ui.adapters.OrdersTabAdapter;
-import com.w9jds.marketbot.ui.adapters.RegionAdapter;
-import com.w9jds.marketbot.classes.MarketBot;
-import com.w9jds.marketbot.data.BaseDataManager;
 import com.w9jds.marketbot.data.storage.MarketTypeEntry;
-import com.w9jds.marketbot.ui.fragments.OrdersTab;
+import com.w9jds.marketbot.ui.adapters.ListTabAdapter;
+import com.w9jds.marketbot.ui.adapters.RegionAdapter;
+import com.w9jds.marketbot.ui.fragments.ListTab;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +42,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Created by Jeremy Shore on 2/22/16.
@@ -55,6 +54,9 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
         DataLoadingSubject.DataLoadingCallbacks, DataLoadingSubject.DataUpdatingCallbacks {
 
     @Inject boolean isFirstRun;
+    @Inject long regionId;
+    @Inject SharedPreferences sharedPreferences;
+
 
     @Bind(R.id.item_content) CoordinatorLayout baseView;
     @Bind(R.id.main_toolbar) Toolbar toolbar;
@@ -65,14 +67,14 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
     private ProgressDialog progressDialog;
     private TypeLoader loader;
     private GroupsLoader updateLoader;
+    private OrdersLoader ordersLoader;
     private Type currentType;
     private RegionAdapter regionAdapter;
-    private OrdersTabAdapter tabAdapter;
-    private boolean updateRun = false;
-    private long defaultRegionId;
-    private long typeIdExtra;
+    private ListTabAdapter tabAdapter;
+    private BehaviorSubject<Map.Entry<Integer, List<?>>> subject;
 
-    private SparseArray<OrdersTab> orderTabs;
+    private boolean updateRun = false;
+    private long typeIdExtra;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,9 +82,9 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_market_item);
         ButterKnife.bind(this);
 
-        updateStorageSession();
-        orderTabs = new SparseArray<>();
+        subject = BehaviorSubject.create();
 
+        updateStorageSession();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
@@ -95,7 +97,7 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Intent intent = getIntent();
         typeIdExtra = intent.getLongExtra("typeId", -1);
-        defaultRegionId = intent.getLongExtra("regionId", -1);
+        regionId = intent.getLongExtra("regionId", regionId);
 
         regionAdapter = new RegionAdapter(this);
         loader = new TypeLoader(this) {
@@ -107,13 +109,24 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onRegionsLoaded(List<Region> regions) {
                 regionAdapter.addAllItems(regions);
+                regionSpinner.setSelection(regionAdapter.getPositionfromId((int)regionId), true);
+            }
+        };
 
-                if (defaultRegionId == -1) {
-                    regionSpinner.setSelection(regionAdapter.getPositionfromId(10000002), true);
-                }
-                else {
-                    regionSpinner.setSelection(regionAdapter.getPositionfromId((int)defaultRegionId), true);
-                }
+        ordersLoader = new OrdersLoader(this) {
+            @Override
+            public void onSellOrdersLoaded(List<MarketOrder> orders) {
+                subject.onNext(new AbstractMap.SimpleEntry<>(1, orders));
+            }
+
+            @Override
+            public void onBuyOrdersLoaded(List<MarketOrder> orders) {
+                subject.onNext(new AbstractMap.SimpleEntry<>(2, orders));
+            }
+
+            @Override
+            public void onMarginsLoaded(List<StationMargin> orders) {
+                subject.onNext(new AbstractMap.SimpleEntry<>(3, orders));
             }
         };
 
@@ -185,12 +198,13 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void loadTypeData() {
-        tabAdapter = new OrdersTabAdapter(getSupportFragmentManager(), this, currentType.getId());
+        tabAdapter = new ListTabAdapter(getSupportFragmentManager(), this, currentType.getId(), subject);
         pager.setOffscreenPageLimit(4);
         pager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(pager);
 
         loader.loadRegions(false);
+        ordersLoader.loadMarketOrders(regionId, currentType);
     }
 
 //    public String getCurrentTypeIcon() {
@@ -229,14 +243,10 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Region region = (Region) regionAdapter.getItem(position);
-//
-//        for (OrdersTab tab : orderTabs.) {
-//            tab.updateOrdersList(region, currentType);
-//        }
-    }
+        regionId = region.getId();
+        sharedPreferences.edit().putLong("regionId", region.getId()).apply();
 
-    public void addOrdersFragment(int position, OrdersTab tab) {
-        orderTabs.put(position, tab);
+        ordersLoader.loadMarketOrders(regionId, currentType);
     }
 
     @Override

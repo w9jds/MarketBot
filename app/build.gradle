@@ -45,6 +45,8 @@ buildscript {
 
 repositories {
     mavenCentral()
+    mavenLocal()
+
     maven { url "https://jitpack.io" }
 }
 
@@ -81,8 +83,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-jackson:2.0.1'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
 
-    compile('org.devfleet.crest:api:0.+')
-    compile('org.devfleet.crest:retrofit:0.+')
+    compile 'org.devfleet.crest:api:0.+'
+    compile 'org.devfleet.crest:retrofit:0.+'
 
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'

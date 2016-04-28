@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketGroup;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.loader.GroupsLoader;
@@ -92,12 +93,15 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
         adapter = new MarketGroupsAdapter(this, this);
         recyclerView.setAdapter(adapter);
+
+        groupsLoader.update();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        groupsLoader.loadMarketGroups(null);
+
+        groupsLoader.loadMarketGroups(null);
     }
 
     private void updateProgressDialog(int page, int max, boolean isNewWindow) {
@@ -271,5 +275,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
     @Override
     public void dataUpdatingFinished() {
         progressDialog.dismiss();
+
+        groupsLoader.loadMarketGroups(null);
     }
 }

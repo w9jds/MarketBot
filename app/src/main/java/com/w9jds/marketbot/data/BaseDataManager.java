@@ -58,6 +58,10 @@ public abstract class BaseDataManager implements DataLoadingSubject {
         loadingCount.incrementAndGet();
     }
 
+    protected void incrementLoadingCount(int count) {
+        loadingCount.set(count);
+    }
+
     protected void decrementLoadingCount() {
         loadingCount.decrementAndGet();
     }

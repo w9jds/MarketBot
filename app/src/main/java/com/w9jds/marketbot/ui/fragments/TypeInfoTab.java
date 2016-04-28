@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.TypeInfo;
 import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.loader.TypeLoader;
@@ -19,6 +20,7 @@ import com.w9jds.marketbot.ui.ItemActivity;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -77,7 +79,7 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
 
         loader = new TypeLoader(getContext()) {
             @Override
-            public void onDataLoaded(TypeInfo info) {
+            public void onTypeInfoLoaded(TypeInfo info) {
                 NumberFormat formatter = new DecimalFormat("#,###");
                 String capacityValue = formatter.format(info.getCapacity()) + " m3";
 
@@ -87,6 +89,12 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
                 portion.setText(String.valueOf(info.getPortionSize()));
                 volume.setText(formatNumberValue(info.getVolume(), "m3"));
             }
+
+            @Override
+            public void onRegionsLoaded(List<Region> regions) {
+
+            }
+
         };
 
         loader.registerLoadingCallback(this);

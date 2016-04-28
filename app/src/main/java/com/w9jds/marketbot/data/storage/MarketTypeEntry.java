@@ -8,6 +8,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.data.MarketDatabase;
 
+import org.devfleet.crest.model.CrestMarketType;
 import org.devfleet.crest.model.CrestType;
 
 import java.util.ArrayList;
@@ -26,18 +27,22 @@ public final class MarketTypeEntry extends BaseModel {
     String href;
 
     @Column
+    String icon;
+
+    @Column
     String name;
 
-    public static void addNewMarketTypes(List<CrestType> types) {
+    public static void addNewMarketTypes(List<CrestMarketType> types) {
         int size = types.size();
         for (int i = 0; i < size; i++) {
-            CrestType type = types.get(i);
+            CrestMarketType type = types.get(i);
 
             MarketTypeEntry entry = new MarketTypeEntry();
-            entry.id = type.getId();
-//            entry.groupId = ;
-            entry.href = type.getHref();
-            entry.name = type.getName();
+            entry.id = type.getTypeId();
+            entry.groupId = type.getGroupId();
+            entry.href = type.getTypeHref();
+            entry.icon = type.getTypeIcon();
+            entry.name = type.getTypeName();
             entry.save();
         }
     }

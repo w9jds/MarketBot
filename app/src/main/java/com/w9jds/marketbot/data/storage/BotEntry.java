@@ -1,20 +1,10 @@
 package com.w9jds.marketbot.data.storage;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
-
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.data.MarketDatabase;
-import com.w9jds.marketbot.data.models.Bot;
-
-import java.util.ArrayList;
 
 @Table(database = MarketDatabase.class)
 public final class BotEntry extends BaseModel {

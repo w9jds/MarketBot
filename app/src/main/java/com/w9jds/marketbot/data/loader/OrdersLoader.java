@@ -13,6 +13,8 @@ import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.data.BaseDataManager;
 
+import org.devfleet.crest.model.CrestMarketOrder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,14 +28,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by w9jds on 4/10/2016.
  */
-public abstract class TabsLoader extends BaseDataManager {
+public abstract class OrdersLoader extends BaseDataManager {
 
     @Inject CrestService publicCrest;
     @Inject SharedPreferences sharedPreferences;
 
     private Context context;
 
-    public TabsLoader(Context context) {
+    public OrdersLoader(Context context) {
         super(context);
 
         MarketBot.createNewStorageSession().inject(this);
@@ -43,11 +45,11 @@ public abstract class TabsLoader extends BaseDataManager {
     public abstract void onSellOrdersLoaded(List<MarketOrder> orders);
     public abstract void onBuyOrdersLoaded(List<MarketOrder> orders);
     public abstract void onMarginsLoaded(List<StationMargin> orders);
-
+//    public abstract void onMarketHistoryLoaded()
 
     public void loadMarketOrders(long regionId, Type type) {
         loadStarted();
-        incrementLoadingCount();
+        incrementLoadingCount(3);
 
         publicCrest.getMarketOrders(regionId, type.getHref())
             .subscribeOn(Schedulers.newThread())
@@ -55,11 +57,17 @@ public abstract class TabsLoader extends BaseDataManager {
             .doOnError(Throwable::printStackTrace)
             .doOnNext(crestResponse -> {
                 if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-//                    List<MarketOrder> orders = CrestMapper.map();
+                    List<CrestMarketOrder> orders = crestResponse.body().getItems();
 
-//                    buildSellOrders();
-//                    buildBuyOrders();
-//                    createMargins();
+                    int size = orders.size();
+                    List<MarketOrder> marketOrders = new ArrayList<>(size);
+                    for (int i = 0; i < size; i++) {
+                        marketOrders.add(CrestMapper.map(orders.get(i)));
+                    }
+
+                    buildSellOrders(marketOrders);
+                    buildBuyOrders(marketOrders);
+                    buildMargins(marketOrders);
                 }
             })
             .subscribe();
@@ -90,7 +98,15 @@ public abstract class TabsLoader extends BaseDataManager {
             .doOnError(Throwable::printStackTrace)
             .doOnNext(crestResponse -> {
                 if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-                    onSellOrdersLoaded(CrestMapper.map());
+                    List<CrestMarketOrder> orders = crestResponse.body().getItems();
+
+                    int size = orders.size();
+                    List<MarketOrder> marketOrders = new ArrayList<>(size);
+                    for (int i = 0; i < size; i++) {
+                        marketOrders.add(CrestMapper.map(orders.get(i)));
+                    }
+
+                    onSellOrdersLoaded(marketOrders);
 
                     decrementLoadingCount();
                     loadFinished();
@@ -124,7 +140,15 @@ public abstract class TabsLoader extends BaseDataManager {
                 .doOnError(Throwable::printStackTrace)
                 .doOnNext(crestResponse -> {
                     if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-                        onBuyOrdersLoaded(CrestMapper.map());
+                        List<CrestMarketOrder> orders = crestResponse.body().getItems();
+
+                        int size = orders.size();
+                        List<MarketOrder> marketOrders = new ArrayList<>(size);
+                        for (int i = 0; i < size; i++) {
+                            marketOrders.add(CrestMapper.map(orders.get(i)));
+                        }
+
+                        onBuyOrdersLoaded(marketOrders);
 
                         decrementLoadingCount();
                         loadFinished();
@@ -143,7 +167,15 @@ public abstract class TabsLoader extends BaseDataManager {
             .doOnError(Throwable::printStackTrace)
             .doOnNext(crestResponse -> {
                 if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-                    buildMargins(CrestMapper.map());
+                    List<CrestMarketOrder> orders = crestResponse.body().getItems();
+
+                    int size = orders.size();
+                    List<MarketOrder> marketOrders = new ArrayList<>(size);
+                    for (int i = 0; i < size; i++) {
+                        marketOrders.add(CrestMapper.map(orders.get(i)));
+                    }
+
+                    buildMargins(marketOrders);
                 }
 
             })
@@ -197,6 +229,5 @@ public abstract class TabsLoader extends BaseDataManager {
         decrementLoadingCount();
         loadFinished();
     }
-
 
 }

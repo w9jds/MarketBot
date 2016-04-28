@@ -7,25 +7,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.ui.fragments.OrdersTab;
+import com.w9jds.marketbot.ui.fragments.ListTab;
 import com.w9jds.marketbot.ui.fragments.TypeInfoTab;
 
-/**
- * Created by Jeremy on 3/1/2016.
- *
- * Modified by Alexander Whipp on 4/7/2016.
- */
-public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
+import java.util.List;
+import java.util.Map;
 
-    private Resources resources;
-    private long typeId;
+import rx.subjects.BehaviorSubject;
+
+public final class ListTabAdapter extends FragmentStatePagerAdapter {
+
+    private final Resources resources;
+    private final BehaviorSubject<Map.Entry<Integer, List<?>>> subject;
+    private final long typeId;
 
     final int PAGE_COUNT = 4;
 
-    public OrdersTabAdapter(FragmentManager fragmentManager, Context context, long typeId) {
+    public ListTabAdapter(FragmentManager fragmentManager, Context context, long typeId,
+                          BehaviorSubject<Map.Entry<Integer, List<?>>> subject) {
         super(fragmentManager);
-        resources = context.getResources();
+        this.resources = context.getResources();
         this.typeId = typeId;
+        this.subject = subject;
     }
 
     @Override
@@ -56,8 +59,7 @@ public final class OrdersTabAdapter extends FragmentStatePagerAdapter {
             return TypeInfoTab.create(position, typeId);
         }
         else {
-            return OrdersTab.create(position);
+            return ListTab.create(position, subject);
         }
-
     }
 }

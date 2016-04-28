@@ -31,4 +31,10 @@ public class StorageModule {
         return sharedPreferences.getBoolean("isFirstRun", true);
     }
 
+    @Provides
+    @StorageScope
+    long provideRegionId(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getLong("regionId", 10000002);
+    }
+
 }

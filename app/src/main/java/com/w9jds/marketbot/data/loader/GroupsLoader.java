@@ -15,6 +15,7 @@ import com.w9jds.marketbot.data.storage.RegionEntry;
 import org.devfleet.crest.model.CrestDictionary;
 import org.devfleet.crest.model.CrestItem;
 import org.devfleet.crest.model.CrestMarketGroup;
+import org.devfleet.crest.model.CrestMarketType;
 import org.devfleet.crest.model.CrestServerStatus;
 import org.devfleet.crest.model.CrestType;
 
@@ -100,7 +101,7 @@ public abstract class GroupsLoader extends BaseDataManager {
                     if (serverInfoResponse.isSuccessful() && serverInfoResponse.body() != null) {
                         CrestServerStatus serverInfo = serverInfoResponse.body();
 
-                        if (!serverInfo.getServerVersion().equals(serverVersion) && isFirstRun) {
+                        if (!serverInfo.getServerVersion().equals(serverVersion) || isFirstRun) {
                             resetLoadingCount();
                             loadFinished();
 
@@ -156,9 +157,9 @@ public abstract class GroupsLoader extends BaseDataManager {
             }).subscribe();
     }
 
-    private Action1<Response<CrestDictionary<CrestType>>> typeCallback = typesPage -> {
+    Action1<Response<CrestDictionary<CrestMarketType>>> typeCallback = typesPage -> {
         if (typesPage.isSuccessful() && typesPage.body() != null) {
-            CrestDictionary<CrestType> types = typesPage.body();
+            CrestDictionary<CrestMarketType> types = typesPage.body();
 
             MarketTypeEntry.addNewMarketTypes(types.getItems());
             if (types.getPageNext() != null && !types.getPageNext().equals("")) {
@@ -180,14 +181,21 @@ public abstract class GroupsLoader extends BaseDataManager {
     };
 
     private void updateMarketTypes() {
-
-
-
-        publicCrest.getMarketTypes();
+        publicCrest.getMarketTypes()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(Throwable::printStackTrace)
+            .doOnNext(typeCallback)
+            .subscribe();
     }
 
     public void loadNextPageTypes(String targetLocation) {
-        publicCrest.getMarketTypes(targetLocation);
+        publicCrest.getMarketTypes(targetLocation)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(Throwable::printStackTrace)
+            .doOnNext(typeCallback)
+            .subscribe();
     }
 
     private void updateRegions() {

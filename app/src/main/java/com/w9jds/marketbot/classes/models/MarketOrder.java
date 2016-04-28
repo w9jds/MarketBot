@@ -13,27 +13,39 @@ public final class MarketOrder extends MarketItemBase {
 
     private Date issued;
     private double price;
-    private int volume;
-    private int volumeStart;
+    private long volume;
+    private long volumeStart;
     private String range;
     private String href;
-    private int duration;
+    private long duration;
+
     private String type;
+    private long typeId;
+
     private String location;
+    private long locationId;
 
     public String getHref() {
         return href;
+    }
+
+    public long getLocationId() {
+        return locationId;
+    }
+
+    public long getTypeId() {
+        return typeId;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public int getVolume() {
+    public long getVolume() {
         return volume;
     }
 
@@ -41,7 +53,7 @@ public final class MarketOrder extends MarketItemBase {
         return range;
     }
 
-    public int getVolumeStart() {
+    public long getVolumeStart() {
         return volumeStart;
     }
 
@@ -67,16 +79,21 @@ public final class MarketOrder extends MarketItemBase {
         private boolean isBuyOrder;
         private Date issued;
         private double price;
-        private int volume;
-        private int volumeStart;
+        private long volume;
+        private long volumeStart;
         private String range;
         private String href;
-        private int duration;
-        private String type;
-        private String location;
+        private long duration;
 
-        public void setId(long id) {
+        private String type;
+        private long typeId;
+
+        private String location;
+        private long locationId;
+
+        public Builder setId(long id) {
             this.id = id;
+            return this;
         }
 
         public Builder setHref(String href) {
@@ -89,7 +106,7 @@ public final class MarketOrder extends MarketItemBase {
             return this;
         }
 
-        public Builder setDuration(int duration) {
+        public Builder setDuration(long duration) {
             this.duration = duration;
             return this;
         }
@@ -119,13 +136,23 @@ public final class MarketOrder extends MarketItemBase {
             return this;
         }
 
-        public Builder setVolume(int volume) {
+        public Builder setVolume(long volume) {
             this.volume = volume;
             return this;
         }
 
-        public Builder setVolumeStart(int volumeStart) {
+        public Builder setVolumeStart(long volumeStart) {
             this.volumeStart = volumeStart;
+            return this;
+        }
+
+        public Builder setLocationId(long locationId) {
+            this.locationId = locationId;
+            return this;
+        }
+
+        public Builder setTypeId(long typeId) {
+            this.typeId = typeId;
             return this;
         }
 
@@ -141,7 +168,9 @@ public final class MarketOrder extends MarketItemBase {
             order.href = this.href;
             order.duration = this.duration;
             order.type = this.type;
+            order.typeId = this.typeId;
             order.location = this.location;
+            order.locationId = this.locationId;
 
             return order;
         }

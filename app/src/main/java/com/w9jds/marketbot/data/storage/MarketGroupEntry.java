@@ -7,12 +7,13 @@ import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.classes.models.MarketGroup;
+import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.data.MarketDatabase;
+
+import org.devfleet.crest.model.CrestMarketGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import core.eve.crest.CrestMarketGroup;
 
 @Table(database = MarketDatabase.class)
 public final class MarketGroupEntry extends BaseModel {
@@ -30,7 +31,10 @@ public final class MarketGroupEntry extends BaseModel {
     String description;
 
     @Column
-    String parentId;
+    long parentId;
+
+    @Column
+    String parent;
 
     @Column
     String types;
@@ -44,19 +48,35 @@ public final class MarketGroupEntry extends BaseModel {
             entry.id = group.getId();
             entry.description = group.getDescription();
             entry.name = group.getName();
-            entry.href = group.getRef();
-            entry.parentId = group.getParent();
-            entry.types = group.getType();
+            entry.href = group.getHref();
+            if (group.hasParent()) {
+                entry.parent = group.getParentRef();
+                entry.parentId = getParentId(group.getParentRef());
+            }
+            entry.types = group.getTypeRef();
+            entry.save();
         }
     }
 
+    private static long getParentId(String href) {
+        String[] query = href.split("/");
+
+        for (int i = query.length; i > 0; i--) {
+            if (!query[i-1].equals("")) {
+                return Long.parseLong(query[i-1]);
+            }
+        }
+
+        return 0L;
+    }
+
     public static ArrayList<MarketGroup> getMarketGroupsForParent(Long parentId) {
-        Condition condition = MarketGroupEntry_Table.parentId.eq(buildParentGroupLink(parentId));
-        Condition nullCondition = MarketGroupEntry_Table.parentId.isNull();
+        Condition condition = parentId != null ? MarketGroupEntry_Table.parentId.eq(parentId) :
+                MarketGroupEntry_Table.parentId.isNull();
 
         List<MarketGroupEntry> groups = new Select()
                 .from(MarketGroupEntry.class)
-                .where(parentId != null ? condition : nullCondition)
+                .where(condition)
                 .queryList();
 
         ArrayList<MarketGroup> builtGroups = new ArrayList<>(groups.size());
@@ -68,14 +88,20 @@ public final class MarketGroupEntry extends BaseModel {
     }
 
     private static MarketGroup buildMarketGroup(MarketGroupEntry entry) {
-        return new MarketGroup.Builder()
+        MarketGroup.Builder builder = new MarketGroup.Builder()
             .setDescription(entry.description)
             .setHref(entry.href)
             .setId(entry.id)
             .setName(entry.name)
-            .setParentGroup(entry.parentId)
-            .setTypes(entry.types)
-            .build();
+            .setTypes(entry.types);
+
+        if (!entry.parent.equals("")) {
+            builder
+                .setParentGroup(entry.parent)
+                .setParentId(entry.parentId);
+        }
+
+        return builder.build();
     }
 
     private static String buildParentGroupLink(long id) {
@@ -84,9 +110,9 @@ public final class MarketGroupEntry extends BaseModel {
 
     public static MarketGroup getMarketGroup(long id) {
         MarketGroupEntry group = new Select()
-                .from(MarketGroupEntry.class)
-                .where(MarketGroupEntry_Table.parentId.eq(buildParentGroupLink(id)))
-                .querySingle();
+            .from(MarketGroupEntry.class)
+            .where(MarketGroupEntry_Table.parentId.eq(id))
+            .querySingle();
 
         return buildMarketGroup(group);
     }
