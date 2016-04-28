@@ -22,10 +22,7 @@ public interface CrestService {
     Observable<Response<CrestServerStatus>> getServer();
 
     @GET("/market/types/")
-    Observable<Response<CrestDictionary<CrestMarketType>>> getMarketTypes();
-
-    @GET
-    Observable<Response<CrestDictionary<CrestMarketType>>> getMarketTypes(@Url String url);
+    Observable<Response<CrestDictionary<CrestMarketType>>> getMarketTypes(@Query("page") int page);
 
     @GET("/types/{typeId}/")
     Observable<Response<CrestType>> getTypeInfo(@Path("typeId") long id);

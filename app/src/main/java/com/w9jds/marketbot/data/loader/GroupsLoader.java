@@ -19,13 +19,17 @@ import org.devfleet.crest.model.CrestMarketType;
 import org.devfleet.crest.model.CrestServerStatus;
 import org.devfleet.crest.model.CrestType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import retrofit2.Response;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -180,23 +184,74 @@ public abstract class GroupsLoader extends BaseDataManager {
         }
     };
 
+    Func1<Response<CrestDictionary<CrestMarketType>>, Observable<?>> typesMap = dictionaryResponse -> {
+        if (dictionaryResponse.isSuccessful() && dictionaryResponse.body() != null) {
+            return Observable.just(dictionaryResponse.body().getItems());
+        }
+
+        try {
+            return Observable.error(new Exception(dictionaryResponse.errorBody().string()));
+        }
+        catch(Exception ex) {
+            return Observable.error(ex);
+        }
+    };
+
     private void updateMarketTypes() {
-        publicCrest.getMarketTypes()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(Throwable::printStackTrace)
-            .doOnNext(typeCallback)
-            .subscribe();
+        int pages = 20;
+        List<Observable> observables = new ArrayList<>(pages);
+        for (int i = 1; i <= pages; i++) {
+            final int page = i;
+            observables.add(Observable.defer(() -> publicCrest.getMarketTypes(page))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .flatMap(typesMap));
+        }
+
+        Observable
+            .zip(observables, args -> args)
+            .reduce((o , o1) -> {
+
+            });
+
+
+//        publicCrest.getMarketTypes(1)
+//            .subscribeOn(Schedulers.newThread())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .map(response -> {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    CrestDictionary<CrestMarketType> page = response.body();
+//
+//                    int pages = page.getPageCount();
+//                    Observable<Response<CrestDictionary<CrestMarketType>>>[] requests = new Observable[pages];
+//                    for (int i = 2; i < pages; i++) {
+//                        requests[i - 2] = publicCrest.getMarketTypes(i)
+//                            .subscribeOn(Schedulers.newThread())
+//                            .observeOn(AndroidSchedulers.mainThread());
+//                    }
+//
+//                    Observable.zip(Arrays.asList(requests), args -> {
+//
+//                    });
+//                }
+//
+//
+//            })
+//            .doOnError(Throwable::printStackTrace)
+//            .doOnNext(typeCallback)
+//            .subscribe(crestDictionaryResponse -> {
+//
+//            });
     }
 
-    public void loadNextPageTypes(String targetLocation) {
-        publicCrest.getMarketTypes(targetLocation)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(Throwable::printStackTrace)
-            .doOnNext(typeCallback)
-            .subscribe();
-    }
+//    public void loadNextPageTypes(String targetLocation) {
+//        publicCrest.getMarketTypes(targetLocation)
+//            .subscribeOn(Schedulers.newThread())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .doOnError(Throwable::printStackTrace)
+//            .doOnNext(typeCallback)
+//            .subscribe();
+//    }
 
     private void updateRegions() {
         publicCrest.getRegions()
