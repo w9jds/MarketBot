@@ -29,6 +29,7 @@ import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketGroup;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.loader.GroupsLoader;
+import com.w9jds.marketbot.data.storage.MarketGroupEntry;
 import com.w9jds.marketbot.ui.adapters.MarketGroupsAdapter;
 import com.w9jds.marketbot.data.BaseDataManager;
 
@@ -73,13 +74,11 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
             @Override
             public void onProgressUpdate(final int page, final int totalPages) {
                 if (progressDialog.isIndeterminate()) {
-                    progressDialog.setOnDismissListener(dialog ->
-                            updateProgressDialog(page, totalPages, true));
-
+                    progressDialog.setOnDismissListener(dialog -> updateProgressDialog(page, totalPages));
                     progressDialog.dismiss();
                 }
 
-                updateProgressDialog(page, totalPages, false);
+                updateProgressDialog(page, totalPages);
             }
 
             @Override
@@ -97,27 +96,17 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
         groupsLoader.update();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private void updateProgressDialog(int page, int max) {
+        progressDialog.setMax(max);
+        progressDialog.setProgress(page);
 
-        groupsLoader.loadMarketGroups(null);
-    }
-
-    private void updateProgressDialog(int page, int max, boolean isNewWindow) {
-        if (isNewWindow) {
+        if (!progressDialog.isShowing()) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(false);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setMessage("Updating Items Cache...");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
-        }
-
-        progressDialog.setMax(max);
-        progressDialog.setProgress(page);
-
-        if (isNewWindow) {
             progressDialog.show();
         }
     }
@@ -231,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
                 groupsLoader.loadMarketGroups(parentId);
                 groupsLoader.loadMarketTypes(parentId);
+
+                currentParent = MarketGroupEntry.getMarketGroup(parentId);
             }
             else if (currentParent != null) {
                 groupsLoader.loadMarketGroups(null);

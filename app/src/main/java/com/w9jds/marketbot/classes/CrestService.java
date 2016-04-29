@@ -9,11 +9,11 @@ import org.devfleet.crest.model.CrestMarketType;
 import org.devfleet.crest.model.CrestServerStatus;
 import org.devfleet.crest.model.CrestType;
 
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 import rx.Observable;
 
 public interface CrestService {
@@ -22,7 +22,7 @@ public interface CrestService {
     Observable<Response<CrestServerStatus>> getServer();
 
     @GET("/market/types/")
-    Observable<Response<CrestDictionary<CrestMarketType>>> getMarketTypes(@Query("page") int page);
+    Call<CrestDictionary<CrestMarketType>> getMarketTypes(@Query("page") int page);
 
     @GET("/types/{typeId}/")
     Observable<Response<CrestType>> getTypeInfo(@Path("typeId") long id);
@@ -38,7 +38,7 @@ public interface CrestService {
                                                                             @Path("orderType") String orderType,
                                                                             @Query(value = "type", encoded = true) String typeId);
 
-    @GET("/market/{regionId}/orders")
+    @GET("/market/{regionId}/orders/")
     Observable<Response<CrestDictionary<CrestMarketOrder>>> getMarketOrders(@Path("regionId") long regionId,
                                                                             @Query(value = "type", encoded = true) String typeId);
 

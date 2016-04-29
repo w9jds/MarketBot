@@ -12,7 +12,7 @@ public final class Region extends MarketItemBase {
         return href;
     }
 
-    public class Builder {
+    public static class Builder {
 
         private long id;
         private String name;

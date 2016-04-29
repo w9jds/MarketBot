@@ -1,10 +1,13 @@
 package com.w9jds.marketbot.classes.models;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Jeremy on 2/17/2016.
  */
-public final class Type extends MarketItemBase {
+public final class Type extends MarketItemBase implements Parcelable {
 
     private String href;
     private String icon;
@@ -81,4 +84,43 @@ public final class Type extends MarketItemBase {
 
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.href);
+        dest.writeString(this.icon);
+        dest.writeString(this.marketGroup);
+        dest.writeString(this.name);
+        dest.writeLong(this.id);
+        dest.writeLong(this.groupId);
+    }
+
+    public Type() {
+
+    }
+
+    protected Type(Parcel in) {
+        this.href = in.readString();
+        this.icon = in.readString();
+        this.marketGroup = in.readString();
+        this.name = in.readString();
+        this.id = in.readLong();
+        this.groupId = in.readLong();
+    }
+
+    public static final Parcelable.Creator<Type> CREATOR = new Parcelable.Creator<Type>() {
+        @Override
+        public Type createFromParcel(Parcel source) {
+            return new Type(source);
+        }
+
+        @Override
+        public Type[] newArray(int size) {
+            return new Type[size];
+        }
+    };
 }

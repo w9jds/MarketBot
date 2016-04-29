@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.Region;
+import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.classes.models.TypeInfo;
 import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.loader.TypeLoader;
@@ -31,8 +32,7 @@ import butterknife.ButterKnife;
  */
 public final class TypeInfoTab extends Fragment implements DataLoadingSubject.DataLoadingCallbacks {
 
-    static final String ARG_PAGE = "ARG_PAGE";
-    static final String ARG_TYPEID = "ARG_TYPEID";
+    static final String ARG_TYPE = "ARG_TYPE";
 
     @Bind(R.id.dataloading_progress) ProgressBar loading;
     @Bind(R.id.type_name) TextView name;
@@ -43,23 +43,27 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
     @Bind(R.id.portion_value) TextView portion;
     @Bind(R.id.item_icon) ImageView icon;
 
-    private int position;
-    private long typeId;
+    private Type type;
     private TypeLoader loader;
 
     /**
      * TODO: Possibly show ship 3d view using webresource
      */
-    public static TypeInfoTab create(int page, long typeId) {
+    public static TypeInfoTab create(Type type) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        args.putLong(ARG_TYPEID, typeId);
+        args.putParcelable(ARG_TYPE, type);
         TypeInfoTab fragment = new TypeInfoTab();
         fragment.setArguments(args);
         return fragment;
     }
 
     private String formatNumberValue(double value, String unit) {
+        if (value > 1000000000000L) {
+            return String.format(Locale.ENGLISH, "%.2ft %s", value / 1000000.0, unit);
+        }
+        if (value > 1000000000) {
+            return String.format(Locale.ENGLISH, "%.2fb %s", value / 1000000.0, unit);
+        }
         if (value > 1000000) {
             return String.format(Locale.ENGLISH, "%.2fm %s", value / 1000000.0, unit);
         }
@@ -72,10 +76,9 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
 
-        position = args.getInt(ARG_PAGE);
-        typeId = args.getLong(ARG_TYPEID);
+        Bundle args = getArguments();
+        type = args.getParcelable(ARG_TYPE);
 
         loader = new TypeLoader(getContext()) {
             @Override
@@ -105,13 +108,12 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
         View view = inflater.inflate(R.layout.fragment_type_info, container, false);
         ButterKnife.bind(this, view);
 
-        ItemActivity host = (ItemActivity) getActivity();
-        name.setText(host.getCurrentTypeName());
-        Glide.with(host)
-            .load(host)
+        name.setText(type.getName());
+        Glide.with(getActivity())
+            .load(type.getIcon())
             .into(icon);
 
-        loader.loadTypeInfo(typeId);
+        loader.loadTypeInfo(type.getId());
         return view;
     }
 

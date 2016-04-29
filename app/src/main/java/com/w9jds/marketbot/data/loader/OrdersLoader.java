@@ -125,7 +125,7 @@ public abstract class OrdersLoader extends BaseDataManager {
             }
         }
 
-        onSellOrdersLoaded(sellOrders);
+        onBuyOrdersLoaded(sellOrders);
         decrementLoadingCount();
         loadFinished();
     }

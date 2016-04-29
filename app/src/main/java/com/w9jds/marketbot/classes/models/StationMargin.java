@@ -71,7 +71,7 @@ public class StationMargin {
             margin.maxBuyPrice = maxBuyPrice;
             margin.maxSellPrice = maxSellPrice;
             margin.margin = maxSellPrice - maxBuyPrice;
-            margin.percentage = (margin.margin / maxBuyPrice) * 100;
+            margin.percentage = margin.margin / maxBuyPrice;
             margin.station = station;
 
             return margin;

@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.data.MarketDatabase;
 
-@Table(database = MarketDatabase.class)
+@Table(database = MarketDatabase.class, name = "TypeInfo")
 public final class MarketTypeInfoEntry extends BaseModel {
 
     @PrimaryKey

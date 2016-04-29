@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.classes.models.Type;
+import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 import com.w9jds.marketbot.ui.fragments.ListTab;
 import com.w9jds.marketbot.ui.fragments.TypeInfoTab;
 
@@ -19,15 +21,15 @@ public final class ListTabAdapter extends FragmentStatePagerAdapter {
 
     private final Resources resources;
     private final BehaviorSubject<Map.Entry<Integer, List<?>>> subject;
-    private final long typeId;
+    private final Type type;
 
     final int PAGE_COUNT = 4;
 
-    public ListTabAdapter(FragmentManager fragmentManager, Context context, long typeId,
+    public ListTabAdapter(FragmentManager fragmentManager, Context context, Type type,
                           BehaviorSubject<Map.Entry<Integer, List<?>>> subject) {
         super(fragmentManager);
         this.resources = context.getResources();
-        this.typeId = typeId;
+        this.type = type;
         this.subject = subject;
     }
 
@@ -56,7 +58,7 @@ public final class ListTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return TypeInfoTab.create(position, typeId);
+            return TypeInfoTab.create(type);
         }
         else {
             return ListTab.create(position, subject);

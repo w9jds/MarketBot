@@ -3,6 +3,10 @@ package com.w9jds.marketbot.data.storage;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.classes.models.Type;
@@ -14,7 +18,7 @@ import org.devfleet.crest.model.CrestType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(database = MarketDatabase.class)
+@Table(database = MarketDatabase.class, name = "MarketTypes")
 public final class MarketTypeEntry extends BaseModel {
 
     @PrimaryKey
@@ -34,6 +38,7 @@ public final class MarketTypeEntry extends BaseModel {
 
     public static void addNewMarketTypes(List<CrestMarketType> types) {
         int size = types.size();
+        List<MarketTypeEntry> entries = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             CrestMarketType type = types.get(i);
 
@@ -43,15 +48,20 @@ public final class MarketTypeEntry extends BaseModel {
             entry.href = type.getTypeHref();
             entry.icon = type.getTypeIcon();
             entry.name = type.getTypeName();
-            entry.save();
+            entries.add(entry);
         }
+
+        TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(
+                ProcessModelInfo.withModels(entries)));
     }
 
     private static Type buildMarketType(MarketTypeEntry entry) {
         return new Type.Builder()
+            .setName(entry.name)
             .setGroupId(entry.groupId)
             .setHref(entry.href)
             .setId(entry.id)
+            .setIcon(entry.icon)
             .build();
     }
 
@@ -69,6 +79,7 @@ public final class MarketTypeEntry extends BaseModel {
         return buildMarketTypes(new Select()
             .from(MarketTypeEntry.class)
             .where(MarketTypeEntry_Table.groupId.eq(groupId))
+            .orderBy(OrderBy.fromProperty(MarketTypeEntry_Table.name).ascending())
             .queryList());
     }
 
@@ -83,6 +94,7 @@ public final class MarketTypeEntry extends BaseModel {
         return buildMarketTypes(new Select()
             .from(MarketTypeEntry.class)
             .where(MarketTypeEntry_Table.name.like("%" + queryString + "%"))
+            .orderBy(OrderBy.fromProperty(MarketTypeEntry_Table.name).ascending())
             .queryList());
     }
 }

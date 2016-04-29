@@ -117,7 +117,7 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
 
             final Intent intent = new Intent();
             intent.setClass(host, ItemActivity.class);
-//            intent.putExtra("currentType", type);
+            intent.putExtra("currentType", type);
 
             final ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(host,
                     new Pair(host.findViewById(R.id.app_bar), host.getString(R.string.toolbar_transition_name)),
@@ -188,7 +188,6 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
 
     public void updateCollection(Collection<? extends MarketItemBase> newChildren) {
         ArrayList<MarketItemBase> groups = new ArrayList<>(newChildren);
-        Collections.sort(groups, new TypeComparator());
 
         int newSize;
         int oldSize = items.size();
@@ -227,17 +226,17 @@ public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView
         toClear = clear;
     }
 
-    private class TypeComparator implements Comparator<MarketItemBase> {
-        @Override
-        public int compare(MarketItemBase lhs, MarketItemBase rhs) {
-            if (lhs instanceof MarketGroup && rhs instanceof Type) {
-                return -1;
-            }
-            if (lhs instanceof Type && rhs instanceof MarketGroup) {
-                return 1;
-            }
-
-            return lhs.getName().compareTo(rhs.getName());
-        }
-    }
+//    private class TypeComparator implements Comparator<MarketItemBase> {
+//        @Override
+//        public int compare(MarketItemBase lhs, MarketItemBase rhs) {
+//            if (lhs instanceof MarketGroup && rhs instanceof Type) {
+//                return -1;
+//            }
+//            if (lhs instanceof Type && rhs instanceof MarketGroup) {
+//                return 1;
+//            }
+//
+//            return lhs.getName().compareTo(rhs.getName());
+//        }
+//    }
 }

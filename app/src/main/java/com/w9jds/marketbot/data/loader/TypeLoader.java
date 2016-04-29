@@ -11,6 +11,7 @@ import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.classes.models.TypeInfo;
 import com.w9jds.marketbot.data.BaseDataManager;
+import com.w9jds.marketbot.data.storage.RegionEntry;
 
 import org.devfleet.crest.model.CrestType;
 
@@ -43,7 +44,7 @@ public abstract class TypeLoader extends BaseDataManager {
     public abstract void onRegionsLoaded(List<Region> regions);
 
     public void loadRegions(boolean includesWormholes) {
-//        onDataLoaded(RegionEntry(includesWormholes));
+        onRegionsLoaded(RegionEntry.getAllRegions(includesWormholes));
     }
 
     public void loadTypeInfo(long typeId) {

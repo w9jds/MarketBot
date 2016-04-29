@@ -7,13 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.repacked.apache.commons.codec.binary.StringUtils;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.MarketOrder;
+import com.w9jds.marketbot.classes.models.StationMargin;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -23,14 +25,19 @@ import butterknife.ButterKnife;
 
 public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int MARKET_ORDER_VIEW = 111;
+    private static final int MARKET_MARGIN_VIEW = 101;
+
     Context context;
-    List<Object> items = new ArrayList<>();
+    LayoutInflater layoutInflater;
+    List<?> items = new ArrayList<>();
 
     public ListAdapter(Context context) {
         this.context = context;
+        this.layoutInflater = LayoutInflater.from(context);
     }
 
-    static class OrderViewHolder extends RecyclerView.ViewHolder {
+    static class MarketOrderHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.inventory) TextView volume;
         @Bind(R.id.price) TextView price;
@@ -38,7 +45,17 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Bind(R.id.range) TextView range;
         @Bind(R.id.range_container) View rangeContainer;
 
-        public OrderViewHolder(View view) {
+        public MarketOrderHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    static class MarketMarginHolder extends RecyclerView.ViewHolder {
+
+
+
+        public MarketMarginHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
@@ -46,18 +63,42 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new OrderViewHolder(LayoutInflater.from(context).inflate(
-                R.layout.market_order_item, parent, false));
+        switch(viewType) {
+            case MARKET_MARGIN_VIEW:
+                return createMarketMarginHolder(parent);
+            default:
+                return createMarketOrderHolder(parent);
+        }
+    }
+
+    private MarketOrderHolder createMarketOrderHolder(ViewGroup parent) {
+        return new MarketOrderHolder(layoutInflater.inflate(R.layout.market_order_item, parent, false));
+    }
+
+    private MarketMarginHolder createMarketMarginHolder(ViewGroup parent) {
+        return new MarketMarginHolder(layoutInflater.inflate(R.layout.market_margin_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        final OrderViewHolder viewHolder = (OrderViewHolder) holder;
-        final MarketOrder order = (MarketOrder) getItem(position);
+        switch(getItemViewType(position)) {
+            case MARKET_ORDER_VIEW:
+                bindMarketOrderView((MarketOrder) getItem(position), (MarketOrderHolder) holder);
+                break;
+            case MARKET_MARGIN_VIEW:
+                bindMarketMarginView((StationMargin) getItem(position), (MarketMarginHolder) holder);
+                break;
+        }
 
+    }
+
+    private void bindMarketMarginView(StationMargin margin, MarketMarginHolder holder) {
+
+    }
+
+    private void bindMarketOrderView(MarketOrder order, MarketOrderHolder holder) {
         DecimalFormat formatter;
         String price;
-
 
         formatter = new DecimalFormat("#,###.00");
         price = formatter.format(order.getPrice()) + " ISK";
@@ -66,24 +107,23 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         formatter = new DecimalFormat("#,###");
         String volume = formatter.format(order.getVolume());
 
-        viewHolder.location.setText(order.getLocation());
-        viewHolder.price.setText(price);
-        viewHolder.volume.setText(volume);
+        holder.location.setText(order.getLocation());
+        holder.price.setText(price);
+        holder.volume.setText(volume);
 
         if (order.isBuyOrder()) {
             String range = order.getRange();
-            viewHolder.rangeContainer.setVisibility(View.VISIBLE);
+            holder.rangeContainer.setVisibility(View.VISIBLE);
 
-//            if (StringUtils.isNumeric(range)) {
-//                range = range + " Jumps";
-//            }
-//            range = WordUtils.capitalizeFully(range);
-//            viewHolder.range.setText(range);
+            if (StringUtils.isNumeric(range)) {
+                range = range + " Jumps";
+            }
+            range = WordUtils.capitalizeFully(range);
+            holder.range.setText(range);
         }
         else {
-            viewHolder.rangeContainer.setVisibility(View.GONE);
+            holder.rangeContainer.setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -108,13 +148,21 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void updateCollection(List<?> newChildren) {
-        List<Object> newOrders = new ArrayList<>(newChildren);
-//        Collections.sort(newOrders, new PriceComparator());
-
-        int newSize = newOrders.size();
+        int newSize = newChildren.size();
         int oldSize = items.size();
 
-        items = newOrders;
+        if (newSize > 0 && newChildren.get(0) instanceof MarketOrder) {
+            List<MarketOrder> orders = new ArrayList<>(newSize);
+            for (int i = 0; i < newSize; i++) {
+                orders.add((MarketOrder) newChildren.get(i));
+            }
+
+            Collections.sort(orders, new PriceComparator());
+            items = orders;
+        }
+        else {
+            items = newChildren;
+        }
 
         if (newSize < oldSize) {
             notifyItemRangeChanged(0, newSize);
@@ -126,6 +174,16 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (newSize > oldSize) {
             notifyItemRangeChanged(0, oldSize);
             notifyItemRangeInserted(oldSize, newSize - oldSize);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (getItem(position) instanceof MarketOrder) {
+            return MARKET_ORDER_VIEW;
+        }
+        else {
+            return MARKET_MARGIN_VIEW;
         }
     }
 

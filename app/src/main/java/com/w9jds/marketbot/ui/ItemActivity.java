@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +31,6 @@ import com.w9jds.marketbot.data.loader.TypeLoader;
 import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 import com.w9jds.marketbot.ui.adapters.ListTabAdapter;
 import com.w9jds.marketbot.ui.adapters.RegionAdapter;
-import com.w9jds.marketbot.ui.fragments.ListTab;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -44,19 +42,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.subjects.BehaviorSubject;
 
-/**
- * Created by Jeremy Shore on 2/22/16.
- *
- * Modified by Alexander Whipp on 4/8/16.
- */
+public class ItemActivity extends AppCompatActivity implements DataLoadingSubject.DataLoadingCallbacks,
+        DataLoadingSubject.DataUpdatingCallbacks {
 
-public class ItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
-        DataLoadingSubject.DataLoadingCallbacks, DataLoadingSubject.DataUpdatingCallbacks {
-
-    @Inject boolean isFirstRun;
-    @Inject long regionId;
     @Inject SharedPreferences sharedPreferences;
-
 
     @Bind(R.id.item_content) CoordinatorLayout baseView;
     @Bind(R.id.main_toolbar) Toolbar toolbar;
@@ -70,9 +59,9 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
     private OrdersLoader ordersLoader;
     private Type currentType;
     private RegionAdapter regionAdapter;
-    private ListTabAdapter tabAdapter;
     private BehaviorSubject<Map.Entry<Integer, List<?>>> subject;
 
+    private long regionId;
     private boolean updateRun = false;
     private long typeIdExtra;
 
@@ -82,9 +71,10 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_market_item);
         ButterKnife.bind(this);
 
+        MarketBot.createNewStorageSession().inject(this);
         subject = BehaviorSubject.create();
+        regionId = sharedPreferences.getLong("regionId", 10000002);
 
-        updateStorageSession();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
@@ -110,6 +100,21 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onRegionsLoaded(List<Region> regions) {
                 regionAdapter.addAllItems(regions);
                 regionSpinner.setSelection(regionAdapter.getPositionfromId((int)regionId), true);
+                regionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Region region = (Region) regionAdapter.getItem(position);
+                        regionId = region.getId();
+                        sharedPreferences.edit().putLong("regionId", region.getId()).apply();
+
+                        ordersLoader.loadMarketOrders(regionId, currentType);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Never Happens
+                    }
+                });
             }
         };
 
@@ -134,13 +139,11 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onProgressUpdate(int page, int totalPages) {
                 if (progressDialog.isIndeterminate()) {
-                    progressDialog.setOnDismissListener(dialog ->
-                            updateProgressDialog(page, totalPages, true));
-
+                    progressDialog.setOnDismissListener(dialog -> updateProgressDialog(page, totalPages));
                     progressDialog.dismiss();
                 }
 
-                updateProgressDialog(page, totalPages, false);
+                updateProgressDialog(page, totalPages);
             }
 
             @Override
@@ -152,35 +155,27 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
         loader.registerLoadingCallback(this);
         updateLoader.registerUpdatingCallback(this);
         regionSpinner.setAdapter(regionAdapter);
-        regionSpinner.setOnItemSelectedListener(this);
 
         checkExtras();
     }
 
-    private void updateStorageSession() {
-        MarketBot.createNewStorageSession().inject(this);
-    }
+    private void updateProgressDialog(int page, int max) {
+        progressDialog.setMax(max);
+        progressDialog.setProgress(page);
 
-    private void updateProgressDialog(int page, int max, boolean isNewWindow) {
-        if (isNewWindow) {
+        if (!progressDialog.isShowing()) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(false);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setMessage("Updating Items Cache...");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
-        }
-
-        progressDialog.setMax(max);
-        progressDialog.setProgress(page);
-
-        if (isNewWindow) {
             progressDialog.show();
         }
     }
 
     private void checkExtras() {
-        if (!isFirstRun) {
+        if (!sharedPreferences.getBoolean("isFirstRun", true)) {
             if (typeIdExtra != -1) {
                 currentType = MarketTypeEntry.getType(typeIdExtra);
             } else {
@@ -198,21 +193,15 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void loadTypeData() {
-        tabAdapter = new ListTabAdapter(getSupportFragmentManager(), this, currentType.getId(), subject);
+        loader.loadRegions(false);
+
+        ListTabAdapter tabAdapter = new ListTabAdapter(getSupportFragmentManager(),
+                this, currentType, subject);
         pager.setOffscreenPageLimit(4);
         pager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(pager);
 
-        loader.loadRegions(false);
         ordersLoader.loadMarketOrders(regionId, currentType);
-    }
-
-//    public String getCurrentTypeIcon() {
-//        return currentType.getIconLink();
-//    }
-
-    public String getCurrentTypeName() {
-        return currentType.getName();
     }
 
     @Override
@@ -235,23 +224,7 @@ public class ItemActivity extends AppCompatActivity implements AdapterView.OnIte
     public void dataUpdatingFinished() {
         progressDialog.dismiss();
         updateRun = true;
-
-        updateStorageSession();
         checkExtras();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Region region = (Region) regionAdapter.getItem(position);
-        regionId = region.getId();
-        sharedPreferences.edit().putLong("regionId", region.getId()).apply();
-
-        ordersLoader.loadMarketOrders(regionId, currentType);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override

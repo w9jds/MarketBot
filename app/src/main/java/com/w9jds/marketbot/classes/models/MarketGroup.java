@@ -100,10 +100,12 @@ public final class MarketGroup extends MarketItemBase  {
             MarketGroup group = new MarketGroup();
             group.id = id;
             group.name = name;
-            if (!parentGroup.equals("")) {
+
+            if (parentGroup != null) {
                 group.parentGroup = this.parentGroup;
                 group.parentId = this.parentId;
             }
+
             group.href = this.href;
             group.description = this.description;
             group.types = this.types;

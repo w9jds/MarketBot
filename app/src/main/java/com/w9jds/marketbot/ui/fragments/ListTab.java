@@ -25,7 +25,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 import rx.subjects.BehaviorSubject;
+import rx.subscriptions.CompositeSubscription;
 
 public final class ListTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
 
@@ -34,8 +36,9 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.orders_list) RecyclerView orders;
 
-    private final int position;
+    private CompositeSubscription subscriptions;
 
+    private int position;
     private ListAdapter adapter;
     private OrdersLoader loader;
 
@@ -45,60 +48,68 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
     public static ListTab create(int page, BehaviorSubject<Map.Entry<Integer, List<?>>> behaviorSubject) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        ListTab fragment = new ListTab(behaviorSubject);
+        ListTab fragment = new ListTab();
         fragment.setArguments(args);
+
+        fragment.getSubscriptions().add(behaviorSubject
+            .doOnError(Throwable::printStackTrace)
+            .doOnNext(fragment.updateTab)
+            .subscribe());
+
         return fragment;
     }
 
     public ListTab() {
-        super();
-
-        Bundle args = getArguments();
-        position = args.getInt(ARG_PAGE);
+        subscriptions = new CompositeSubscription();
     }
 
-    public ListTab(BehaviorSubject<Map.Entry<Integer, List<?>>> subject) {
-        this();
-
-        subject
-            .doOnError(Throwable::printStackTrace)
-            .doOnNext(marketOrders -> {
-                if (marketOrders.getKey() == position) {
-                    adapter.updateCollection(marketOrders.getValue());
-                }
-            })
-            .subscribe();
-    }
-
+    public Action1<Map.Entry<Integer, List<?>>> updateTab = marketOrders -> {
+        if (marketOrders.getKey() == position) {
+            adapter.updateCollection(marketOrders.getValue());
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
 
+    public CompositeSubscription getSubscriptions() {
+        return subscriptions;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        subscriptions.unsubscribe();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle args = getArguments();
+        position = args.getInt(ARG_PAGE);
+
         adapter = new ListAdapter(getContext());
-        loader = new OrdersLoader(getActivity()) {
-            @Override
-            public void onSellOrdersLoaded(List<MarketOrder> orders) {
-
-            }
-
-            @Override
-            public void onBuyOrdersLoaded(List<MarketOrder> orders) {
-
-            }
-
-            @Override
-            public void onMarginsLoaded(List<StationMargin> orders) {
-
-            }
-        };
-
-        loader.registerLoadingCallback(this);
+//        loader = new OrdersLoader(getActivity()) {
+//            @Override
+//            public void onSellOrdersLoaded(List<MarketOrder> orders) {
+//
+//            }
+//
+//            @Override
+//            public void onBuyOrdersLoaded(List<MarketOrder> orders) {
+//
+//            }
+//
+//            @Override
+//            public void onMarginsLoaded(List<StationMargin> orders) {
+//
+//            }
+//        };
+//
+//        loader.registerLoadingCallback(this);
     }
 
     @Override
@@ -110,7 +121,7 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
         orders.setItemAnimator(new DefaultItemAnimator());
         orders.setAdapter(adapter);
 
-        refreshLayout.setOnRefreshListener(() -> updateOrdersList(currentRegion, currentType));
+//        refreshLayout.setOnRefreshListener(() -> updateOrdersList(currentRegion, currentType));
         return view;
     }
 
@@ -120,23 +131,23 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
         ButterKnife.unbind(this);
     }
 
-    public void updateOrdersList(Region region, Type type) {
-        currentRegion = region;
-        currentType = type;
-
-        adapter.clear();
-        switch(position) {
-            case 1:
-                loader.loadSellOrders(region.getId(), type);
-                break;
-            case 2:
-                loader.loadBuyOrders(region.getId(), type);
-                break;
-            case 3:
-                loader.loadMarginOrders(region.getId(), type);
-                break;
-        }
-    }
+//    public void updateOrdersList(Region region, Type type) {
+//        currentRegion = region;
+//        currentType = type;
+//
+//        adapter.clear();
+//        switch(position) {
+//            case 1:
+//                loader.loadSellOrders(region.getId(), type);
+//                break;
+//            case 2:
+//                loader.loadBuyOrders(region.getId(), type);
+//                break;
+//            case 3:
+//                loader.loadMarginOrders(region.getId(), type);
+//                break;
+//        }
+//    }
 
     @Override
     public void dataStartedLoading() {
