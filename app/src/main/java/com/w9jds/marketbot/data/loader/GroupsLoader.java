@@ -114,7 +114,7 @@ public abstract class GroupsLoader extends BaseDataManager {
                                 .apply();
 
                             updateMarketGroups();
-                            updateMarketTypes(1);
+                            updateMarketTypes();
                             updateRegions();
                         }
                         else {
@@ -164,33 +164,45 @@ public abstract class GroupsLoader extends BaseDataManager {
             }).subscribe();
     }
 
-    private void updateMarketTypes(int page) {
-        publicCrest.getMarketTypes(page).enqueue(new Callback<CrestDictionary<CrestMarketType>>() {
-            @Override
-            public void onResponse(Call<CrestDictionary<CrestMarketType>> call, Response<CrestDictionary<CrestMarketType>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    CrestDictionary<CrestMarketType> types = response.body();
-                    MarketTypeEntry.addNewMarketTypes(types.getItems());
+    private List<CrestMarketType> getAllMarketTypes() {
+        try {
+            List<CrestMarketType> crestMarketTypes = new ArrayList<>();
+            CrestDictionary<CrestMarketType> dictionary;
+            int page = 0;
 
-                    if (types.getPageNext() != null) {
-                        Uri uri = Uri.parse(types.getPageNext());
-                        onProgressUpdate(Integer.parseInt(uri.getQueryParameter("page")), types.getPageCount());
-                        updateMarketTypes(page + 1);
-                    }
-                    else {
-                        decrementUpdatingCount();
-                        updateFinished();
-                    }
+            do {
+                page = page + 1;
+                dictionary = publicCrest.getMarketTypes(page).execute().body();
+                if (dictionary == null) {
+                    break;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<CrestDictionary<CrestMarketType>> call, Throwable t) {
-                updateFailed = true;
+                crestMarketTypes.addAll(dictionary.getItems());
+                onProgressUpdate(crestMarketTypes.size(), (int)dictionary.getTotalCount());
+            } while(dictionary.getPageNext() != null);
+
+            return crestMarketTypes;
+        }
+        catch(Exception ex) {
+            updateFailed = true;
+            decrementUpdatingCount();
+            updateFinished();
+
+            return new ArrayList<>();
+        }
+    }
+
+    private void updateMarketTypes() {
+        Observable.defer(() -> Observable.just(getAllMarketTypes()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(orders -> {
+
+                MarketTypeEntry.addNewMarketTypes(orders);
                 decrementUpdatingCount();
                 updateFinished();
-            }
-        });
+
+            }).subscribe();
     }
 
     private void updateRegions() {

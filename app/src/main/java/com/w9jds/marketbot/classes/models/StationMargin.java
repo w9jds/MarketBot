@@ -38,13 +38,7 @@ public class StationMargin {
 
         double maxBuyPrice;
         double maxSellPrice;
-
         String station;
-
-//        public Builder setMargin(double margin) {
-//            this.margin = margin;
-//            return this;
-//        }
 
         public Builder setMaxBuyPrice(double maxBuyPrice) {
             this.maxBuyPrice = maxBuyPrice;
@@ -55,11 +49,6 @@ public class StationMargin {
             this.maxSellPrice = maxSellPrice;
             return this;
         }
-
-//        public Builder setPercentage(double percentage) {
-//            this.percentage = percentage;
-//            return this;
-//        }
 
         public Builder setStation(String station) {
             this.station = station;
