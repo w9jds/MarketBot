@@ -2,6 +2,8 @@ package com.w9jds.marketbot.ui.fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -70,13 +72,20 @@ public class MarketHistoryTab extends Fragment {
     public Action1<Map.Entry<Integer, List<?>>> updateTab = historyEntries -> {
         if (historyEntries.getKey() == position) {
 
+            SimpleDateFormat format = new SimpleDateFormat("MMM dd", Locale.getDefault());
+
             int size = historyEntries.getValue().size();
             List<MarketHistory> histories = new ArrayList<>(size);
+            List<String> xAxis = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
-                histories.add((MarketHistory) historyEntries.getValue().get(i));
+                MarketHistory history = (MarketHistory) historyEntries.getValue().get(i);
+                Date recordDate = new Date(history.getRecordDate());
+
+                xAxis.add(format.format(recordDate));
+                histories.add(history);
             }
 
-            CombinedData data = new CombinedData();
+            CombinedData data = new CombinedData(xAxis);
 
             data.setData(generateOrderBarData(histories));
             data.setData(generateAverageLineData(histories));
@@ -117,9 +126,8 @@ public class MarketHistoryTab extends Fragment {
         View view = inflater.inflate(R.layout.fragment_market_history, container, false);
         ButterKnife.bind(this, view);
 
-        chart.setDescription("");
-        chart.setDrawGridBackground(false);
-        chart.setDrawBarShadow(false);
+        chart.setMaxVisibleValueCount(40);
+        chart.set
 
         chart.setDrawOrder(new CombinedChart.DrawOrder[] {
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.CANDLE, CombinedChart.DrawOrder.LINE
@@ -135,84 +143,97 @@ public class MarketHistoryTab extends Fragment {
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        xAxis.setLabelsToSkip(15);
+//        xAxis.setDrawLabels(false);
 
         return view;
     }
 
     private BarData generateOrderBarData(List<MarketHistory> historyEntries) {
 
-        BarData data = new BarData();
-        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd", Locale.getDefault());
 
         int size = historyEntries.size();
         List<BarEntry> entries = new ArrayList<>(size);
+        List<String> xAxis = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             MarketHistory history = historyEntries.get(i);
             Date recordDate = new Date(history.getRecordDate());
 
-            entries.add(new BarEntry((float) history.getOrderCount(), i,
-                    format.format(recordDate)));
+            xAxis.add(format.format(recordDate));
+            entries.add(new BarEntry((float) history.getOrderCount(), i));
         }
 
         BarDataSet set = new BarDataSet(entries, "Order Count");
-//        set.setColor();
+        set.setColor(Color.rgb(60, 220, 78));
+        set.setValueTextColor(Color.rgb(60, 220, 78));
+        set.setValueTextSize(10f);
+
         set.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        data.addDataSet(set);
-        return data;
+        return new BarData(xAxis, set);
     }
 
     private LineData generateAverageLineData(List<MarketHistory> historyEntries) {
 
-        LineData data = new LineData();
-        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd", Locale.getDefault());
 
         int size = historyEntries.size();
         List<Entry> entries = new ArrayList<>(size);
+        List<String> xAxis = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             MarketHistory history = historyEntries.get(i);
             Date recordDate = new Date(history.getRecordDate());
 
-            entries.add(new Entry((float) history.getAveragePrice(), i, format.format(recordDate)));
+            xAxis.add(format.format(recordDate));
+            entries.add(new Entry((float) history.getAveragePrice(), i));
         }
 
         LineDataSet set = new LineDataSet(entries, "Price Averages");
+        set.setColor(Color.rgb(240, 238, 70));
         set.setLineWidth(2.5f);
-        set.setCircleRadius(4f);
+        set.setCircleColor(Color.rgb(240, 238, 70));
+        set.setCircleRadius(5f);
+        set.setFillColor(Color.rgb(240, 238, 70));
         set.setDrawCubic(true);
         set.setDrawValues(true);
+        set.setValueTextSize(10f);
+        set.setValueTextColor(Color.rgb(240, 238, 70));
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        data.addDataSet(set);
-        return data;
+        return new LineData(xAxis, set);
     }
 
     private CandleData generateMarginCandleData(List<MarketHistory> historyEntries) {
 
-        CandleData data = new CandleData();
-        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd", Locale.getDefault());
 
         int size = historyEntries.size();
         List<CandleEntry> entries = new ArrayList<>(size);
+        List<String> xAxis = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             MarketHistory history = historyEntries.get(i);
             Date recordDate = new Date(history.getRecordDate());
 
+            xAxis.add(format.format(recordDate));
             entries.add(new CandleEntry(i,
-                (float) history.getAveragePrice(),
-                (float) history.getAveragePrice(),
                 (float) history.getHighPrice(),
                 (float) history.getLowPrice(),
-                format.format(recordDate)
+                (float) history.getAveragePrice(),
+                (float) history.getAveragePrice()
             ));
         }
 
         CandleDataSet set = new CandleDataSet(entries, "Price Margins");
-        set.setBarSpace(0.3f);
-        set.setDrawValues(false);
+        set.setShadowColor(Color.DKGRAY);
+        set.setShadowWidth(0.7f);
+        set.setDecreasingColor(Color.RED);
+        set.setDecreasingPaintStyle(Paint.Style.FILL);
+        set.setIncreasingColor(Color.rgb(122, 242, 84));
+        set.setIncreasingPaintStyle(Paint.Style.STROKE);
+        set.setNeutralColor(Color.BLUE);
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        data.addDataSet(set);
-        return data;
+        return new CandleData(xAxis, set);
 
     }
 
