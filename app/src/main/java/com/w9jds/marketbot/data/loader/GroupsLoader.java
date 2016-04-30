@@ -35,9 +35,6 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
-/**
- * Created by w9jds on 4/10/2016.
- */
 public abstract class GroupsLoader extends BaseDataManager {
 
     @Inject CrestService publicCrest;

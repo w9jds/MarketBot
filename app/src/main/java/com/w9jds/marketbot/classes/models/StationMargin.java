@@ -1,11 +1,6 @@
 package com.w9jds.marketbot.classes.models;
 
-import java.util.Date;
-
-/**
- * Created by Jeremy Shore on 4/24/16.
- */
-public class StationMargin {
+public final class StationMargin {
 
     double maxBuyPrice;
     double maxSellPrice;

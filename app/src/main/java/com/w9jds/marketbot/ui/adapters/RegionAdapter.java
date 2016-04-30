@@ -18,9 +18,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by Jeremy on 3/1/2016.
- */
 public final class RegionAdapter extends BaseAdapter implements SpinnerAdapter {
 
     private Context context;

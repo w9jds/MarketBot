@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.w9jds.marketbot.classes.utils;
+package com.w9jds.marketbot.utils;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -39,8 +39,8 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 
-import com.w9jds.marketbot.classes.utils.AnimUtils;
-import com.w9jds.marketbot.classes.utils.ColorUtils;
+import com.w9jds.marketbot.utils.AnimUtils;
+import com.w9jds.marketbot.utils.ColorUtils;
 
 /**
  * Utility methods for working with Views.

@@ -1,16 +1,15 @@
 package com.w9jds.marketbot.classes;
 
 import com.w9jds.marketbot.classes.models.MarketGroup;
+import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.TypeInfo;
 
 import org.devfleet.crest.model.CrestMarketGroup;
+import org.devfleet.crest.model.CrestMarketHistory;
 import org.devfleet.crest.model.CrestMarketOrder;
 import org.devfleet.crest.model.CrestType;
 
-/**
- * Created by w9jds on 4/10/2016.
- */
 public class CrestMapper {
 
     public static TypeInfo map(CrestType crestType) {
@@ -39,22 +38,29 @@ public class CrestMapper {
 
     public static MarketOrder map(CrestMarketOrder order) {
         return new MarketOrder.Builder()
-                .setBuyOrder(order.isBuyOrder())
-                .setDuration(order.getDuration())
-                .setHref(order.getHref())
-                .setLocation(order.getLocationName())
-                .setLocationId(order.getLocationId())
-                .setVolume(order.getVolume())
-                .setVolumeStart(order.getVolumeEntered())
-//                .setIssued(order.getIssued())
-                .setPrice(order.getPrice())
-                .setRange(order.getRange())
-                .setType(order.getTypeName())
-                .setTypeId(order.getTypeId())
-                .build();
+            .setBuyOrder(order.isBuyOrder())
+            .setDuration(order.getDuration())
+            .setHref(order.getHref())
+            .setLocation(order.getLocationName())
+            .setLocationId(order.getLocationId())
+            .setVolume(order.getVolume())
+            .setVolumeStart(order.getVolumeEntered())
+            .setPrice(order.getPrice())
+            .setRange(order.getRange())
+            .setType(order.getTypeName())
+            .setTypeId(order.getTypeId())
+            .build();
+    }
 
-
-
+    public static MarketHistory map(CrestMarketHistory history) {
+        return new MarketHistory.Builder()
+            .setAveragePrice(history.getAveragePrice())
+            .setHighPrice(history.getHighPrice())
+            .setLowPrice(history.getLowPrice())
+            .setOrderCount(history.getOrderCount())
+            .setRecordDate(history.getDate())
+            .setVolume(history.getVolume())
+            .build();
     }
 
 }

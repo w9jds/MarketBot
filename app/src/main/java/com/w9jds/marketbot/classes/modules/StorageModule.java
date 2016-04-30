@@ -9,9 +9,6 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by Jeremy Shore on 3/10/16.
- */
 @Module
 public class StorageModule {
 

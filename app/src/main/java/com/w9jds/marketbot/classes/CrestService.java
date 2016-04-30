@@ -43,8 +43,8 @@ public interface CrestService {
                                                                             @Query(value = "type", encoded = true) String typeId);
 
     @GET("/market/{regionId}/types/{itemId}/history/")
-    Observable<Response<CrestDictionary<CrestMarketHistory>>> getMarketHistory(@Path("regionId") final long regionId,
-                                                                               @Path("itemId") final long itemId,
-                                                                               @Query("page") final int page);
+    Call<CrestDictionary<CrestMarketHistory>> getMarketHistory(@Path("regionId") final long regionId,
+                                                               @Path("itemId") final long itemId,
+                                                               @Query("page") final int page);
 
 }

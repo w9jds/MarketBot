@@ -2,11 +2,6 @@ package com.w9jds.marketbot.classes.models;
 
 import java.util.Date;
 
-/**
- * Created by Jeremy on 3/1/2016.
- *
- * Modified by Alexander Whipp on 4/8/2016.
- */
 public final class MarketOrder extends MarketItemBase {
 
     private boolean isBuyOrder;

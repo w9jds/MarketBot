@@ -18,6 +18,7 @@ import android.widget.Spinner;
 
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.MarketBot;
+import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
@@ -29,8 +30,8 @@ import com.w9jds.marketbot.data.loader.GroupsLoader;
 import com.w9jds.marketbot.data.loader.OrdersLoader;
 import com.w9jds.marketbot.data.loader.TypeLoader;
 import com.w9jds.marketbot.data.storage.MarketTypeEntry;
-import com.w9jds.marketbot.ui.adapters.ListTabAdapter;
 import com.w9jds.marketbot.ui.adapters.RegionAdapter;
+import com.w9jds.marketbot.ui.adapters.TypeTabAdapter;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -108,6 +109,7 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
                         sharedPreferences.edit().putLong("regionId", region.getId()).apply();
 
                         ordersLoader.loadMarketOrders(regionId, currentType);
+                        ordersLoader.loadMarketHistory(regionId, currentType.getId());
                     }
 
                     @Override
@@ -132,6 +134,11 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
             @Override
             public void onMarginsLoaded(List<StationMargin> orders) {
                 subject.onNext(new AbstractMap.SimpleEntry<>(3, orders));
+            }
+
+            @Override
+            public void onHistoryLoaded(List<MarketHistory> historyEntries) {
+                subject.onNext(new AbstractMap.SimpleEntry<>(4, historyEntries));
             }
         };
 
@@ -195,13 +202,14 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
     private void loadTypeData() {
         loader.loadRegions(false);
 
-        ListTabAdapter tabAdapter = new ListTabAdapter(getSupportFragmentManager(),
+        TypeTabAdapter tabAdapter = new TypeTabAdapter(getSupportFragmentManager(),
                 this, currentType, subject);
         pager.setOffscreenPageLimit(4);
         pager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(pager);
 
         ordersLoader.loadMarketOrders(regionId, currentType);
+        ordersLoader.loadMarketHistory(regionId, currentType.getId());
     }
 
     @Override

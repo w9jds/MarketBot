@@ -4,9 +4,6 @@ package com.w9jds.marketbot.classes.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Jeremy on 2/17/2016.
- */
 public final class Type extends MarketItemBase implements Parcelable {
 
     private String href;

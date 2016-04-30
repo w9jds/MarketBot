@@ -27,9 +27,6 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jeremy Shore on 3/3/16.
- */
 public final class TypeInfoTab extends Fragment implements DataLoadingSubject.DataLoadingCallbacks {
 
     static final String ARG_TYPE = "ARG_TYPE";

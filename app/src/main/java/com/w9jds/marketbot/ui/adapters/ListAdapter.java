@@ -1,12 +1,15 @@
 package com.w9jds.marketbot.ui.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.w9jds.marketbot.BR;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.StationMargin;
@@ -53,11 +56,11 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     static class MarketMarginHolder extends RecyclerView.ViewHolder {
 
-
+        ViewDataBinding binding;
 
         public MarketMarginHolder(View view) {
             super(view);
-            ButterKnife.bind(this, view);
+            binding = DataBindingUtil.bind(itemView);
         }
     }
 
@@ -93,7 +96,8 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void bindMarketMarginView(StationMargin margin, MarketMarginHolder holder) {
-
+        holder.binding.setVariable(BR.margin, margin);
+        holder.binding.executePendingBindings();
     }
 
     private void bindMarketOrderView(MarketOrder order, MarketOrderHolder holder) {

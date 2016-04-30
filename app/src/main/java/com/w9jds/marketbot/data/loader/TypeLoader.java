@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.w9jds.marketbot.classes.CrestMapper;
 import com.w9jds.marketbot.classes.CrestService;
 import com.w9jds.marketbot.classes.MarketBot;
+import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.Type;
@@ -23,9 +24,6 @@ import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by w9jds on 4/10/2016.
- */
 public abstract class TypeLoader extends BaseDataManager {
 
     @Inject CrestService publicCrest;
@@ -42,6 +40,7 @@ public abstract class TypeLoader extends BaseDataManager {
 
     public abstract void onTypeInfoLoaded(TypeInfo info);
     public abstract void onRegionsLoaded(List<Region> regions);
+
 
     public void loadRegions(boolean includesWormholes) {
         onRegionsLoaded(RegionEntry.getAllRegions(includesWormholes));

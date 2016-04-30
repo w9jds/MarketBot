@@ -1,9 +1,5 @@
 package com.w9jds.marketbot.classes.models;
 
-
-/**
- * Created by Jeremy Shore on 2/21/16.
- */
 public class MarketItemBase {
 
     protected long id;

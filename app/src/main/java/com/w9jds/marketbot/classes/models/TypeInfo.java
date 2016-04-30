@@ -1,9 +1,6 @@
 package com.w9jds.marketbot.classes.models;
 
 
-/**
- * Created by Jeremy Shore on 3/3/16.
- */
 public final class TypeInfo extends MarketItemBase {
 
     private double capacity;

@@ -7,13 +7,18 @@ import android.support.v4.util.ArrayMap;
 import com.w9jds.marketbot.classes.CrestMapper;
 import com.w9jds.marketbot.classes.CrestService;
 import com.w9jds.marketbot.classes.MarketBot;
+import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.data.BaseDataManager;
+import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 
+import org.devfleet.crest.model.CrestDictionary;
+import org.devfleet.crest.model.CrestMarketHistory;
 import org.devfleet.crest.model.CrestMarketOrder;
+import org.devfleet.crest.model.CrestMarketType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,12 +27,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by w9jds on 4/10/2016.
- */
 public abstract class OrdersLoader extends BaseDataManager {
 
     @Inject CrestService publicCrest;
@@ -45,7 +48,7 @@ public abstract class OrdersLoader extends BaseDataManager {
     public abstract void onSellOrdersLoaded(List<MarketOrder> orders);
     public abstract void onBuyOrdersLoaded(List<MarketOrder> orders);
     public abstract void onMarginsLoaded(List<StationMargin> orders);
-//    public abstract void onMarketHistoryLoaded()
+    public abstract void onHistoryLoaded(List<MarketHistory> historyEntries);
 
     public void loadMarketOrders(long regionId, Type type) {
         loadStarted();
@@ -228,6 +231,48 @@ public abstract class OrdersLoader extends BaseDataManager {
         onMarginsLoaded(margins);
         decrementLoadingCount();
         loadFinished();
+    }
+
+    public void loadMarketHistory(final long regionId, final long typeId) {
+        Observable.defer(() -> Observable.just(getHistoryEntries(regionId, typeId)))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(entries -> {
+                int size = entries.size();
+                List<MarketHistory> histories = new ArrayList<MarketHistory>(size);
+                for (int i = 0; i < size; i++) {
+                    histories.add(CrestMapper.map(entries.get(i)));
+                }
+
+                onHistoryLoaded(histories);
+                decrementLoadingCount();
+                updateFinished();
+
+            }).subscribe();
+    }
+
+    private List<CrestMarketHistory> getHistoryEntries(final long regionId, final long typeId) {
+        try {
+            List<CrestMarketHistory> crestMarketTypes = new ArrayList<>();
+            CrestDictionary<CrestMarketHistory> dictionary;
+            int page = 0;
+
+            do {
+                page = page + 1;
+                dictionary = publicCrest.getMarketHistory(regionId, typeId, page).execute().body();
+                if (dictionary == null) {
+                    break;
+                }
+
+                crestMarketTypes.addAll(dictionary.getItems());
+            } while(dictionary.getPageNext() != null);
+
+            return crestMarketTypes;
+        }
+        catch(Exception ex) {
+            loadFailed("Failed to retrieve items market history");
+            return new ArrayList<>();
+        }
     }
 
 }

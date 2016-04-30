@@ -17,9 +17,6 @@ import org.devfleet.crest.model.CrestItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by w9jds on 4/3/2016.
- */
 @Table(database = MarketDatabase.class, name = "Regions")
 public final class RegionEntry extends BaseModel {
 

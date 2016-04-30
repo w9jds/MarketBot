@@ -1,8 +1,5 @@
 package com.w9jds.marketbot.data;
 
-/**
- * Created by Jeremy on 2/19/2016.
- */
 public interface DataLoadingSubject {
     boolean isDataLoading();
 

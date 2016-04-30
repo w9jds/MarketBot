@@ -1,8 +1,5 @@
 package com.w9jds.marketbot.classes.models;
 
-/**
- * Created by Jeremy on 2/17/2016.
- */
 public final class MarketGroup extends MarketItemBase  {
 
     private String parentGroup;

@@ -8,9 +8,6 @@ import com.w9jds.marketbot.classes.modules.ApplicationModule;
 import com.w9jds.marketbot.classes.modules.NetModule;
 import com.w9jds.marketbot.classes.modules.StorageModule;
 
-/**
- * Created by Jeremy Shore on 3/9/16.
- */
 public class MarketBot extends Application {
 
     private static BaseComponent baseComponent;

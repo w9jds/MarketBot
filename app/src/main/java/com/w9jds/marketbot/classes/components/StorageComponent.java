@@ -10,9 +10,6 @@ import com.w9jds.marketbot.classes.modules.StorageModule;
 
 import dagger.Component;
 
-/**
- * Created by Jeremy Shore on 3/10/16.
- */
 @StorageScope
 @Component(dependencies = BaseComponent.class, modules = StorageModule.class)
 public interface StorageComponent {

@@ -1,9 +1,5 @@
 package com.w9jds.marketbot.classes.models;
 
-
-/**
- * Created by Jeremy Shore on 2/16/16.
- */
 public final class Region extends MarketItemBase {
 
     private String href;

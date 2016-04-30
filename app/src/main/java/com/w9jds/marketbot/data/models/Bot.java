@@ -1,12 +1,5 @@
 package com.w9jds.marketbot.data.models;
 
-import android.os.PersistableBundle;
-
-import com.w9jds.marketbot.data.storage.BotEntry;
-
-/**
- * Created by Jeremy on 3/5/2016.
- */
 public final class Bot {
 
     long interval;

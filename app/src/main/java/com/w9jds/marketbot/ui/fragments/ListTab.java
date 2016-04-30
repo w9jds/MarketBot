@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.w9jds.marketbot.R;
+import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.StationMargin;
@@ -92,36 +93,41 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
         position = args.getInt(ARG_PAGE);
 
         adapter = new ListAdapter(getContext());
-//        loader = new OrdersLoader(getActivity()) {
-//            @Override
-//            public void onSellOrdersLoaded(List<MarketOrder> orders) {
-//
-//            }
-//
-//            @Override
-//            public void onBuyOrdersLoaded(List<MarketOrder> orders) {
-//
-//            }
-//
-//            @Override
-//            public void onMarginsLoaded(List<StationMargin> orders) {
-//
-//            }
-//        };
-//
-//        loader.registerLoadingCallback(this);
+        loader = new OrdersLoader(getActivity()) {
+            @Override
+            public void onSellOrdersLoaded(List<MarketOrder> orders) {
+                adapter.updateCollection(orders);
+            }
+
+            @Override
+            public void onBuyOrdersLoaded(List<MarketOrder> orders) {
+                adapter.updateCollection(orders);
+            }
+
+            @Override
+            public void onMarginsLoaded(List<StationMargin> orders) {
+                adapter.updateCollection(orders);
+            }
+
+            @Override
+            public void onHistoryLoaded(List<MarketHistory> historyEntries) {
+
+            }
+        };
+
+        loader.registerLoadingCallback(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_market_lists, container, false);
         ButterKnife.bind(this, view);
 
         orders.setLayoutManager(new LinearLayoutManager(getContext()));
         orders.setItemAnimator(new DefaultItemAnimator());
         orders.setAdapter(adapter);
 
-//        refreshLayout.setOnRefreshListener(() -> updateOrdersList(currentRegion, currentType));
+        refreshLayout.setOnRefreshListener(() -> updateOrdersList(currentRegion, currentType));
         return view;
     }
 
@@ -131,23 +137,21 @@ public final class ListTab extends Fragment implements BaseDataManager.DataLoadi
         ButterKnife.unbind(this);
     }
 
-//    public void updateOrdersList(Region region, Type type) {
-//        currentRegion = region;
-//        currentType = type;
-//
-//        adapter.clear();
-//        switch(position) {
-//            case 1:
+    public void updateOrdersList(Region region, Type type) {
+        adapter.clear();
+
+        switch(position) {
+            case 1:
 //                loader.loadSellOrders(region.getId(), type);
-//                break;
-//            case 2:
+                break;
+            case 2:
 //                loader.loadBuyOrders(region.getId(), type);
-//                break;
-//            case 3:
+                break;
+            case 3:
 //                loader.loadMarginOrders(region.getId(), type);
-//                break;
-//        }
-//    }
+                break;
+        }
+    }
 
     @Override
     public void dataStartedLoading() {

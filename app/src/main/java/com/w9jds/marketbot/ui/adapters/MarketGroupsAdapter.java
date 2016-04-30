@@ -28,9 +28,6 @@ import java.util.Comparator;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jeremy on 2/18/2016.
- */
 public final class MarketGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int MARKET_GROUP_VIEW = 0;

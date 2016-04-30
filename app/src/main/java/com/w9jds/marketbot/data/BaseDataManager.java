@@ -11,9 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by Jeremy on 2/19/2016.
- */
 public abstract class BaseDataManager implements DataLoadingSubject {
 
     private Context context;
