@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.MarketHistory;
+import com.w9jds.marketbot.utils.NumberUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class MarketHistoryTab extends Fragment {
         MarketHistoryTab fragment = new MarketHistoryTab();
         fragment.setArguments(args);
 
+        fragment.setRetainInstance(true);
         fragment.getSubscriptions().add(behaviorSubject
                 .doOnError(Throwable::printStackTrace)
                 .doOnNext(fragment.updateTab)
@@ -126,8 +128,10 @@ public class MarketHistoryTab extends Fragment {
         View view = inflater.inflate(R.layout.fragment_market_history, container, false);
         ButterKnife.bind(this, view);
 
+        chart.setDescription("");
+        chart.setDrawGridBackground(true);
+        chart.setGridBackgroundColor(Color.WHITE);
         chart.setMaxVisibleValueCount(40);
-        chart.set
 
         chart.setDrawOrder(new CombinedChart.DrawOrder[] {
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.CANDLE, CombinedChart.DrawOrder.LINE
@@ -140,10 +144,12 @@ public class MarketHistoryTab extends Fragment {
         leftAxis = chart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinValue(0f);
+        leftAxis.setValueFormatter((value, yAxis) ->
+            value < 1000 ? String.valueOf(value) : NumberUtils.shortened(value, 0));
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-        xAxis.setLabelsToSkip(15);
+        xAxis.setPosition(XAxis.XAxisPosition.TOP);
+        xAxis.setLabelsToSkip(34);
 //        xAxis.setDrawLabels(false);
 
         return view;
@@ -165,9 +171,10 @@ public class MarketHistoryTab extends Fragment {
         }
 
         BarDataSet set = new BarDataSet(entries, "Order Count");
-        set.setColor(Color.rgb(60, 220, 78));
-        set.setValueTextColor(Color.rgb(60, 220, 78));
-        set.setValueTextSize(10f);
+        set.setColor(Color.parseColor("#99FF99"));
+//        set.setValueTextSize(0f);
+
+        set.setDrawValues(false);
 
         set.setAxisDependency(YAxis.AxisDependency.RIGHT);
         return new BarData(xAxis, set);
@@ -189,15 +196,15 @@ public class MarketHistoryTab extends Fragment {
         }
 
         LineDataSet set = new LineDataSet(entries, "Price Averages");
-        set.setColor(Color.rgb(240, 238, 70));
-        set.setLineWidth(2.5f);
-        set.setCircleColor(Color.rgb(240, 238, 70));
-        set.setCircleRadius(5f);
-        set.setFillColor(Color.rgb(240, 238, 70));
-        set.setDrawCubic(true);
-        set.setDrawValues(true);
-        set.setValueTextSize(10f);
-        set.setValueTextColor(Color.rgb(240, 238, 70));
+        set.setColor(Color.RED);
+        set.setDrawCircles(false);
+        set.setDrawCircleHole(false);
+        set.setLineWidth(2.0f);
+        set.setDrawCubic(false);
+        set.setDrawValues(false);
+
+        set.setDrawHighlightIndicators(false);
+        set.setDrawVerticalHighlightIndicator(false);
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         return new LineData(xAxis, set);
@@ -225,17 +232,17 @@ public class MarketHistoryTab extends Fragment {
 
         CandleDataSet set = new CandleDataSet(entries, "Price Margins");
         set.setShadowColor(Color.DKGRAY);
-        set.setShadowWidth(0.7f);
-        set.setDecreasingColor(Color.RED);
-        set.setDecreasingPaintStyle(Paint.Style.FILL);
-        set.setIncreasingColor(Color.rgb(122, 242, 84));
-        set.setIncreasingPaintStyle(Paint.Style.STROKE);
-        set.setNeutralColor(Color.BLUE);
+        set.setShadowWidth(2.0f);
+        set.setShowCandleBar(true);
+        set.setBarSpace(0.35f);
+        set.setNeutralColor(Color.DKGRAY);
+        set.setDrawValues(false);
+
+        set.setDrawHighlightIndicators(false);
+        set.setDrawVerticalHighlightIndicator(false);
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         return new CandleData(xAxis, set);
 
     }
-
-
 }

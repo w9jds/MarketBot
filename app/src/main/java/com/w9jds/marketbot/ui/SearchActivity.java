@@ -2,6 +2,7 @@ package com.w9jds.marketbot.ui;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -68,13 +69,13 @@ public class SearchActivity extends AppCompatActivity implements DataLoadingSubj
 
         searchLoader = new GroupsLoader(this) {
             @Override
-            public void onProgressUpdate(int page, int totalPages) {
+            public void onProgressUpdate(int page, int totalPages, String message) {
 
             }
 
             @Override
             public void onDataLoaded(List<? extends MarketItemBase> data) {
-
+                adapter.updateCollection(data);
             }
         };
 

@@ -8,4 +8,8 @@ public class MarketDatabase {
     public static final String NAME = "MarketBotDb";
     public static final int VERSION = 3;
 
+
+    public interface TransactionListener {
+        void onTransactionProgressUpdate(int progress, int max);
+    }
 }

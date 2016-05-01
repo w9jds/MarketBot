@@ -3,6 +3,7 @@ package com.w9jds.marketbot.data.loader;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 
 import com.w9jds.marketbot.classes.CrestMapper;
 import com.w9jds.marketbot.classes.CrestService;
@@ -57,7 +58,7 @@ public abstract class OrdersLoader extends BaseDataManager {
         publicCrest.getMarketOrders(regionId, type.getHref())
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(Throwable::printStackTrace)
+            .doOnError(exception -> Log.e("OrdersLoader", exception.getCause().getMessage()))
             .doOnNext(crestResponse -> {
                 if (crestResponse.isSuccessful() && crestResponse.body() != null) {
                     List<CrestMarketOrder> orders = crestResponse.body().getItems();
@@ -98,7 +99,7 @@ public abstract class OrdersLoader extends BaseDataManager {
         publicCrest.getMarketOrders(regionId, type.getHref(), "sell")
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(Throwable::printStackTrace)
+            .doOnError(exception -> Log.e("OrdersLoader", exception.getCause().getMessage()))
             .doOnNext(crestResponse -> {
                 if (crestResponse.isSuccessful() && crestResponse.body() != null) {
                     List<CrestMarketOrder> orders = crestResponse.body().getItems();
@@ -140,7 +141,7 @@ public abstract class OrdersLoader extends BaseDataManager {
         publicCrest.getMarketOrders(regionId, type.getHref(), "buy")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(Throwable::printStackTrace)
+                .doOnError(exception -> Log.e("OrdersLoader", exception.getCause().getMessage()))
                 .doOnNext(crestResponse -> {
                     if (crestResponse.isSuccessful() && crestResponse.body() != null) {
                         List<CrestMarketOrder> orders = crestResponse.body().getItems();
@@ -167,7 +168,7 @@ public abstract class OrdersLoader extends BaseDataManager {
         publicCrest.getMarketOrders(regionId, type.getHref())
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(Throwable::printStackTrace)
+            .doOnError(exception -> Log.e("OrdersLoader", exception.getCause().getMessage()))
             .doOnNext(crestResponse -> {
                 if (crestResponse.isSuccessful() && crestResponse.body() != null) {
                     List<CrestMarketOrder> orders = crestResponse.body().getItems();

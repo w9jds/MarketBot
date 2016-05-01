@@ -18,6 +18,7 @@ import com.w9jds.marketbot.classes.models.TypeInfo;
 import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.loader.TypeLoader;
 import com.w9jds.marketbot.ui.ItemActivity;
+import com.w9jds.marketbot.utils.NumberUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -51,23 +52,9 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
         args.putParcelable(ARG_TYPE, type);
         TypeInfoTab fragment = new TypeInfoTab();
         fragment.setArguments(args);
-        return fragment;
-    }
+        fragment.setRetainInstance(true);
 
-    private String formatNumberValue(double value, String unit) {
-        if (value > 1000000000000L) {
-            return String.format(Locale.ENGLISH, "%.2ft %s", value / 1000000.0, unit);
-        }
-        if (value > 1000000000) {
-            return String.format(Locale.ENGLISH, "%.2fb %s", value / 1000000.0, unit);
-        }
-        if (value > 1000000) {
-            return String.format(Locale.ENGLISH, "%.2fm %s", value / 1000000.0, unit);
-        }
-        else {
-            NumberFormat formatter = new DecimalFormat("#,##0.00");
-            return formatter.format(value) + " " + unit;
-        }
+        return fragment;
     }
 
     @Override
@@ -84,10 +71,19 @@ public final class TypeInfoTab extends Fragment implements DataLoadingSubject.Da
                 String capacityValue = formatter.format(info.getCapacity()) + " m3";
 
                 description.setText(Html.fromHtml(info.getDescription()));
-                mass.setText(formatNumberValue(info.getMass(), "kg"));
+
+                String shortened = info.getMass() < 1000 ? String.valueOf(info.getMass()) :
+                        NumberUtils.shortened(info.getMass(), 0);
+                String massShortened = shortened + " kg";
+                mass.setText(massShortened);
+
+                shortened = info.getVolume() < 1000 ? String.valueOf(info.getVolume()) :
+                        NumberUtils.shortened(info.getVolume(), 0);
+                String vol = shortened + " m3";
+                volume.setText(vol);
+
                 capacity.setText(capacityValue);
                 portion.setText(String.valueOf(info.getPortionSize()));
-                volume.setText(formatNumberValue(info.getVolume(), "m3"));
             }
 
             @Override

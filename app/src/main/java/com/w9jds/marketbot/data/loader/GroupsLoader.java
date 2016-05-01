@@ -3,11 +3,15 @@ package com.w9jds.marketbot.data.loader;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 
 import com.w9jds.marketbot.classes.CrestService;
 import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.BaseDataManager;
+import com.w9jds.marketbot.data.MarketDatabase;
 import com.w9jds.marketbot.data.storage.MarketGroupEntry;
 import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 import com.w9jds.marketbot.data.storage.RegionEntry;
@@ -22,6 +26,7 @@ import org.devfleet.crest.model.CrestType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -33,7 +38,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
+import rx.subscriptions.CompositeSubscription;
 
 public abstract class GroupsLoader extends BaseDataManager {
 
@@ -44,7 +51,7 @@ public abstract class GroupsLoader extends BaseDataManager {
     private Context context;
     private boolean updateFailed = false;
 
-    public abstract void onProgressUpdate(int page, int totalPages);
+    public abstract void onProgressUpdate(int page, int totalPages, @Nullable String message);
     public abstract void onDataLoaded(List<? extends MarketItemBase> data);
 
     public GroupsLoader(Context context) {
@@ -175,7 +182,7 @@ public abstract class GroupsLoader extends BaseDataManager {
                 }
 
                 crestMarketTypes.addAll(dictionary.getItems());
-                onProgressUpdate(crestMarketTypes.size(), (int)dictionary.getTotalCount());
+                onProgressUpdate(crestMarketTypes.size(), (int)dictionary.getTotalCount(), null);
             } while(dictionary.getPageNext() != null);
 
             return crestMarketTypes;
@@ -191,15 +198,19 @@ public abstract class GroupsLoader extends BaseDataManager {
 
     private void updateMarketTypes() {
         Observable.defer(() -> Observable.just(getAllMarketTypes()))
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(orders -> {
+            .doOnNext(orders -> MarketTypeEntry.addNewMarketTypes(orders,
+                (MarketDatabase.TransactionListener) (progress, max) -> {
+//                    context.
+//                    onProgressUpdate(progress, max, "Storing items list...");
 
-                MarketTypeEntry.addNewMarketTypes(orders);
-                decrementUpdatingCount();
-                updateFinished();
-
-            }).subscribe();
+                    if (progress == max) {
+                        decrementUpdatingCount();
+                        updateFinished();
+                    }
+                }))
+            .subscribe();
     }
 
     private void updateRegions() {

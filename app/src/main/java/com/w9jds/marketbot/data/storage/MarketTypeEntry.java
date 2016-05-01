@@ -5,6 +5,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
 import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelTransaction;
 import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -13,8 +14,8 @@ import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.data.MarketDatabase;
 
 import org.devfleet.crest.model.CrestMarketType;
-import org.devfleet.crest.model.CrestType;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public final class MarketTypeEntry extends BaseModel {
     @Column
     String name;
 
-    public static void addNewMarketTypes(List<CrestMarketType> types) {
+    public static void addNewMarketTypes(List<CrestMarketType> types, MarketDatabase.TransactionListener listener) {
         int size = types.size();
         List<MarketTypeEntry> entries = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -51,8 +52,13 @@ public final class MarketTypeEntry extends BaseModel {
             entries.add(entry);
         }
 
-        TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(
-                ProcessModelInfo.withModels(entries)));
+        TransactionManager manager = TransactionManager.getInstance();
+        ProcessModelTransaction transaction = new SaveModelTransaction<>(ProcessModelInfo.withModels(entries));
+
+        transaction.setChangeListener((current, maxProgress, modifiedModel) ->
+                listener.onTransactionProgressUpdate((int)current, (int)maxProgress));
+
+        manager.addTransaction(transaction);
     }
 
     private static Type buildMarketType(MarketTypeEntry entry) {

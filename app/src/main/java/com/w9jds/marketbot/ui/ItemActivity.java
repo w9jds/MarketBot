@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -144,13 +145,13 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
 
         updateLoader = new GroupsLoader(this) {
             @Override
-            public void onProgressUpdate(int page, int totalPages) {
+            public void onProgressUpdate(int page, int totalPages, String message) {
                 if (progressDialog.isIndeterminate()) {
-                    progressDialog.setOnDismissListener(dialog -> updateProgressDialog(page, totalPages));
+                    progressDialog.setOnDismissListener(dialog -> updateProgressDialog(page, totalPages, message));
                     progressDialog.dismiss();
                 }
 
-                updateProgressDialog(page, totalPages);
+                updateProgressDialog(page, totalPages, message);
             }
 
             @Override
@@ -166,15 +167,19 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
         checkExtras();
     }
 
-    private void updateProgressDialog(int page, int max) {
+    private void updateProgressDialog(int page, int max, @Nullable String message) {
         progressDialog.setMax(max);
         progressDialog.setProgress(page);
+
+        if (message != null) {
+            progressDialog.setMessage(message);
+        }
 
         if (!progressDialog.isShowing()) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(false);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.setMessage("Updating Items Cache...");
+            progressDialog.setMessage("Retrieving updated items list...");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
             progressDialog.show();
