@@ -9,9 +9,6 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by Jeremy Shore on 3/10/16.
- */
 @Module
 public class StorageModule {
 
@@ -29,6 +26,12 @@ public class StorageModule {
     @StorageScope
     boolean provideFirstRun(SharedPreferences sharedPreferences) {
         return sharedPreferences.getBoolean("isFirstRun", true);
+    }
+
+    @Provides
+    @StorageScope
+    long provideRegionId(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getLong("regionId", 10000002);
     }
 
 }

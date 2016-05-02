@@ -8,7 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import com.w9jds.eveapi.Client.Crest;
+import com.w9jds.marketbot.classes.CrestService;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public final class BotJobService extends JobService {
@@ -43,7 +43,7 @@ public final class BotJobService extends JobService {
 
         private Context context;
         private JobParameters params;
-        private Crest publicCrestApi;
+        private CrestService publicCrestApi;
 
         public CheckMarketOrders(Context context) {
             this.context = context;

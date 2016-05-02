@@ -15,8 +15,8 @@
     <string name="volume_progress_format">$s / $s</string>
 
     <string name="toolbar_transition_name" translatable="false">transition_toolbar</string>
-    <string name="type_icon_transition" translatable="false">transition_type_icon</string>
-    <string name="type_name_transition" translatable="false">transition_type_name</string>
+    <string name="type_icon_transition" >transition_type_icon</string>
+    <string name="type_name_transition" >transition_type_name</string>
 
     <string name="range_label">Range:</string>
     <string name="search_hint">Search Market…</string>
@@ -27,4 +27,6 @@
     <string name="ign_chingy_chonga">IGN: Chingy Chonga</string>
     <string name="jeremy_shore">Jeremy Shore</string>
     <string name="info_label">Info</string>
+    <string name="maximum_buy_price">Maximum Buy Price:</string>
+    <string name="maximum_sell_price">Maximum Sell Price:</string>
 </resources>

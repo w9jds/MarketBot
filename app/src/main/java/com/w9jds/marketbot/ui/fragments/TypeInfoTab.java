@@ -11,12 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.w9jds.eveapi.Models.MarketItemBase;
-import com.w9jds.eveapi.Models.TypeInfo;
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.activities.ItemActivity;
-import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.loader.DataManager;
+import com.w9jds.marketbot.classes.models.Region;
+import com.w9jds.marketbot.classes.models.Type;
+import com.w9jds.marketbot.classes.models.TypeInfo;
+import com.w9jds.marketbot.data.DataLoadingSubject;
+import com.w9jds.marketbot.data.loader.TypeLoader;
+import com.w9jds.marketbot.ui.ItemActivity;
+import com.w9jds.marketbot.utils.NumberUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -26,96 +28,72 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jeremy Shore on 3/3/16.
- */
-public final class TypeInfoTab extends Fragment implements BaseDataManager.DataLoadingCallbacks {
+public final class TypeInfoTab extends Fragment implements DataLoadingSubject.DataLoadingCallbacks {
 
-    static final String ARG_PAGE = "ARG_PAGE";
-    static final String ARG_TYPEID = "ARG_TYPEID";
+    static final String ARG_TYPE = "ARG_TYPE";
 
-    @Bind(R.id.dataloading_progress)
-    ProgressBar loading;
+    @Bind(R.id.dataloading_progress) ProgressBar loading;
+    @Bind(R.id.type_name) TextView name;
+    @Bind(R.id.type_description) TextView description;
+    @Bind(R.id.mass_value) TextView mass;
+    @Bind(R.id.capacity_value) TextView capacity;
+    @Bind(R.id.volume_value) TextView volume;
+    @Bind(R.id.portion_value) TextView portion;
+    @Bind(R.id.item_icon) ImageView icon;
 
-    @Bind(R.id.type_name)
-    TextView name;
-    @Bind(R.id.type_description)
-    TextView description;
-    @Bind(R.id.mass_value)
-    TextView mass;
-    @Bind(R.id.capacity_value)
-    TextView capacity;
-    @Bind(R.id.volume_value)
-    TextView volume;
-    @Bind(R.id.portion_value)
-    TextView portion;
-
-    @Bind(R.id.item_icon)
-    ImageView icon;
-
-    private int position;
-    private long typeId;
-    private DataManager dataManager;
+    private Type type;
+    private TypeLoader loader;
 
     /**
      * TODO: Possibly show ship 3d view using webresource
      */
-    public static TypeInfoTab create(int page, long typeId) {
+    public static TypeInfoTab create(Type type) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        args.putLong(ARG_TYPEID, typeId);
+        args.putParcelable(ARG_TYPE, type);
         TypeInfoTab fragment = new TypeInfoTab();
         fragment.setArguments(args);
-        return fragment;
-    }
+        fragment.setRetainInstance(true);
 
-    private String formatNumberValue(double value, String unit) {
-        if (value > 1000000) {
-            return String.format(Locale.ENGLISH, "%.2fm %s", value / 1000000.0, unit);
-        }
-        else {
-            NumberFormat formatter = new DecimalFormat("#,##0.00");
-            return formatter.format(value) + " " + unit;
-        }
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
+        type = args.getParcelable(ARG_TYPE);
 
-        position = args.getInt(ARG_PAGE);
-        typeId = args.getLong(ARG_TYPEID);
-
-        dataManager = new DataManager(getActivity().getApplication()) {
+        loader = new TypeLoader(getContext()) {
             @Override
-            public void onProgressUpdate(int page, int totalPages) {
+            public void onTypeInfoLoaded(TypeInfo info) {
+                NumberFormat formatter = new DecimalFormat("#,###");
+                String capacityValue = formatter.format(info.getCapacity()) + " m3";
 
+                description.setText(Html.fromHtml(info.getDescription()));
+
+                String shortened = info.getMass() < 1000 ? String.valueOf(info.getMass()) :
+                        NumberUtils.shortened(info.getMass(), 0);
+                String massShortened = shortened + " kg";
+                mass.setText(massShortened);
+
+                shortened = info.getVolume() < 1000 ? String.valueOf(info.getVolume()) :
+                        NumberUtils.shortened(info.getVolume(), 0);
+                String vol = shortened + " m3";
+                volume.setText(vol);
+
+                capacity.setText(capacityValue);
+                portion.setText(String.valueOf(info.getPortionSize()));
             }
 
             @Override
-            public void onDataLoaded(List<? extends MarketItemBase> data) {
+            public void onRegionsLoaded(List<Region> regions) {
 
             }
 
-            @Override
-            public void onDataLoaded(Object data) {
-                if (data instanceof TypeInfo) {
-                    TypeInfo info = (TypeInfo) data;
-
-                    NumberFormat formatter = new DecimalFormat("#,###");
-                    String capacityValue = formatter.format(info.getCapacity()) + " m3";
-
-                    description.setText(Html.fromHtml(info.getDescription()));
-                    mass.setText(formatNumberValue(info.getMass(), "kg"));
-                    capacity.setText(capacityValue);
-                    portion.setText(String.valueOf(info.getPortionSize()));
-                    volume.setText(formatNumberValue(info.getVolume(), "m3"));
-                }
-            }
         };
 
-        dataManager.registerCallback(this);
+        loader.registerLoadingCallback(this);
     }
 
     @Override
@@ -123,13 +101,12 @@ public final class TypeInfoTab extends Fragment implements BaseDataManager.DataL
         View view = inflater.inflate(R.layout.fragment_type_info, container, false);
         ButterKnife.bind(this, view);
 
-        ItemActivity host = (ItemActivity) getActivity();
-        name.setText(host.getCurrentTypeName());
-        Glide.with(host)
-                .load(host.getCurrentTypeIcon())
-                .into(icon);
+        name.setText(type.getName());
+        Glide.with(getActivity())
+            .load(type.getIcon())
+            .into(icon);
 
-        dataManager.loadTypeInfo(typeId);
+        loader.loadTypeInfo(type.getId());
         return view;
     }
 

@@ -1,65 +1,104 @@
 package com.w9jds.marketbot.data.storage;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.w9jds.marketbot.classes.models.Region;
+import com.w9jds.marketbot.data.MarketDatabase;
 
-import com.w9jds.eveapi.Models.Region;
-import com.w9jds.marketbot.data.Database;
+import org.devfleet.crest.model.CrestItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by w9jds on 4/3/2016.
- */
-public final class RegionEntry implements BaseColumns {
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_HREF = "href";
+@Table(database = MarketDatabase.class, name = "Regions")
+public final class RegionEntry extends BaseModel {
 
-    public static final String TABLE_NAME = "Regions";
+    @PrimaryKey
+    long id;
 
-    public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
-            + _ID + " INTEGER PRIMARY KEY,"
-            + COLUMN_NAME + " TEXT,"
-            + COLUMN_HREF + " TEXT,"
-            + " UNIQUE (" + _ID + ") ON CONFLICT REPLACE);";
+    @Column
+    String name;
 
-    private static Region buildRegion(Cursor cursor) {
-        Region region = new Region();
-        region.setHref(cursor.getString(cursor.getColumnIndex(COLUMN_HREF)));
-        region.setId(cursor.getLong(cursor.getColumnIndex(_ID)));
-        region.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+    @Column
+    String href;
 
-        return region;
+    public static void addRegions(List<CrestItem> regions) {
+        int size = regions.size();
+        List<RegionEntry> entries = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            CrestItem region = regions.get(i);
+
+            RegionEntry entry = new RegionEntry();
+            entry.id = region.getId();
+            entry.name = region.getName();
+            entry.href = region.getHref();
+            entries.add(entry);
+        }
+
+        TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(
+                ProcessModelInfo.withModels(entries)));
     }
 
-    public static ArrayList<Region> getRegions(Context context, boolean includeWormholes) {
-        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
-        database.beginTransaction();
-        ArrayList<Region> regions = new ArrayList<>();
-
-        Cursor cursor;
-        if (includeWormholes) {
-            cursor = database.query(TABLE_NAME, null, null, null, null, null, COLUMN_NAME);
-        }
-        else {
-            cursor = database.query(TABLE_NAME, null, COLUMN_NAME + " NOT GLOB ?",
-                    new String[]{ "*[A-Z]-R*" }, null, null, COLUMN_NAME);
+    private static List<Region> buildRegions(List<RegionEntry> entries) {
+        int size = entries.size();
+        List<Region> regions = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            regions.add(buildRegion(entries.get(i)));
         }
 
-        if (cursor.moveToFirst()) {
-            while(!cursor.isAfterLast()) {
-                regions.add(buildRegion(cursor));
-                cursor.moveToNext();
-            }
-        }
-
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        database.close();
         return regions;
     }
+
+    private static Region buildRegion(RegionEntry entry) {
+        return new Region.Builder()
+            .setHref(entry.href)
+            .setName(entry.name)
+            .setId(entry.id)
+            .build();
+    }
+
+    public static List<Region> getAllRegions(boolean includeWormholes) {
+        List<RegionEntry> regions = new Select()
+            .from(RegionEntry.class)
+            .where()
+            .orderBy(OrderBy.fromProperty(RegionEntry_Table.name).ascending())
+            .queryList();
+
+        return buildRegions(regions);
+    }
+
+//    public static ArrayList<Region> getRegions(Context context, boolean includeWormholes) {
+//        SQLiteDatabase database = Database.getInstance(context).getReadableDatabase();
+//        database.beginTransaction();
+//        ArrayList<Region> regions = new ArrayList<>();
+//
+//        Cursor cursor;
+//        if (includeWormholes) {
+//            cursor = database.query(TABLE_NAME, null, null, null, null, null, COLUMN_NAME);
+//        }
+//        else {
+//            cursor = database.query(TABLE_NAME, null, COLUMN_NAME + " NOT GLOB ?",
+//                    new String[]{  }, null, null, COLUMN_NAME);
+//        }
+//
+//        if (cursor.moveToFirst()) {
+//            while(!cursor.isAfterLast()) {
+//                regions.add(buildRegion(cursor));
+//                cursor.moveToNext();
+//            }
+//        }
+//
+//        database.setTransactionSuccessful();
+//        database.endTransaction();
+//        database.close();
+//        return regions;
+//    }
 
 }
