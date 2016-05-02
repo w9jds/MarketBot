@@ -3,15 +3,12 @@ package com.w9jds.marketbot.data.loader;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 
 import com.w9jds.marketbot.classes.CrestService;
 import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.MarketDatabase;
 import com.w9jds.marketbot.data.storage.MarketGroupEntry;
 import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 import com.w9jds.marketbot.data.storage.RegionEntry;
@@ -197,19 +194,25 @@ public abstract class GroupsLoader extends BaseDataManager {
     }
 
     private void updateMarketTypes() {
-        Observable.defer(() -> Observable.just(getAllMarketTypes()))
-            .subscribeOn(Schedulers.newThread())
+        BehaviorSubject<Map.Entry<Integer, Integer>> subject = BehaviorSubject.create();
+        CompositeSubscription subscriptions = new CompositeSubscription();
+        subscriptions.add(subject
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(orders -> MarketTypeEntry.addNewMarketTypes(orders,
-                (MarketDatabase.TransactionListener) (progress, max) -> {
-//                    context.
-//                    onProgressUpdate(progress, max, "Storing items list...");
+            .doOnNext(progress -> {
+                onProgressUpdate(progress.getKey(), progress.getValue(), "Storing items list...");
 
-                    if (progress == max) {
-                        decrementUpdatingCount();
-                        updateFinished();
-                    }
-                }))
+                if (progress.getKey().equals(progress.getValue())) {
+                    subscriptions.unsubscribe();
+                    decrementUpdatingCount();
+                    updateFinished();
+                }
+            }).subscribe());
+
+
+        Observable.defer(() -> Observable.just(getAllMarketTypes()))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(orders -> MarketTypeEntry.addNewMarketTypes(orders, subject))
             .subscribe();
     }
 

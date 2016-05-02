@@ -18,6 +18,9 @@ import org.devfleet.crest.model.CrestMarketType;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import rx.subjects.BehaviorSubject;
 
 @Table(database = MarketDatabase.class, name = "MarketTypes")
 public final class MarketTypeEntry extends BaseModel {
@@ -37,7 +40,7 @@ public final class MarketTypeEntry extends BaseModel {
     @Column
     String name;
 
-    public static void addNewMarketTypes(List<CrestMarketType> types, MarketDatabase.TransactionListener listener) {
+    public static void addNewMarketTypes(List<CrestMarketType> types, BehaviorSubject<Map.Entry<Integer, Integer>> subject) {
         int size = types.size();
         List<MarketTypeEntry> entries = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -55,8 +58,11 @@ public final class MarketTypeEntry extends BaseModel {
         TransactionManager manager = TransactionManager.getInstance();
         ProcessModelTransaction transaction = new SaveModelTransaction<>(ProcessModelInfo.withModels(entries));
 
-        transaction.setChangeListener((current, maxProgress, modifiedModel) ->
-                listener.onTransactionProgressUpdate((int)current, (int)maxProgress));
+        transaction.setChangeListener((current, maxProgress, modifiedModel) -> {
+            if (current % 25 == 0 || current == maxProgress) {
+                subject.onNext(new AbstractMap.SimpleEntry<>((int) current, (int) maxProgress));
+            }
+        });
 
         manager.addTransaction(transaction);
     }
