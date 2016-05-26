@@ -19,7 +19,7 @@ public class MarketBot extends Application {
 
         baseComponent = DaggerBaseComponent.builder()
                 .applicationModule(new ApplicationModule(this))
-                .netModule(new NetModule(NetModule.PUBLIC_TRANQUILITY))
+                .netModule(new NetModule(NetModule.TRANQUILITY))
                 .build();
 
     }
