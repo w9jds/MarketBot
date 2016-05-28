@@ -57,7 +57,7 @@ public class CrestMapper {
             .setAveragePrice(history.getAveragePrice())
             .setHighPrice(history.getHighPrice())
             .setLowPrice(history.getLowPrice())
-            .setOrderCount(history.getOrderCount())
+//            .setOrderCount(history.get())
             .setRecordDate(history.getDate())
             .setVolume(history.getVolume())
             .build();
