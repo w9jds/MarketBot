@@ -15,8 +15,14 @@
     <string name="volume_progress_format">$s / $s</string>
 
     <string name="toolbar_transition_name" translatable="false">transition_toolbar</string>
-    <string name="type_icon_transition" >transition_type_icon</string>
-    <string name="type_name_transition" >transition_type_name</string>
+    <string name="type_icon_transition">transition_type_icon</string>
+    <string name="type_name_transition">transition_type_name</string>
+
+    <string name="above">Above</string>
+    <string name="below">Below</string>
+
+    <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
 
     <string name="range_label">Range:</string>
     <string name="search_hint">Search Market…</string>
@@ -29,4 +35,21 @@
     <string name="info_label">Info</string>
     <string name="maximum_buy_price">Maximum Buy Price:</string>
     <string name="maximum_sell_price">Maximum Sell Price:</string>
+    <string name="region_label">Region:</string>
+    <string name="target_item_label">Target Item:</string>
+    <string name="threshold_hint">Threshold</string>
+    <string name="new_bot_configuration">New Bot Configuration</string>
+
+    <string-array name="order">
+        <item>@string/above</item>
+        <item>@string/below</item>
+    </string-array>
+
+    <string-array name="order_type">
+        <item>@string/buy</item>
+        <item>@string/sell</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
