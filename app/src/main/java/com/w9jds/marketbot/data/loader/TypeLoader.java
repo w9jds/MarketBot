@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.Response;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -50,21 +52,35 @@ public abstract class TypeLoader extends BaseDataManager {
         loadStarted();
         incrementLoadingCount();
 
-        publicCrest.getTypeInfo(typeId)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(error -> {
-                decrementLoadingCount();
-                loadFinished();
-                loadFailed(error.getMessage());
-            })
-            .doOnNext(crestResponse -> {
-                if (crestResponse.isSuccessful() && crestResponse.body() != null) {
-                    onTypeInfoLoaded(CrestMapper.map(crestResponse.body()));
-                    decrementLoadingCount();
-                    loadFinished();
-                }
-            }).subscribe();
+        Observable.defer(() -> {
+            try {
+                return Observable.just(getTypeInfo(typeId));
+            }
+            catch(Exception ex) {
+                return Observable.error(ex);
+            }
+        })
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnError(error -> {
+            decrementLoadingCount();
+            loadFinished();
+            loadFailed(error.getMessage());
+        })
+        .doOnNext(crestType -> {
+            onTypeInfoLoaded(CrestMapper.map(crestType));
+            decrementLoadingCount();
+            loadFinished();
+        }).subscribe();
+    }
+
+    private CrestType getTypeInfo(long typeId) throws Exception {
+        Response<CrestType> response = publicCrest.getTypeInfo(typeId).execute();
+        if (!response.isSuccessful() || response.body() == null) {
+            throw new Exception("Unable to load type info");
+        }
+
+        return response.body();
     }
 
 }

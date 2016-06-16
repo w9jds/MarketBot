@@ -20,9 +20,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 @Module
 public class NetModule {
 
-    public static final String PUBLIC_SINGULARITY = "https://public-crest-sisi.testeveonline.com/";
     public static final String SINGULARITY = "https://api-sisi.testeveonline.com/";
-    public static final String PUBLIC_TRANQUILITY = "https://public-crest.eveonline.com/";
     public static final String TRANQUILITY = "https://crest-tq.eveonline.com/";
 
     String mBaseUrl;
@@ -65,7 +63,7 @@ public class NetModule {
     @Singleton
     Retrofit providePublicRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-            .baseUrl(PUBLIC_TRANQUILITY)
+            .baseUrl(TRANQUILITY)
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .addConverterFactory(JacksonConverterFactory.create())
             .client(okHttpClient)

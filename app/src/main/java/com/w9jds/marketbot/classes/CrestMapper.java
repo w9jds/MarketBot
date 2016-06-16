@@ -32,6 +32,7 @@ public class CrestMapper {
             .setDescription(crestGroup.getDescription())
             .setHref(crestGroup.getHref())
             .setParentGroup(crestGroup.getParentRef())
+            .setParentId(crestGroup.getParentId())
             .setTypes(crestGroup.getTypeRef())
             .build();
     }

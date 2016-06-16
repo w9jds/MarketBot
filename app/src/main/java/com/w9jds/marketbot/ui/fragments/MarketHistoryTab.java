@@ -48,6 +48,7 @@ public class MarketHistoryTab extends Fragment {
 
     private YAxis rightAxis;
     private YAxis leftAxis;
+    private XAxis xAxis;
 
     private CompositeSubscription subscriptions;
     private int position;
@@ -72,7 +73,7 @@ public class MarketHistoryTab extends Fragment {
     }
 
     public Action1<Map.Entry<Integer, List<?>>> updateTab = historyEntries -> {
-        if (historyEntries.getKey() == position) {
+        if (historyEntries.getKey() == position && historyEntries.getValue().size() > 0) {
 
             SimpleDateFormat format = new SimpleDateFormat("MMM dd", Locale.getDefault());
 
@@ -93,8 +94,15 @@ public class MarketHistoryTab extends Fragment {
             data.setData(generateAverageLineData(histories));
             data.setData(generateMarginCandleData(histories));
 
-            chart.setData(data);
-            chart.invalidate();
+            try {
+                chart.setData(data);
+                chart.invalidate();
+            }
+            catch(Exception ex) {
+                this.xAxis.setDrawLabels(false);
+                chart.setData(data);
+                chart.invalidate();
+            }
         }
     };
 
@@ -147,7 +155,7 @@ public class MarketHistoryTab extends Fragment {
         leftAxis.setValueFormatter((value, yAxis) ->
             value < 1000 ? String.valueOf(value) : NumberUtils.shortened(value, 0));
 
-        XAxis xAxis = chart.getXAxis();
+        xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.TOP);
         xAxis.setLabelsToSkip(34);
 //        xAxis.setDrawLabels(false);
