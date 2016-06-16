@@ -28,6 +28,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit2.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -234,8 +235,8 @@ public abstract class OrdersLoader extends BaseDataManager {
         loadFinished();
     }
 
-    public void loadMarketHistory(final long regionId, final long typeId) {
-        Observable.defer(() -> Observable.just(getHistoryEntries(regionId, typeId)))
+    public void loadMarketHistory(final long regionId, final Type type) {
+        Observable.defer(() -> Observable.just(getHistoryEntries(regionId, type)))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext(entries -> {
@@ -252,22 +253,17 @@ public abstract class OrdersLoader extends BaseDataManager {
             }).subscribe();
     }
 
-    private List<CrestMarketHistory> getHistoryEntries(final long regionId, final long typeId) {
+    private List<CrestMarketHistory> getHistoryEntries(final long regionId, final Type type) {
         try {
             List<CrestMarketHistory> crestMarketTypes = new ArrayList<>();
-            CrestDictionary<CrestMarketHistory> dictionary;
-            int page = 0;
+            Response<CrestDictionary<CrestMarketHistory>> dictionary;
 
-            do {
-                page = page + 1;
-                dictionary = publicCrest.getMarketHistory(regionId, typeId, page).execute().body();
-                if (dictionary == null) {
-                    break;
-                }
+            dictionary = publicCrest.getMarketHistory(regionId, type.getHref()).execute();
+            if (!dictionary.isSuccessful() || dictionary.body() == null) {
+                return crestMarketTypes;
+            }
 
-                crestMarketTypes.addAll(dictionary.getItems());
-            } while(dictionary.getPageNext() != null);
-
+            crestMarketTypes.addAll(dictionary.body().getItems());
             return crestMarketTypes;
         }
         catch(Exception ex) {

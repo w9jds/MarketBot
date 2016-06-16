@@ -24,7 +24,7 @@ public interface CrestService {
     @GET("/market/types/")
     Call<CrestDictionary<CrestMarketType>> getMarketTypes(@Query("page") int page);
 
-    @GET("/types/{typeId}/")
+    @GET("/inventory/types/{typeId}/")
     Observable<Response<CrestType>> getTypeInfo(@Path("typeId") long id);
 
     @GET("/market/groups/")
@@ -42,9 +42,8 @@ public interface CrestService {
     Observable<Response<CrestDictionary<CrestMarketOrder>>> getMarketOrders(@Path("regionId") long regionId,
                                                                             @Query(value = "type", encoded = true) String typeId);
 
-    @GET("/market/{regionId}/types/{itemId}/history/")
+    @GET("/market/{regionId}/history/")
     Call<CrestDictionary<CrestMarketHistory>> getMarketHistory(@Path("regionId") final long regionId,
-                                                               @Path("itemId") final long itemId,
-                                                               @Query("page") final int page);
+                                                               @Query("type") final String typeRef);
 
 }

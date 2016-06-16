@@ -55,25 +55,13 @@ public final class MarketGroupEntry extends BaseModel {
             entry.name = group.getName();
             entry.href = group.getHref();
             entry.parent = group.hasParent() ? group.getParentRef() : null;
-            entry.parentId = group.hasParent() ? getParentId(group.getParentRef()) : null;
+            entry.parentId = group.hasParent() ? group.getParentId() : null;
             entry.types = group.getTypeRef();
             entries.add(entry);
         }
 
         TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(
                 ProcessModelInfo.withModels(entries)));
-    }
-
-    private static long getParentId(String href) {
-        String[] query = href.split("/");
-
-        for (int i = query.length; i > 0; i--) {
-            if (!query[i-1].equals("")) {
-                return Long.parseLong(query[i-1]);
-            }
-        }
-
-        return 0L;
     }
 
     public static ArrayList<MarketGroup> getMarketGroupsForParent(Long parentId) {
@@ -109,10 +97,6 @@ public final class MarketGroupEntry extends BaseModel {
         }
 
         return builder.build();
-    }
-
-    private static String buildParentGroupLink(long id) {
-        return "https://public-crest.eveonline.com/market/groups/" + id + "/";
     }
 
     public static MarketGroup getMarketGroup(long id) {

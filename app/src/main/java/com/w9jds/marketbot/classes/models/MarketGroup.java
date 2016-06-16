@@ -2,7 +2,7 @@ package com.w9jds.marketbot.classes.models;
 
 public final class MarketGroup extends MarketItemBase  {
 
-    private String parentGroup;
+    private String parentGroupRef;
     private long parentId;
     private String href;
     private String description;
@@ -25,27 +25,15 @@ public final class MarketGroup extends MarketItemBase  {
     }
 
     public String getParentGroup() {
-        return parentGroup;
+        return parentGroupRef;
     }
 
     public long getParentId() {
         return this.parentId;
     }
 
-    public Long getParentGroupId() {
-        String[] query = this.parentGroup.split("/");
-
-        for (int i = query.length; i > 0; i--) {
-            if (!query[i-1].equals("")) {
-                return Long.parseLong(query[i-1]);
-            }
-        }
-
-        return 0L;
-    }
-
     public boolean hasParent() {
-        return this.parentGroup != null && !this.parentGroup.equals("");
+        return this.parentGroupRef != null && !this.parentGroupRef.equals("");
     }
 
     public static class Builder {
@@ -99,7 +87,7 @@ public final class MarketGroup extends MarketItemBase  {
             group.name = name;
 
             if (parentGroup != null) {
-                group.parentGroup = this.parentGroup;
+                group.parentGroupRef = this.parentGroup;
                 group.parentId = this.parentId;
             }
 

@@ -110,7 +110,7 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
                         sharedPreferences.edit().putLong("regionId", region.getId()).apply();
 
                         ordersLoader.loadMarketOrders(regionId, currentType);
-                        ordersLoader.loadMarketHistory(regionId, currentType.getId());
+                        ordersLoader.loadMarketHistory(regionId, currentType);
                     }
 
                     @Override
@@ -214,7 +214,7 @@ public class ItemActivity extends AppCompatActivity implements DataLoadingSubjec
         tabLayout.setupWithViewPager(pager);
 
         ordersLoader.loadMarketOrders(regionId, currentType);
-        ordersLoader.loadMarketHistory(regionId, currentType.getId());
+        ordersLoader.loadMarketHistory(regionId, currentType);
     }
 
     @Override

@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements MarketGroupsAdapt
 
         if (!groupsLoader.isDataLoading()) {
             if (currentParent != null && currentParent.hasParent()) {
-                long parentId = currentParent.getParentGroupId();
+                long parentId = currentParent.getParentId();
 
                 groupsLoader.loadMarketGroups(parentId);
                 groupsLoader.loadMarketTypes(parentId);
