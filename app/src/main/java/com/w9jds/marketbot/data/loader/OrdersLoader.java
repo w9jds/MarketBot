@@ -257,6 +257,14 @@ public abstract class OrdersLoader extends BaseDataManager {
         try {
             List<CrestMarketHistory> crestMarketTypes = new ArrayList<>();
             Response<CrestDictionary<CrestMarketHistory>> dictionary;
+            int page = 0;
+
+            do {
+                page = page + 1;
+                dictionary = publicCrest.getMarketHistory(regionId, typeId, page).execute().body();
+                if (dictionary == null) {
+                    break;
+                }
 
             dictionary = publicCrest.getMarketHistory(regionId, type.getHref()).execute();
             if (!dictionary.isSuccessful() || dictionary.body() == null) {
