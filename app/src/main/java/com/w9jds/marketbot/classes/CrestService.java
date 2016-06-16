@@ -25,7 +25,7 @@ public interface CrestService {
     Call<CrestDictionary<CrestMarketType>> getMarketTypes(@Query("page") int page);
 
     @GET("/inventory/types/{typeId}/")
-    Observable<Response<CrestType>> getTypeInfo(@Path("typeId") long id);
+    Call<CrestType> getTypeInfo(@Path("typeId") long id);
 
     @GET("/market/groups/")
     Observable<Response<CrestDictionary<CrestMarketGroup>>> getMarketGroups();

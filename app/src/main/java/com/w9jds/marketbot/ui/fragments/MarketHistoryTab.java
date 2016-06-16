@@ -73,7 +73,7 @@ public class MarketHistoryTab extends Fragment {
     }
 
     public Action1<Map.Entry<Integer, List<?>>> updateTab = historyEntries -> {
-        if (historyEntries.getKey() == position) {
+        if (historyEntries.getKey() == position && historyEntries.getValue().size() > 0) {
 
             SimpleDateFormat format = new SimpleDateFormat("MMM dd", Locale.getDefault());
 
