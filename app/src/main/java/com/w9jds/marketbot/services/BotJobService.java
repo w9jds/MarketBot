@@ -43,7 +43,7 @@ public final class BotJobService extends JobService {
 
         private Context context;
         private JobParameters params;
-        private CrestService publicCrestApi;
+//        private CrestService publicCrestApi;
 
         public CheckMarketOrders(Context context) {
             this.context = context;

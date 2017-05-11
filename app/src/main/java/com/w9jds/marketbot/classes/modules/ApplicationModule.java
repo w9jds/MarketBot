@@ -20,13 +20,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Application provideApplication() {
+    Application providesApplication() {
         return application;
     }
 
     @Provides
     @Singleton
-    SharedPreferences provideSharedPreferences(Application application) {
+    SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(application);
     }
 

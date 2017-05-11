@@ -13,6 +13,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.w9jds.marketbot.classes.models.MarketGroup;
 import com.w9jds.marketbot.data.MarketDatabase;
+import com.w9jds.marketbot.data.models.esi.EsiMarketGroup;
 
 import org.devfleet.crest.model.CrestMarketGroup;
 
@@ -29,39 +30,31 @@ public final class MarketGroupEntry extends BaseModel {
     String name;
 
     @Column
-    String href;
-
-    @Column
     String description;
 
     @Column
-    Long parentId;
+    long parentId;
 
     @Column
-    String parent;
+    int[] types;
 
-    @Column
-    String types;
-
-    public static void addNewMarketGroups(List<CrestMarketGroup> groups) {
+    public static void addNewMarketGroups(List<EsiMarketGroup> groups) {
         int count = groups.size();
         List<MarketGroupEntry> entries = new ArrayList<>(count);
+
         for (int i = 0; i < count; i++) {
-            CrestMarketGroup group = groups.get(i);
+            EsiMarketGroup group = groups.get(i);
 
             MarketGroupEntry entry = new MarketGroupEntry();
-            entry.id = group.getId();
+            entry.id = group.getGroupId();
             entry.description = group.getDescription();
             entry.name = group.getName();
-            entry.href = group.getHref();
-            entry.parent = group.hasParent() ? group.getParentRef() : null;
-            entry.parentId = group.hasParent() ? group.getParentId() : null;
-            entry.types = group.getTypeRef();
+            entry.parentId = group.getParentGroupId();
+            entry.types = group.getTypes();
             entries.add(entry);
         }
 
-        TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(
-                ProcessModelInfo.withModels(entries)));
+
     }
 
     public static ArrayList<MarketGroup> getMarketGroupsForParent(Long parentId) {
