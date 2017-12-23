@@ -2,10 +2,9 @@ package com.w9jds.marketbot.data.loader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.w9jds.marketbot.classes.CrestService;
+import com.w9jds.marketbot.classes.EsiService;
 import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.BaseDataManager;
@@ -13,36 +12,21 @@ import com.w9jds.marketbot.data.storage.MarketGroupEntry;
 import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 import com.w9jds.marketbot.data.storage.RegionEntry;
 
-import org.devfleet.crest.model.CrestDictionary;
-import org.devfleet.crest.model.CrestItem;
-import org.devfleet.crest.model.CrestMarketGroup;
-import org.devfleet.crest.model.CrestMarketType;
-import org.devfleet.crest.model.CrestServerStatus;
-import org.devfleet.crest.model.CrestType;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public abstract class GroupsLoader extends BaseDataManager {
 
-    @Inject CrestService publicCrest;
-    @Inject SharedPreferences sharedPreferences;
+    @Inject
+    EsiService esiService;
+    @Inject
+    SharedPreferences sharedPreferences;
     @Inject boolean isFirstRun;
 
     private Context context;
@@ -100,6 +84,7 @@ public abstract class GroupsLoader extends BaseDataManager {
         incrementUpdatingCount(1);
 
         if (isConnected()) {
+
             publicCrest.getServer()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

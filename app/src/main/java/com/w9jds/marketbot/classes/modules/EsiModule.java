@@ -1,5 +1,7 @@
 package com.w9jds.marketbot.classes.modules;
 
+import com.w9jds.marketbot.classes.EsiService;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -23,7 +25,7 @@ public class EsiModule {
             Request request = chain.request();
 
             Request.Builder builder = request.newBuilder()
-                    .addHeader("User-Agent", "Marketbot-Android/v1.0.0 by Jeremy Shore w9jds@live.com")
+                    .addHeader("User-Agent", "Marketbot-Android/v3.0.0 by Chingy Chonga/Jeremy Shore w9jds@live.com")
                     .addHeader("Accept", "application/json");
 
             return chain.proceed(builder.build());
@@ -32,7 +34,7 @@ public class EsiModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideCrestClient(Interceptor headers) {
+    OkHttpClient provideEsiClient(Interceptor headers) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
 //        if (BuildConfig.DEBUG) {
