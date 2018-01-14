@@ -1,38 +1,29 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
-
     defaultConfig {
-        applicationId "com.w9jds.marketbot"
+        applicationId "com.w9jds.marketbot_kotlin"
         minSdkVersion 21
-        versionCode 13
-        versionName "v2.0.4"
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
     }
-
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            postprocessing {
+                removeUnusedCode false
+                removeUnusedResources false
+                obfuscate false
+                optimizeCode false
+                proguardFile 'proguard-rules.pro'
+            }
         }
     }
-
     dataBinding {
         enabled = true
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
     }
 }
 
@@ -43,53 +34,50 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def dbflow_version = "4.2.3"
+def dbflow_version = "4.2.4"
 def stetho_version = "1.5.0"
 def retrofit_version = "2.2.0"
 def google_version = "27.0.2"
 def dagger_version = "2.14.1"
-def butterknife_version = "8.5.1"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     debugImplementation "com.facebook.stetho:stetho:${stetho_version}"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${stetho_version}"
     debugImplementation "com.facebook.stetho:stetho-urlconnection:${stetho_version}"
 
-//    compile 'com.google.android.gms:play-services-vision:11.8.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
     implementation "com.android.support:support-v4:${google_version}"
-    implementation "com.android.support:customtabs:${google_version}"
-    implementation "com.android.support:palette-v7:${google_version}"
     implementation "com.android.support:appcompat-v7:${google_version}"
     implementation "com.android.support:recyclerview-v7:${google_version}"
     implementation "com.android.support:design:${google_version}"
 
-    annotationProcessor "com.google.dagger:dagger-compiler:${dagger_version}"
     annotationProcessor 'com.android.databinding:compiler:3.0.1'
-    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknife_version}"
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
 
-    implementation "com.google.dagger:dagger:${dagger_version}"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
 
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-rx2:$dbflow_version"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:$dbflow_version"
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 
-    implementation "com.squareup.retrofit2:retrofit:${retrofit_version}"
-    implementation "com.squareup.retrofit2:converter-jackson:${retrofit_version}"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:${retrofit_version}"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
-    implementation "com.jakewharton:butterknife:${butterknife_version}"
-    implementation 'com.github.bumptech.glide:glide:4.4.0'
-    implementation 'joda-time:joda-time:2.9.9'
+    implementation 'com.github.bumptech.glide:glide:4.5.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
 
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
 }

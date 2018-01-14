@@ -3,10 +3,8 @@ package com.w9jds.marketbot.data.models.esi
 /**
  * Created by w9jds on 12/23/2017.
  */
-interface Type {
-
-    var id: Int
-    var name: String
+interface Type: Base {
+    
     var groupId: Int
     var published: Boolean
     var description: String

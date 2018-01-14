@@ -4,20 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
-import com.w9jds.marketbot.classes.EsiService;
-import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
-import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.storage.MarketGroupEntry;
-import com.w9jds.marketbot.data.storage.MarketTypeEntry;
-import com.w9jds.marketbot.data.storage.RegionEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import io.reactivex.Scheduler;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 

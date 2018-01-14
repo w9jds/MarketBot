@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.classes.MarketBot;
 
 import javax.inject.Inject;
 

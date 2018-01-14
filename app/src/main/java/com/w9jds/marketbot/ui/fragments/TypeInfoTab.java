@@ -15,15 +15,12 @@ import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.classes.models.TypeInfo;
-import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.loader.TypeLoader;
-import com.w9jds.marketbot.ui.ItemActivity;
 import com.w9jds.marketbot.utils.NumberUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

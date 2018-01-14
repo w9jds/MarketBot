@@ -2,7 +2,6 @@ package com.w9jds.marketbot.ui;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.w9jds.marketbot.R;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.loader.GroupsLoader;
 import com.w9jds.marketbot.ui.adapters.MarketGroupsAdapter;
-import com.w9jds.marketbot.data.DataLoadingSubject;
 
 import java.util.List;
 

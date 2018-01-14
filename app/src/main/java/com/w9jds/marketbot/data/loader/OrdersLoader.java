@@ -7,14 +7,11 @@ import android.util.Log;
 
 import com.w9jds.marketbot.classes.CrestMapper;
 import com.w9jds.marketbot.classes.CrestService;
-import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
-import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 
 import org.devfleet.crest.model.CrestDictionary;
 import org.devfleet.crest.model.CrestMarketHistory;
@@ -22,9 +19,7 @@ import org.devfleet.crest.model.CrestMarketOrder;
 import org.devfleet.crest.model.CrestMarketType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 

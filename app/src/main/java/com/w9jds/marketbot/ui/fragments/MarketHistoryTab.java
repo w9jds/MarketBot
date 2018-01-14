@@ -40,7 +40,7 @@ import rx.functions.Action1;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
-public class MarketHistoryTab extends Fragment {
+public final class MarketHistoryTab extends Fragment {
 
     static final String ARG_PAGE = "ARG_PAGE";
 

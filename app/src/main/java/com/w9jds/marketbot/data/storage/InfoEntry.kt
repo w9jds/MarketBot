@@ -1,40 +1,40 @@
-package com.w9jds.marketbot.data.storage;
+package com.w9jds.marketbot.data.storage
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.w9jds.marketbot.data.MarketDatabase;
+import com.raizlabs.android.dbflow.annotation.Column
+import com.raizlabs.android.dbflow.annotation.PrimaryKey
+import com.raizlabs.android.dbflow.annotation.Table
+import com.raizlabs.android.dbflow.rx2.structure.BaseRXModel
+import com.w9jds.marketbot.data.MarketDatabase
 
-@Table(database = MarketDatabase.class, name = "TypeInfo")
-public final class MarketTypeInfoEntry extends BaseModel {
+@Table(database = MarketDatabase::class, name = "Info")
+data class InfoEntry(var info: MarketInfo): BaseRXModel() {
 
     @PrimaryKey
-    long id;
+    private var id: Long = 0
 
     @Column
-    String name;
+    private var name: String? = null
 
     @Column
-    double capacity;
+    private var capacity: Double = 0.toDouble()
 
     @Column
-    String description;
+    private var description: String? = null
 
     @Column
-    long iconId;
+    private var iconId: Long = 0
 
     @Column
-    double mass;
+    private var mass: Double = 0.toDouble()
 
     @Column
-    double radius;
+    private var radius: Double = 0.toDouble()
 
     @Column
-    double volume;
+    private var volume: Double = 0.toDouble()
 
     @Column
-    double portionSize;
+    private var portionSize: Double = 0.toDouble()
 
 
 //        public static void createNewTypeInfos(Context context, List<TypeInfo> infos) {
@@ -57,4 +57,5 @@ public final class MarketTypeInfoEntry extends BaseModel {
 //            database.setTransactionSuccessful();
 //            database.endTransaction();
 //        }
-    }
+
+}

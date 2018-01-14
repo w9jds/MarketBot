@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 
 import com.w9jds.marketbot.classes.CrestMapper;
 import com.w9jds.marketbot.classes.CrestService;
-import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketOrder;
 import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.classes.models.TypeInfo;
-import com.w9jds.marketbot.data.BaseDataManager;
-import com.w9jds.marketbot.data.storage.RegionEntry;
 
 import org.devfleet.crest.model.CrestType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;

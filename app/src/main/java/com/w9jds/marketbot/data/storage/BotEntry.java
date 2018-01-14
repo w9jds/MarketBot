@@ -30,8 +30,6 @@ public final class BotEntry extends BaseModel {
     @Column
     boolean isAbove;
 
-
-
 //    public static final String COLUMN_INTERVAL = "interval";
 //    public static final String COLUMN_TYPE_ID = "typeId";
 //    public static final String COLUMN_REGION_ID = "regionId";

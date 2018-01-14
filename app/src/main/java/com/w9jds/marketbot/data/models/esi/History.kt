@@ -1,7 +1,5 @@
 package com.w9jds.marketbot.data.models.esi
 
-import org.joda.time.DateTime
-
 /**
  * Created by w9jds on 12/23/2017.
  */

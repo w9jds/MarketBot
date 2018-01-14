@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketHistory;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.classes.models.MarketOrder;
@@ -26,11 +25,9 @@ import com.w9jds.marketbot.classes.models.Region;
 import com.w9jds.marketbot.classes.models.StationMargin;
 import com.w9jds.marketbot.classes.models.Type;
 import com.w9jds.marketbot.classes.models.TypeInfo;
-import com.w9jds.marketbot.data.DataLoadingSubject;
 import com.w9jds.marketbot.data.loader.GroupsLoader;
 import com.w9jds.marketbot.data.loader.OrdersLoader;
 import com.w9jds.marketbot.data.loader.TypeLoader;
-import com.w9jds.marketbot.data.storage.MarketTypeEntry;
 import com.w9jds.marketbot.ui.adapters.RegionAdapter;
 import com.w9jds.marketbot.ui.adapters.TypeTabAdapter;
 

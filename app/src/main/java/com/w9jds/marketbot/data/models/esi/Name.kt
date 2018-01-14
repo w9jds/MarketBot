@@ -3,10 +3,8 @@ package com.w9jds.marketbot.data.models.esi
 /**
  * Created by w9jds on 12/23/2017.
  */
-interface Name {
+interface Name: Base {
 
-    val id: Int
-    val name: String
     val category: EsiCategory
 
 }

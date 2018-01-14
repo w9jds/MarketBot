@@ -26,13 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.w9jds.marketbot.R;
-import com.w9jds.marketbot.classes.MarketBot;
 import com.w9jds.marketbot.classes.models.MarketGroup;
 import com.w9jds.marketbot.classes.models.MarketItemBase;
 import com.w9jds.marketbot.data.loader.GroupsLoader;
-import com.w9jds.marketbot.data.storage.MarketGroupEntry;
 import com.w9jds.marketbot.ui.adapters.MarketGroupsAdapter;
-import com.w9jds.marketbot.data.BaseDataManager;
 
 import java.util.List;
 
@@ -40,7 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MarketGroupsAdapter.onMarketGroupChanged,
-        BaseDataManager.DataLoadingCallbacks, BaseDataManager.DataUpdatingCallbacks{
+        BaseDataManager.DataLoadingCallbacks, BaseDataManager.DataUpdatingCallbacks {
 
     @Bind(R.id.market_groups) RecyclerView recyclerView;
     @Bind(R.id.dataloading_progress) ProgressBar progressBar;

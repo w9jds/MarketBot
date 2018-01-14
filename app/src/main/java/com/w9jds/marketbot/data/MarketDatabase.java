@@ -6,10 +6,9 @@ import com.raizlabs.android.dbflow.annotation.Database;
 public class MarketDatabase {
 
     public static final String NAME = "MarketBotDb";
-    public static final int VERSION = 3;
-
-
-    public interface TransactionListener {
-        void onTransactionProgressUpdate(int progress, int max);
-    }
+    public static final int VERSION = 4;
+    
+//    public interface TransactionListener {
+//        void onTransactionProgressUpdate(int progress, int max);
+//    }
 }
