@@ -5,18 +5,11 @@ package com.w9jds.marketbot.data.models.esi
  */
 interface History {
 
-    var date: DateTime
-    var orderCount: Int
-    var volume: Int
-    var highest: Long
-    var average: Long
-    var lowest: Long
-
-//    date (string): The date of this historical statistic entry ,
-//    order_count (integer): Total number of orders happened that day ,
-//    volume (integer): Total ,
-//    highest (number): highest number ,
-//    average (number): average number ,
-//    lowest (number): lowest number
+    val date: String
+    val orderCount: Long
+    val volume: Long
+    val highest: Double
+    val average: Double
+    val lowest: Double
 
 }

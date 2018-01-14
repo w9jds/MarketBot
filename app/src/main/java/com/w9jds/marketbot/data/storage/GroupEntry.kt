@@ -11,19 +11,16 @@ import com.w9jds.marketbot.data.MarketDatabase
 data class GroupEntry(var group: MarketGroup): BaseModel() {
 
     @PrimaryKey
-    var id: Long = 0
+    val id: Int = group.id
 
     @Column
-    var name: String? = null
+    val name: String? = group.name
 
     @Column
-    var description: String? = null
+    val description: String = group.description
 
     @Column
-    var parentId: Long = 0
-
-    @Column
-    var types: IntArray? = null
+    val parentGroupId: Int? = group.parentGroupId
 
 //    public static void addNewMarketGroups(List<MarketGroup> groups) {
 //        int count = groups.size();

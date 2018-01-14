@@ -4,25 +4,53 @@ import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.rx2.structure.BaseRXModel
+import com.w9jds.marketbot.classes.models.MarketType
 import com.w9jds.marketbot.data.MarketDatabase
 
 @Table(database = MarketDatabase::class, name = "Types")
 data class TypeEntry(var type: MarketType): BaseRXModel() {
 
     @PrimaryKey
-    private var id: Long = 0
+    private val id: Int = type.id
 
     @Column
-    private var groupId: Long = 0
+    private val name: String? = type.name
 
     @Column
-    private var href: String? = ""
+    private val description: String = type.description
 
     @Column
-    private var icon: String? = ""
+    private val published: Boolean = type.published
 
     @Column
-    private var name: String? = ""
+    private val groupId: Int = type.groupId
+
+    @Column
+    private val marketGroupId: Int = type.marketGroupId
+
+    @Column
+    private val radius: Float? = type.radius
+
+    @Column
+    private val volume: Float? = type.volume
+
+    @Column
+    private val packagedVolume: Float? = type.packagedVolume
+
+    @Column
+    private val iconId: Int? = type.iconId
+
+    @Column
+    private val capacity: Float? = type.capacity
+
+    @Column
+    private val portionSize: Int? = type.portionSize
+
+    @Column
+    private val mass: Float? = type.mass
+
+    @Column
+    private val graphicId: Int? = type.graphicId
 
 //    public static void addNewMarketTypes(List<CrestMarketType> types, BehaviorSubject<Map.Entry<Integer, Integer>> subject) {
 //        int size = types.size();

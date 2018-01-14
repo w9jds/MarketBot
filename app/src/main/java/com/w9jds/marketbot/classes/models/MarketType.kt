@@ -1,84 +1,26 @@
 package com.w9jds.marketbot.classes.models
 
-import com.w9jds.marketbot.data.models.esi.MarketBase
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.w9jds.marketbot.data.models.esi.Type
 
-class MarketType: MarketBase() {
+data class MarketType(
+        @JsonProperty("type_id") override val id: Int,
+        @JsonProperty override val name: String?,
+        @JsonProperty override val description: String,
+        @JsonProperty override val published: Boolean,
+        @JsonProperty("group_id") override val groupId: Int,
+        @JsonProperty("market_group_id") override val marketGroupId: Int,
+        @JsonProperty override val radius: Float?,
+        @JsonProperty override val volume: Float?,
+        @JsonProperty("packaged_volume") override val packagedVolume: Float?,
+        @JsonProperty("icon_id") override val iconId: Int?,
+        @JsonProperty override val capacity: Float?,
+        @JsonProperty("portion_size") override val portionSize: Int?,
+        @JsonProperty override val mass: Float?,
+        @JsonProperty("graphic_id") override val graphicId: Int?
+): Type
 
-//    private String href;
-//    private String icon;
-//    private String marketGroup;
-//    private long groupId;
-//
-//    public String getHref() {
-//        return href;
-//    }
-//
-//    public String getIcon() {
-//        return icon;
-//    }
-//
-//    public long getGroupId() {
-//        return groupId;
-//    }
-//
-//    public String getMarketGroup() {
-//        return marketGroup;
-//    }
-//
-//    public static class Builder {
-//
-//        private long id;
-//        private String name;
-//        private String href;
-//        private String icon;
-//        private String marketGroup;
-//        private long groupId;
-//
-//        public Builder setId(long id) {
-//            this.id = id;
-//            return this;
-//        }
-//
-//        public Builder setName(String name) {
-//            this.name = name;
-//            return this;
-//        }
-//
-//        public Builder setHref(String href) {
-//            this.href = href;
-//            return this;
-//        }
-//
-//        public Builder setIcon(String icon) {
-//            this.icon = icon;
-//            return this;
-//        }
-//
-//        public Builder setMarketGroup(String marketGroup) {
-//            this.marketGroup = marketGroup;
-//            return this;
-//        }
-//
-//        public Builder setGroupId(long groupId) {
-//            this.groupId = groupId;
-//            return this;
-//        }
-//
-//        public Type build() {
-//            Type type = new Type();
-//            type.id = this.id;
-//            type.name = this.name;
-//            type.href = this.href;
-//            type.icon = this.icon;
-//            type.marketGroup = this.marketGroup;
-//            type.groupId = this.groupId;
-//
-//            return type;
-//        }
-//
-//
-//    }
-//
+
 //    @Override
 //    public int describeContents() {
 //        return 0;
@@ -118,4 +60,3 @@ class MarketType: MarketBase() {
 //            return new Type[size];
 //        }
 //    };
-}

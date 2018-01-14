@@ -5,6 +5,6 @@ package com.w9jds.marketbot.data.models.esi
  */
 interface Name: Base {
 
-    val category: EsiCategory
+    val category: Category
 
 }

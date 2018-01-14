@@ -1,90 +1,17 @@
 package com.w9jds.marketbot.classes.models
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.w9jds.marketbot.data.models.esi.Group
-import com.w9jds.marketbot.data.models.esi.MarketBase
-import com.w9jds.marketbot.data.storage.GroupEntry
 
-data class MarketGroup(var group: GroupEntry): MarketBase(), Group {
+data class MarketGroup(
+        @JsonProperty("market_group_id") override val id: Int,
+        @JsonProperty("parent_group_id") override val parentGroupId: Int?,
+        @JsonProperty override val name: String?,
+        @JsonProperty override val description: String,
+        @JsonProperty override val types: List<Int>
+): Group
 
 
-    override val description: String
-        get() = group.description
-
-
-//
-//    public MarketGroup() {
-//
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public String getHref() {
-//        return href;
-//    }
-//
-//    public String getTypesLocation() {
-//        return types;
-//    }
-//
-//    public String getParentGroup() {
-//        return parentGroupRef;
-//    }
-//
-//    public long getParentId() {
-//        return this.parentId;
-//    }
-//
-//    public boolean hasParent() {
-//        return this.parentGroupRef != null && !this.parentGroupRef.equals("");
-//    }
-//
-//    public static class Builder {
-//
-//        private long id;
-//        private String name;
-//        private String parentGroup;
-//        private long parentId;
-//        private String href;
-//        private String description;
-//        private String types;
-//
-//        public Builder setParentGroup(String parentGroup) {
-//            this.parentGroup = parentGroup;
-//            return this;
-//        }
-//
-//        public Builder setHref(String href) {
-//            this.href = href;
-//            return this;
-//        }
-//
-//        public Builder setDescription(String description) {
-//            this.description = description;
-//            return this;
-//        }
-//
-//        public Builder setTypes(String types) {
-//            this.types = types;
-//            return this;
-//        }
-//
-//        public Builder setName(String name) {
-//            this.name = name;
-//            return this;
-//        }
-//
-//        public Builder setId(long id) {
-//            this.id = id;
-//            return this;
-//        }
-//
-//        public Builder setParentId(long id) {
-//            this.parentId = id;
-//            return this;
-//        }
-//
 //        public MarketGroup build() {
 //            MarketGroup group = new MarketGroup();
 //            group.id = id;
@@ -102,7 +29,3 @@ data class MarketGroup(var group: GroupEntry): MarketBase(), Group {
 //            return group;
 //        }
 //    }
-//
-
-
-}

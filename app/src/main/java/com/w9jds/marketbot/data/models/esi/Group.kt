@@ -7,6 +7,10 @@ interface Group: Base {
 
     val description: String
     val types: List<Int>
-    var parentGroupId: Int?
+    val parentGroupId: Int?
+
+    fun hasParentGroup(): Boolean {
+        return this.parentGroupId != null
+    }
 
 }

@@ -1,8 +1,9 @@
 package com.w9jds.marketbot.classes
 
-import com.w9jds.marketbot.data.models.esi.MarketGroup
+import com.w9jds.marketbot.classes.models.MarketGroup
 import com.w9jds.marketbot.data.models.esi.Name
 import com.w9jds.marketbot.data.models.esi.Type
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -14,7 +15,7 @@ interface EsiService {
     fun getGroups(): List<Long>
 
     @GET("/v1/markets/groups/{groupId}/")
-    fun getGroup(@Path("groupId") groupId: Long): List<MarketGroup>
+    fun getGroup(@Path("groupId") groupId: Long): Response<MarketGroup>
 
     @GET("/v1/universe/regions/")
     fun getRegions(): List<Long>

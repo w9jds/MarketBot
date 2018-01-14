@@ -4,19 +4,17 @@ import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.rx2.structure.BaseRXModel
+import com.w9jds.marketbot.classes.models.MarketRegion
 import com.w9jds.marketbot.data.MarketDatabase
 
 @Table(database = MarketDatabase::class, name = "Regions")
 data class RegionEntry(var region: MarketRegion): BaseRXModel() {
 
     @PrimaryKey
-    private var id: Long = 0
+    private val id: Int = region.id
 
     @Column
-    private var name: String? = ""
-
-    @Column
-    private var href: String? = ""
+    private val name: String? = region.name
 
 //    public static void addRegions(List<CrestItem> regions) {
 //        int size = regions.size();
