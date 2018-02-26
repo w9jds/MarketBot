@@ -3,14 +3,22 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
-    defaultConfig {
-        applicationId "com.w9jds.marketbot_kotlin"
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude '.readme'
     }
+
+    compileSdkVersion 27
+    buildToolsVersion "27.0.2"
+    defaultConfig {
+        applicationId "com.w9jds.marketbot"
+        targetSdkVersion 27
+        minSdkVersion 21
+        versionCode 13
+        versionName "v2.0.4"
+    }
+
     buildTypes {
         release {
             postprocessing {
@@ -69,8 +77,6 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-rx2:$dbflow_version"
     implementation "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:$dbflow_version"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
-
-    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"

@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clipToPadding="false">
+    tools:showIn="@layout/activity_main">
+
+    <data>
+        <import type="android.view.View"/>
+    </data>
 
     <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/main_content"
+        android:id="@+id/base_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.MainActivity">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MarketBot.Toolbar.ItemToolbar"
-            android:elevation="4dp">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-        </android.support.design.widget.AppBarLayout>
+        <include android:id="@+id/activity_header" layout="@layout/app_bar" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/market_groups"
@@ -34,14 +27,4 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <ProgressBar
-        android:id="@+id/dataloading_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="?android:colorAccent"
-        android:indeterminateTintMode="src_in"
-        android:visibility="gone"/>
-
-</FrameLayout>
+</layout>
