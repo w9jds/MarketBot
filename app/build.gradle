@@ -45,7 +45,7 @@ repositories {
 def dbflow_version = "4.2.4"
 def stetho_version = "1.5.0"
 def retrofit_version = "2.2.0"
-def google_version = "27.0.2"
+def google_version = "27.1.0"
 def dagger_version = "2.14.1"
 
 dependencies {
@@ -56,14 +56,12 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${stetho_version}"
     debugImplementation "com.facebook.stetho:stetho-urlconnection:${stetho_version}"
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta6'
     implementation "com.android.support:palette-v7:${google_version}"
     implementation "com.android.support:support-v4:${google_version}"
     implementation "com.android.support:appcompat-v7:${google_version}"
     implementation "com.android.support:recyclerview-v7:${google_version}"
     implementation "com.android.support:design:${google_version}"
-
-    annotationProcessor 'com.android.databinding:compiler:3.0.1'
 
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'

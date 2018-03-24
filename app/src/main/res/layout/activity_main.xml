@@ -17,7 +17,9 @@
         android:fitsSystemWindows="true"
         tools:context=".ui.MainActivity">
 
-        <include android:id="@+id/activity_header" layout="@layout/app_bar" />
+        <include
+            android:id="@+id/activity_header"
+            layout="@layout/app_bar" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/market_groups"
