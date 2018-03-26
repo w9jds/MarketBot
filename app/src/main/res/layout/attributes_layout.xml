@@ -1,115 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight=".5"
-        android:layout_height="wrap_content">
+<layout>
 
-        <LinearLayout
-            android:layout_marginBottom="6dp"
-            android:orientation="horizontal"
-            style="@style/Base.TextAppearance.AppCompat.SearchResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        xmlns:bind="http://schemas.android.com/tools">
 
-            <TextView
-                android:text="@string/mass_label"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"/>
 
-            <TextView
-                android:id="@+id/mass_value"
-                android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"/>
+        <include layout="@layout/label_value_layout"
+            android:id="@+id/volume_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            bind:label_text="Volume:"
+            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintRight_toRightOf="parent" />
 
-        </LinearLayout>
+        <include layout="@layout/label_value_layout"
+            android:id="@+id/mass_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            bind:label_text="Mass:"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline" />
 
-        <LinearLayout
-            android:layout_marginBottom="6dp"
-            android:orientation="horizontal"
-            style="@style/Base.TextAppearance.AppCompat.SearchResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <include layout="@layout/label_value_layout"
+            android:id="@+id/capacity_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            bind:label_text="Capacity:"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/mass_container"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <TextView
-                android:text="@string/volume_label"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <include layout="@layout/label_value_layout"
+            android:id="@+id/portion_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            bind:label_text="Portion:"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/volume_container"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <TextView
-                android:id="@+id/volume_value"
-                android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_marginStart="20dp"
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight=".5"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_marginBottom="6dp"
-            android:orientation="horizontal"
-            style="@style/Base.TextAppearance.AppCompat.SearchResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="@string/capacity_label"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/capacity_value"
-                android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            style="@style/Base.TextAppearance.AppCompat.SearchResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="@string/portion_label"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/portion_value"
-                android:textSize="15sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>
 

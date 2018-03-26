@@ -6,10 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="@layout/activity_main">
 
-    <data>
-        <import type="android.view.View"/>
-    </data>
-
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/base_view"
         android:layout_width="match_parent"
