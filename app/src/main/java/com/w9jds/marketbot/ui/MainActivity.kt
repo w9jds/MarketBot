@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.w9jds.marketbot.R
-import com.w9jds.marketbot.data.loader.GroupsLoader
 import com.w9jds.marketbot.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.app_bar.view.*
 
@@ -28,7 +27,7 @@ class MainActivity: AppCompatActivity() {
         }
 
         var layoutManager = LinearLayoutManager(this)
-        binding.marketGroups.layoutManager = layoutManager
+//        binding.marketGroups.layoutManager = layoutManager
         binding.marketGroups.itemAnimator = DefaultItemAnimator()
 
 //        var groupLoader =

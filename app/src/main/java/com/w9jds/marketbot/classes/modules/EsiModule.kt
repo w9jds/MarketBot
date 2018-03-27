@@ -22,7 +22,7 @@ class EsiModule {
             val request = chain.request()
 
             val builder = request.newBuilder()
-                    .addHeader("User-Agent", "Marketbot-Android/v3.0.0 by Chingy Chonga/Jeremy Shore w9jds@live.com")
+                    .addHeader("User-Agent", "Marketbot-Android/v4.0.0 by Chingy Chonga/Jeremy Shore w9jds@live.com")
                     .addHeader("Accept", "application/json")
 
             chain.proceed(builder.build())

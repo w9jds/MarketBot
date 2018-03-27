@@ -16,7 +16,7 @@ android {
         targetSdkVersion 27
         minSdkVersion 21
         versionCode 13
-        versionName "v2.0.4"
+        versionName "v3.0.0"
     }
 
     buildTypes {
@@ -30,6 +30,7 @@ android {
             }
         }
     }
+
     dataBinding {
         enabled = true
     }
