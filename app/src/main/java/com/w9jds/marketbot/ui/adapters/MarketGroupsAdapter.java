@@ -15,7 +15,7 @@
 //
 //import com.bumptech.glide.Glide;
 //import com.w9jds.marketbot.R;
-//import com.w9jds.marketbot.classes.models.MarketGroup;
+//import com.w9jds.marketbot.classes.models.market.MarketGroup;
 //import com.w9jds.marketbot.classes.models.MarketItemBase;
 //import com.w9jds.marketbot.classes.models.Type;
 //import com.w9jds.marketbot.ui.ItemActivity;

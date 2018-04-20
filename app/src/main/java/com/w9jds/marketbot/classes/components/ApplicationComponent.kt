@@ -6,8 +6,10 @@ import com.w9jds.marketbot.classes.modules.EsiModule
 import dagger.Component
 import javax.inject.Singleton
 import android.content.SharedPreferences
+import com.google.firebase.database.FirebaseDatabase
 import com.w9jds.marketbot.classes.EsiService
 import com.w9jds.marketbot.data.DataManager
+import com.w9jds.marketbot.data.loader.GroupsLoader
 import com.w9jds.marketbot.ui.MainActivity
 
 @Singleton
@@ -15,9 +17,12 @@ import com.w9jds.marketbot.ui.MainActivity
 interface ApplicationComponent {
 
     fun application(): Application
-    fun preferences(): SharedPreferences
+    fun database(): FirebaseDatabase
     fun esi(): EsiService
+    fun preferences(): SharedPreferences
+
 
     fun inject(mainActivity: MainActivity)
+    fun inject(groupsLoader: GroupsLoader)
     fun inject(manager: DataManager)
 }

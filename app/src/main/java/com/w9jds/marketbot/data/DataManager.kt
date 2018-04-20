@@ -62,7 +62,7 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
             loadingCallbacks = ArrayList(1)
         }
 
-        loadingCallbacks!!.add(callback)
+        loadingCallbacks?.add(callback)
     }
 
     override fun registerUpdatingCallback(callback: DataLoadingSubject.DataUpdatingCallbacks) {
@@ -70,7 +70,7 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
             updatingCallbacks = ArrayList(1)
         }
 
-        updatingCallbacks!!.add(callback)
+        updatingCallbacks?.add(callback)
     }
 
     override fun unregisterUpdatingCallback(callback: DataLoadingSubject.DataUpdatingCallbacks) {
@@ -87,7 +87,7 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
 
     private fun dispatchLoadingStartedCallbacks() {
         if (loadingCount.toInt() == 0) {
-            if (loadingCallbacks != null && !loadingCallbacks!!.isEmpty()) {
+            if (loadingCallbacks != null && loadingCallbacks?.isNotEmpty()!!) {
                 for (loadingCallback in loadingCallbacks!!) {
                     loadingCallback.dataStartedLoading()
                 }
@@ -97,7 +97,7 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
 
     private fun dispatchLoadingFinishedCallbacks() {
         if (loadingCount.toInt() == 0) {
-            if (loadingCallbacks != null && !loadingCallbacks!!.isEmpty()) {
+            if (loadingCallbacks?.isNotEmpty()!!) {
                 for (loadingCallback in loadingCallbacks!!) {
                     loadingCallback.dataFinishedLoading()
                 }

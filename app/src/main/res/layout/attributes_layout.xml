@@ -19,7 +19,7 @@
             android:id="@+id/volume_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            bind:label_text="Volume:"
+            bind:label="Volume:"
             app:layout_constraintLeft_toRightOf="@id/guideline"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -27,7 +27,7 @@
             android:id="@+id/mass_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            bind:label_text="Mass:"
+            bind:label="Mass:"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/guideline" />
 
@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            bind:label_text="Capacity:"
+            bind:label="Capacity:"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/mass_container"
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            bind:label_text="Portion:"
+            bind:label="Portion:"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/volume_container"
