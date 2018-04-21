@@ -94,30 +94,7 @@
 //        groupsLoader.update();
 //    }
 //
-//    private void updateProgressDialog(int progress, int max, @Nullable String message) {
-//        progressDialog.setMax(max);
-//
-//        if (progress > progressDialog.getProgress()) {
-//            progressDialog.incrementProgressBy(progress - progressDialog.getProgress());
-//        }
-//        else {
-//            progressDialog.setProgress(progress);
-//        }
-//
-//        if (message != null) {
-//            progressDialog.setMessage(message);
-//        }
-//
-//        if (!progressDialog.isShowing()) {
-//            progressDialog = new ProgressDialog(this);
-//            progressDialog.setIndeterminate(false);
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            progressDialog.setMessage("Retrieving updated items list...");
-//            progressDialog.setCanceledOnTouchOutside(false);
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
-//        }
-//    }
+
 //
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,31 +227,5 @@
 //        }
 //    }
 //
-//    @Override
-//    public void dataFinishedLoading() {
-//        progressBar.setVisibility(View.GONE);
-//    }
-//
-//    @Override
-//    public void dataFailedLoading(String errorMessage) {
-//        Snackbar.make(baseView, errorMessage, Snackbar.LENGTH_LONG)
-//                .show();
-//    }
-//
-//    @Override
-//    public void dataUpdatingStarted() {
-//        progressDialog = new ProgressDialog(this);
-//        progressDialog.setMessage("Updating Market Cache...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.show();
-//    }
-//
-//    @Override
-//    public void dataUpdatingFinished() {
-//        progressDialog.dismiss();
-//
-//        groupsLoader.loadMarketGroups(null);
-//    }
+
 //}

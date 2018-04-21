@@ -10,9 +10,6 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
     private var loadingCount: AtomicInteger = AtomicInteger(0)
     private var loadingCallbacks: MutableList<DataLoadingSubject.DataLoadingCallbacks>? = null
 
-    private var updatingCount: AtomicInteger = AtomicInteger(0)
-    private var updatingCallbacks: MutableList<DataLoadingSubject.DataUpdatingCallbacks>? = null
-
     override fun isDataLoading(): Boolean {
         return loadingCount.get() > 0
     }
@@ -45,38 +42,12 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
         loadingCount.decrementAndGet()
     }
 
-    protected fun updateFinished() {
-        dispatchUpdateFinishedCallbacks()
-    }
-
-    protected fun isConnected(): Boolean {
-        val manager = context.getSystemService(
-                Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val activeNetwork = manager.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-    }
-
     override fun registerLoadingCallback(callback: DataLoadingSubject.DataLoadingCallbacks) {
         if (loadingCallbacks == null) {
             loadingCallbacks = ArrayList(1)
         }
 
         loadingCallbacks?.add(callback)
-    }
-
-    override fun registerUpdatingCallback(callback: DataLoadingSubject.DataUpdatingCallbacks) {
-        if (updatingCallbacks == null) {
-            updatingCallbacks = ArrayList(1)
-        }
-
-        updatingCallbacks?.add(callback)
-    }
-
-    override fun unregisterUpdatingCallback(callback: DataLoadingSubject.DataUpdatingCallbacks) {
-        if (updatingCallbacks!!.contains(callback)) {
-            updatingCallbacks!!.remove(callback)
-        }
     }
 
     override fun unregisterLoadingCallback(callback: DataLoadingSubject.DataLoadingCallbacks) {
@@ -113,13 +84,4 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
         }
     }
 
-    private fun dispatchUpdateFinishedCallbacks() {
-        if (updatingCount.toInt() == 0) {
-            if (updatingCallbacks != null && !updatingCallbacks!!.isEmpty()) {
-                for (updatingCallback in updatingCallbacks!!) {
-                    updatingCallback.dataUpdatingFinished()
-                }
-            }
-        }
-    }
 }

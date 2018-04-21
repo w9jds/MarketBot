@@ -1,53 +1,44 @@
 package com.w9jds.marketbot.data.loader
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.data.DataManager
-import javax.inject.Inject
 
-abstract class GroupsLoader(val context: Context): DataManager(context) {
+abstract class GroupsLoader(context: Context) : DataManager(context) {
 
-    @Inject lateinit var database: FirebaseDatabase
+    private val database: FirebaseDatabase = MarketBot.base.database()
 
     abstract fun onDataLoaded(data: List<DataSnapshot>)
 
-    init {
-        MarketBot.base.inject(this)
+    private val valueHandler = object: ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot?) {
+            onDataLoaded(snapshot?.children?.distinct() ?: emptyList())
+            decrementLoadingCount()
+            loadFinished()
+        }
+
+        override fun onCancelled(error: DatabaseError?) {
+            onDataLoaded(emptyList())
+            decrementLoadingCount()
+            loadFailed(error?.message ?: "Database Error Occurred")
+        }
     }
 
-    private fun incrementUpdatingCount(count: Int) {
-//        updatingCount.set(count)
-    }
-
-    private fun decrementUpdatingCount() {
-//        updatingCount.decrementAndGet()
-    }
-
-//    private fun updatingCount(): Int {
-//        return updatingCount.intValue()
-//    }
-
-    private fun updateStarted() {
-//        dispatchUpdateStartedCallbacks()
-    }
-
-    fun loadMarketGroups(parentId: Long?) {
-        val id: Double = parentId?.toDouble()
+    fun loadMarketGroups(parentId: Double?) {
+        val query: Query = database.getReference("groups").orderByChild("parent_group_id")
 
         loadStarted()
         incrementLoadingCount()
 
-        database.getReference("groups")
-                .orderByChild("parent_group_id")
-                .equalTo(parentId)
-                .addListenerForSingleValueEvent()
-
-//        onDataLoaded(MarketGroupEntry.getMarketGroupsForParent(parentId))
-        decrementLoadingCount()
-        loadFinished()
+        if (parentId != null) {
+            query.equalTo(parentId)
+                    .addListenerForSingleValueEvent(valueHandler)
+        }
+        else {
+            query.equalTo(null)
+                    .addListenerForSingleValueEvent(valueHandler)
+        }
     }
 
     fun loadMarketTypes(groupId: Long) {
@@ -56,20 +47,11 @@ abstract class GroupsLoader(val context: Context): DataManager(context) {
 
         database.getReference("types/$groupId")
                 .orderByChild("name")
-                .addListenerForSingleValueEvent()
-
-        decrementLoadingCount()
-        loadFinished()
+                .addListenerForSingleValueEvent(valueHandler)
     }
 
-    fun searchMarketTypes(queryString: String) {
-        loadStarted()
-        incrementLoadingCount()
-
-
-
-        decrementLoadingCount()
-        loadFinished()
+    init {
+        MarketBot.base.inject(context)
     }
 
 }

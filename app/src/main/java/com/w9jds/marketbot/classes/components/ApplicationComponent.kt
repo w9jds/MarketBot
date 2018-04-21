@@ -1,6 +1,7 @@
 package com.w9jds.marketbot.classes.components
 
 import android.app.Application
+import android.content.Context
 import com.w9jds.marketbot.classes.modules.ApplicationModule
 import com.w9jds.marketbot.classes.modules.EsiModule
 import dagger.Component
@@ -18,11 +19,7 @@ interface ApplicationComponent {
 
     fun application(): Application
     fun database(): FirebaseDatabase
-    fun esi(): EsiService
-    fun preferences(): SharedPreferences
 
+    fun inject(context: Context)
 
-    fun inject(mainActivity: MainActivity)
-    fun inject(groupsLoader: GroupsLoader)
-    fun inject(manager: DataManager)
 }

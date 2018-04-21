@@ -11,23 +11,19 @@ import javax.inject.Singleton
 @Module
 class ApplicationModule(private val application: Application) {
 
-    @Provides
-    @Singleton
-    fun providesApplication(): Application {
-        return application
-    }
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(application)
-    }
+    fun providesApplication(): Application = application
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
 
     @Provides
     @Singleton
     fun provideFirebaseDatabase(): FirebaseDatabase {
-        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-
         database.setPersistenceEnabled(true)
         database.getReference("groups").keepSynced(true)
         database.getReference("types").keepSynced(true)
