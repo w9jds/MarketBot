@@ -50,8 +50,17 @@ abstract class GroupsLoader(context: Context) : DataManager(context) {
                 .addListenerForSingleValueEvent(valueHandler)
     }
 
-    init {
-        MarketBot.base.inject(context)
+    fun getMarketGroup(groupId: Double, callback: (DataSnapshot?) -> Unit) {
+        database.getReference("groups/$groupId")
+            .addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot?) {
+                    callback(snapshot)
+                }
+
+                override fun onCancelled(snapshot: DatabaseError?) {
+                    callback(null)
+                }
+            })
     }
 
 }

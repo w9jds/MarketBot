@@ -42,6 +42,14 @@ abstract class DataManager(private val context: Context): DataLoadingSubject {
         loadingCount.decrementAndGet()
     }
 
+    fun isConnected(): Boolean {
+        val manager = context.getSystemService(
+                Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetwork = manager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    }
+
     override fun registerLoadingCallback(callback: DataLoadingSubject.DataLoadingCallbacks) {
         if (loadingCallbacks == null) {
             loadingCallbacks = ArrayList(1)

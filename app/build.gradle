@@ -35,6 +35,10 @@ android {
     dataBinding {
         enabled = true
     }
+
+    kapt {
+        generateStubs = true
+    }
 }
 
 repositories {
@@ -48,24 +52,26 @@ def stetho_version = "1.5.0"
 def retrofit_version = "2.2.0"
 def google_version = "27.1.1"
 def dagger_version = "2.14.1"
+def firebase_version = "15.0.0"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.firebase:firebase-core:15.0.0'
 
-    debugImplementation "com.facebook.stetho:stetho:${stetho_version}"
-    debugImplementation "com.facebook.stetho:stetho-okhttp3:${stetho_version}"
-    debugImplementation "com.facebook.stetho:stetho-urlconnection:${stetho_version}"
+    debugImplementation "com.facebook.stetho:stetho:$stetho_version"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stetho_version"
+    debugImplementation "com.facebook.stetho:stetho-urlconnection:$stetho_version"
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation "com.android.support:palette-v7:${google_version}"
-    implementation "com.android.support:support-v4:${google_version}"
-    implementation "com.android.support:appcompat-v7:${google_version}"
-    implementation "com.android.support:recyclerview-v7:${google_version}"
-    implementation "com.android.support:design:${google_version}"
+    implementation "com.android.support:support-v4:$google_version"
+    implementation "com.android.support:appcompat-v7:$google_version"
+    implementation "com.android.support:recyclerview-v7:$google_version"
+    implementation "com.android.support:design:$google_version"
 
-    implementation 'com.google.firebase:firebase-database:15.0.0'
+    kapt "com.android.databinding:compiler:3.1.1"
+
+    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.google.firebase:firebase-database:$firebase_version"
 
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
@@ -73,15 +79,13 @@ dependencies {
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation 'com.google.dagger:dagger-android:2.12'
-    kapt 'com.google.dagger:dagger-android-processor:2.12'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
 }
 

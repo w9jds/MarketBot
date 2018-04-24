@@ -41,9 +41,6 @@
 //    private Type type;
 //    private TypeLoader loader;
 //
-//    /**
-//     * TODO: Possibly show ship 3d view using webresource
-//     */
 //    public static TypeInfoTab create(Type type) {
 //        Bundle args = new Bundle();
 //        args.putParcelable(ARG_TYPE, type);

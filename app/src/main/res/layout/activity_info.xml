@@ -35,9 +35,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:paddingStart="16dp"
@@ -87,65 +84,6 @@
             <TextView
                 android:id="@+id/application_version"
                 android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_gravity="center_horizontal"
-            android:text="@string/crest_version"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/crest_version"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-
-        <TextView
-            android:text="@string/eternal_gratitude"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:paddingBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/rixx_container"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:id="@+id/rix_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="16dp"/>
-
-            <TextView
-                android:text="@string/rixx_javix"
-                android:layout_gravity="center_vertical"
-                style="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

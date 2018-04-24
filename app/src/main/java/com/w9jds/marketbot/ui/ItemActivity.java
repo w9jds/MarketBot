@@ -164,25 +164,6 @@
 //        checkExtras();
 //    }
 //
-//    private void updateProgressDialog(int page, int max, @Nullable String message) {
-//        progressDialog.setMax(max);
-//        progressDialog.setProgress(page);
-//
-//        if (message != null) {
-//            progressDialog.setMessage(message);
-//        }
-//
-//        if (!progressDialog.isShowing()) {
-//            progressDialog = new ProgressDialog(this);
-//            progressDialog.setIndeterminate(false);
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            progressDialog.setMessage("Retrieving updated items list...");
-//            progressDialog.setCanceledOnTouchOutside(false);
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
-//        }
-//    }
-//
 //    private void checkExtras() {
 //        if (!sharedPreferences.getBoolean("isFirstRun", true)) {
 //            if (typeIdExtra != -1) {
@@ -221,23 +202,6 @@
 //    }
 //
 //    @Override
-//    public void dataUpdatingStarted() {
-//        progressDialog = new ProgressDialog(this);
-//        progressDialog.setMessage("Updating Market Cache...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.show();
-//    }
-//
-//    @Override
-//    public void dataUpdatingFinished() {
-//        progressDialog.dismiss();
-//        updateRun = true;
-//        checkExtras();
-//    }
-//
-//    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId()) {
 //            case android.R.id.home:
@@ -248,18 +212,4 @@
 //        }
 //    }
 //
-//    @Override
-//    public void dataStartedLoading() {
-//
-//    }
-//
-//    @Override
-//    public void dataFinishedLoading() {
-//
-//    }
-//
-//    @Override
-//    public void dataFailedLoading(String errorMessage) {
-//
-//    }
 //}

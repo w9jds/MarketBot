@@ -12,7 +12,9 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.FirebaseDatabase
 import com.w9jds.marketbot.R
+import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.data.DataLoadingSubject
 import com.w9jds.marketbot.data.loader.GroupsLoader
 import com.w9jds.marketbot.databinding.ActivityMainBinding
@@ -23,6 +25,7 @@ import kotlinx.android.synthetic.main.app_bar.view.*
 
 class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks {
 
+    private val database: FirebaseDatabase = MarketBot.base.database()
     private val parentListener: BehaviorSubject<DataSnapshot> = BehaviorSubject.create()
 
     private lateinit var binding: ActivityMainBinding
@@ -31,7 +34,13 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     private var parent: DataSnapshot? = null
     private val loader: GroupsLoader = object : GroupsLoader(this) {
         override fun onDataLoaded(data: List<DataSnapshot>) {
+
+            if (parent != null) {
+                binding.baseView.toolbar.title = parent?.child("name")?.value.toString()
+            }
+
             adapter.updateItems(data)
+
         }
     }
 
@@ -43,14 +52,30 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
             setSupportActionBar(binding.baseView.toolbar)
         }
 
+        binding.swipeRefresh.setOnRefreshListener {
+            this.loadBaseGroups()
+        }
+
         binding.marketGroups.layoutManager = LinearLayoutManager(this)
         binding.marketGroups.itemAnimator = DefaultItemAnimator()
 
         adapter = GroupsAdapter(this, parentListener)
         binding.marketGroups.adapter = adapter
 
+        checkNetworkStatus()
+
         attachListeners()
         loadBaseGroups()
+    }
+
+    private fun checkNetworkStatus() {
+        if (loader.isConnected()) {
+            database.goOnline()
+            Snackbar.make(binding.baseView, "Market Syncing in Background...", Snackbar.LENGTH_LONG).show()
+        }
+        else {
+            database.goOffline()
+        }
     }
 
     private fun loadBaseGroups() {
@@ -60,16 +85,17 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     }
 
     private fun onNextParent(snapshot: DataSnapshot) {
-        parent = snapshot
+        if (!loader.isDataLoading()) {
+            parent = snapshot
+            val id = snapshot.child("market_group_id").value as Long
 
-        val id = snapshot.child("market_group_id").value as Long
-        binding.baseView.toolbar.title = snapshot.child("name").value.toString()
 
-        if (snapshot.hasChild("types")) {
-            loader.loadMarketTypes(id)
-        }
-        else {
-            loader.loadMarketGroups(id.toDouble())
+            if (snapshot.hasChild("types")) {
+                loader.loadMarketTypes(id)
+            }
+            else {
+                loader.loadMarketGroups(id.toDouble())
+            }
         }
     }
 
@@ -81,14 +107,15 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     }
 
     override fun dataStartedLoading() {
-
+        binding.swipeRefresh.isRefreshing = true
     }
 
     override fun dataFinishedLoading() {
-
+        binding.swipeRefresh.isRefreshing = false
     }
 
     override fun dataFailedLoading(errorMessage: String) {
+        binding.swipeRefresh.isRefreshing = false
         Snackbar.make(binding.baseView, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
@@ -121,7 +148,13 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     override fun onBackPressed() {
         if (parent != null) {
             if (parent!!.hasChild("parent_group_id")) {
-//                loader.loadMarketGroups(parent.child("parent_group_id"))
+                val groupId = parent?.child("parent_group_id")?.value as Long
+
+                loader.getMarketGroup(groupId.toDouble(), {
+                    parent = it
+                    binding.baseView.toolbar.title = it?.child("name")?.value.toString()
+                    loader.loadMarketGroups(groupId.toDouble())
+                })
             }
             else {
                 loadBaseGroups()

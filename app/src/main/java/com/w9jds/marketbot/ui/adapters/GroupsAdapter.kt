@@ -1,6 +1,8 @@
 package com.w9jds.marketbot.ui.adapters
 
 import android.app.Activity
+import android.databinding.DataBindingUtil
+import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import com.w9jds.marketbot.R
 import io.reactivex.subjects.BehaviorSubject
 import android.support.v7.util.DiffUtil
 import com.bumptech.glide.Glide
+import com.w9jds.marketbot.BR
 import com.w9jds.marketbot.classes.models.market.MarketGroup
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.utils.FirebaseDiffUtil
@@ -23,10 +26,11 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     private val MARKET_TYPE_VIEW: Int = 1
 
     private val inflater: LayoutInflater = host.layoutInflater
-    private var items: List<DataSnapshot> = emptyList()
+    private var items: MutableList<DataSnapshot> = mutableListOf()
 
     inner class GroupHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val binding = DataBindingUtil.bind<ViewDataBinding>(itemView)
+
+        val binding = DataBindingUtil.bind<ViewDataBinding>(itemView)
 
         val title: TextView = itemView.findViewById(R.id.title)
         val description: TextView = itemView.findViewById(R.id.description)
@@ -87,8 +91,7 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     }
 
     private fun bindGroup(group: MarketGroup?, holder: GroupHolder) {
-        holder.title.text = group?.name
-        holder.description.text = group?.description
+        holder.binding?.setVariable(BR.marketGroup, group)
 
         if (group?.description.isNullOrBlank()) {
             holder.description.visibility = View.GONE
@@ -99,7 +102,7 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
         holder.title.text = type?.name
 
         Glide.with(host)
-            .load("https://imageserver.eveonline.com/Type/${type?.icon_id}_64.png")
+            .load("https://imageserver.eveonline.com/Type/${type?.type_id}_64.png")
             .into(holder.icon)
     }
 
@@ -108,12 +111,11 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     }
 
     fun updateItems(snapshots: List<DataSnapshot>) {
-        val old: List<DataSnapshot>  = ArrayList(items)
+        val oldItems: MutableList<DataSnapshot> = ArrayList(items)
+        val diffUtil = DiffUtil.calculateDiff(FirebaseDiffUtil(oldItems, snapshots))
 
-        items = snapshots
-
-        val diffUtil = DiffUtil.calculateDiff(FirebaseDiffUtil(items, old))
+        items.clear()
+        items.addAll(snapshots)
         diffUtil.dispatchUpdatesTo(this)
     }
-
 }

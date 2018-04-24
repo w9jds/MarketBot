@@ -50,6 +50,13 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <activity
+            android:name=".ui.ItemActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+
+        </activity>
+
     </application>
 
 </manifest>
