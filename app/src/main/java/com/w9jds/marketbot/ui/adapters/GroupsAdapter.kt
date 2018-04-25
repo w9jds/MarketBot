@@ -1,8 +1,11 @@
 package com.w9jds.marketbot.ui.adapters
 
 import android.app.Activity
+import android.app.ActivityOptions
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.w9jds.marketbot.BR
 import com.w9jds.marketbot.classes.models.market.MarketGroup
 import com.w9jds.marketbot.classes.models.market.MarketType
+import com.w9jds.marketbot.ui.ItemActivity
 import com.w9jds.marketbot.utils.FirebaseDiffUtil
 
 
@@ -66,6 +70,18 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
         val holder = TypeHolder(view)
 
         holder.itemView.setOnClickListener {
+            val type = items[holder.adapterPosition].getValue(MarketType::class.java)
+
+            val intent = Intent()
+            intent.setClass(host, ItemActivity::class.java)
+            intent.putExtra("type", type)
+
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                    host,
+                    android.util.Pair(host.findViewById(R.id.app_bar), host.getString(R.string.toolbar_transition_name))
+            )
+
+            ActivityCompat.startActivity(host, intent, options.toBundle())
 
         }
 
