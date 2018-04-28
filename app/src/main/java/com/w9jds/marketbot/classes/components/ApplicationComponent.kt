@@ -19,6 +19,7 @@ interface ApplicationComponent {
 
     fun application(): Application
     fun database(): FirebaseDatabase
+    fun preferences(): SharedPreferences
 
     fun inject(context: Context)
 

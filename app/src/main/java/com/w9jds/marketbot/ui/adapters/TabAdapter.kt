@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
+import com.w9jds.marketbot.ui.fragments.BuyOrders
 import com.w9jds.marketbot.ui.fragments.Info
-import com.w9jds.marketbot.ui.fragments.List
+import com.w9jds.marketbot.ui.fragments.Margins
+import com.w9jds.marketbot.ui.fragments.SellOrders
 
 class TabAdapter(
         manager: FragmentManager,
@@ -16,7 +18,7 @@ class TabAdapter(
         private val type: MarketType
 ) : FragmentStatePagerAdapter(manager) {
 
-    private val pageCount = 5
+    private val pageCount = 3
 
     private fun <T: Fragment> createTypeInstance(fragment: T, type: MarketType): T {
         val bundle = Bundle()
@@ -28,10 +30,13 @@ class TabAdapter(
         return fragment
     }
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): Fragment? {
         return when(position) {
             0 -> createTypeInstance(Info(), type)
-            else -> createTypeInstance(List(), type)
+            1 -> createTypeInstance(SellOrders(), type)
+            2 -> createTypeInstance(BuyOrders(), type)
+            3 -> createTypeInstance(Margins(), type)
+            else -> null
         }
     }
 

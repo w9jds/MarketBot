@@ -6,14 +6,13 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.w9jds.marketbot.BR
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
-import com.w9jds.marketbot.databinding.FragmentTypeInfoBinding
+import com.w9jds.marketbot.databinding.FragmentTypeListsBinding
 
-class Info : Fragment() {
+class SellOrders: Fragment() {
 
-    private lateinit var binding: FragmentTypeInfoBinding
+    private lateinit var binding: FragmentTypeListsBinding
     private lateinit var type: MarketType
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,10 +22,9 @@ class Info : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_type_info, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_type_lists, container, false)
 
         binding = DataBindingUtil.bind(view)!!
-        binding.setVariable(BR.marketType, type)
 
         return view
     }

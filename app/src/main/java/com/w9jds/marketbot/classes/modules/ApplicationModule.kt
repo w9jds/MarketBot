@@ -26,9 +26,9 @@ class ApplicationModule(private val application: Application) {
     fun provideFirebaseDatabase(): FirebaseDatabase {
         database.setPersistenceEnabled(true)
 
-        database.getReference("groups").keepSynced(true)
-        database.getReference("types").keepSynced(true)
-        database.getReference("regions").keepSynced(true)
+//        database.getReference("groups").keepSynced(true)
+//        database.getReference("types").keepSynced(true)
+//        database.getReference("regions").keepSynced(true)
 
         return database
     }
