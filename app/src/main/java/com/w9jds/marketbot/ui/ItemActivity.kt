@@ -7,7 +7,6 @@ import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.databinding.ActivityMarketItemBinding
 import com.w9jds.marketbot.ui.adapters.TabAdapter
-import com.w9jds.marketbot.ui.adapters.RegionAdapter
 
 class ItemActivity: AppCompatActivity() {
 
@@ -16,7 +15,7 @@ class ItemActivity: AppCompatActivity() {
     private lateinit var binding: ActivityMarketItemBinding
     private lateinit var tabAdapter: TabAdapter
     private lateinit var type: MarketType
-    private lateinit var adapter: RegionAdapter
+//    private lateinit var adapter: RegionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
