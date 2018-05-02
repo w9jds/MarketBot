@@ -50,7 +50,7 @@ abstract class GroupsLoader(context: Context) : DataManager(context) {
                 .addListenerForSingleValueEvent(valueHandler)
     }
 
-    fun getMarketGroup(groupId: Double, callback: (DataSnapshot?) -> Unit) {
+    fun getMarketGroup(groupId: Long, callback: (DataSnapshot?) -> Unit) {
         database.getReference("groups/$groupId")
             .addListenerForSingleValueEvent(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot?) {

@@ -150,7 +150,7 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
             if (parent!!.hasChild("parent_group_id")) {
                 val groupId = parent?.child("parent_group_id")?.value as Long
 
-                loader.getMarketGroup(groupId.toDouble(), {
+                loader.getMarketGroup(groupId, {
                     parent = it
                     binding.baseView.toolbar.title = it?.child("name")?.value.toString()
                     loader.loadMarketGroups(groupId.toDouble())

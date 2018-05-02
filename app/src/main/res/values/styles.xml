@@ -7,8 +7,7 @@
         <!--<item name="android:textColorHint">@color/hint_disabled_dark</item>-->
         <!--<item name="android:windowBackground">@color/background_light</item>-->
 
-        <!--<item name="android:statusBarColor">@color/immersive_bars</item>-->
-        <!--<item name="android:navigationBarColor">@color/immersive_bars</item>-->
+        <item name="android:navigationBarColor">@color/primaryDarkColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorAccent">@color/primaryColor</item>
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
