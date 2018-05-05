@@ -29,22 +29,15 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     private val MARKET_GROUP_VIEW: Int = 0
     private val MARKET_TYPE_VIEW: Int = 1
 
-    private val inflater: LayoutInflater = host.layoutInflater
     private var items: MutableList<DataSnapshot> = mutableListOf()
 
     inner class GroupHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         val binding = DataBindingUtil.bind<ViewDataBinding>(itemView)
-
-        val title: TextView = itemView.findViewById(R.id.title)
         val description: TextView = itemView.findViewById(R.id.description)
     }
 
     inner class TypeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val title: TextView = itemView.findViewById(R.id.title)
-        val icon: ImageView = itemView.findViewById(R.id.icon)
-
+        val binding = DataBindingUtil.bind<ViewDataBinding>(itemView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -55,7 +48,8 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     }
 
     private fun createGroupHolder(parent: ViewGroup): GroupHolder {
-        val view: View = inflater.inflate(R.layout.group_item_layout, parent, false)
+        val view: View = LayoutInflater.from(parent.context)
+                .inflate(R.layout.group_item_layout, parent, false)
         val holder = GroupHolder(view)
 
         holder.itemView.setOnClickListener {
@@ -66,7 +60,8 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     }
 
     private fun createTypeHolder(parent: ViewGroup): TypeHolder {
-        val view: View = inflater.inflate(R.layout.type_item_layout, parent, false)
+        val view: View = LayoutInflater.from(parent.context)
+                .inflate(R.layout.type_item_layout, parent, false)
         val holder = TypeHolder(view)
 
         holder.itemView.setOnClickListener {
@@ -115,11 +110,7 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
     }
 
     private fun bindType(type: MarketType?, holder: TypeHolder) {
-        holder.title.text = type?.name
-
-        Glide.with(host)
-            .load("https://imageserver.eveonline.com/Type/${type?.type_id}_64.png")
-            .into(holder.icon)
+        holder.binding?.setVariable(BR.marketType, type)
     }
 
     override fun getItemCount(): Int {

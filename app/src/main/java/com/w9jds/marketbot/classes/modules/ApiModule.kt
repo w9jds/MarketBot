@@ -1,8 +1,6 @@
 package com.w9jds.marketbot.classes.modules
 
-import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.w9jds.marketbot.BuildConfig
-import com.w9jds.marketbot.classes.EsiService
+import com.w9jds.marketbot.classes.ApiService
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -13,9 +11,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class EsiModule {
-
-    val ImageServerUri = "https://imageserver.eveonline.com/%s/%d_%d.%s"
+class ApiModule {
 
     @Provides
     @Singleton
@@ -47,7 +43,7 @@ class EsiModule {
     @Singleton
     fun provideEsiRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://esi.tech.ccp.is/")
+            .baseUrl("https://api.new-eden.io/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(JacksonConverterFactory.create())
             .client(okHttpClient)
@@ -56,8 +52,8 @@ class EsiModule {
 
     @Provides
     @Singleton
-    fun provideEsiService(retrofit: Retrofit): EsiService {
-        return retrofit.create(EsiService::class.java)
+    fun provideEsiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 
 }

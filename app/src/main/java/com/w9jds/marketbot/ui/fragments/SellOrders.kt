@@ -3,22 +3,61 @@ package com.w9jds.marketbot.ui.fragments
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.w9jds.marketbot.R
+import com.w9jds.marketbot.classes.models.Region
+import com.w9jds.marketbot.classes.models.market.MarketOrder
 import com.w9jds.marketbot.classes.models.market.MarketType
+import com.w9jds.marketbot.data.DataLoadingSubject
+import com.w9jds.marketbot.data.loader.OrdersLoader
 import com.w9jds.marketbot.databinding.FragmentTypeListsBinding
+import com.w9jds.marketbot.ui.adapters.OrdersAdapter
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 
-class SellOrders: Fragment() {
+class SellOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
 
+    private lateinit var regionsObservable: Observable<Region>
     private lateinit var binding: FragmentTypeListsBinding
+    private lateinit var ordersAdapter: OrdersAdapter
+    private lateinit var ordersLoaders: OrdersLoader
     private lateinit var type: MarketType
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         type = arguments?.getParcelable("type")!!
+
+        ordersAdapter = OrdersAdapter()
+        ordersLoaders = object: OrdersLoader(context!!) {
+            override fun onRegionsLoaded(data: List<MarketOrder>) {
+                ordersAdapter.updateItems(data)
+            }
+        }
+
+        regionsObservable.observeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = {
+                    if (it.region_id != null && type.type_id != null) {
+                        ordersLoaders.loadSellOrders(it.region_id, type.type_id!!)
+                    }
+                },
+                onError = {
+                    dataFailedLoading(it.message ?: "Error occured pulling orders...")
+                    it.printStackTrace()
+                }
+            )
+    }
+
+    fun setOnRegionChangeObservable(observable: Observable<Region>) {
+        regionsObservable = observable
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,7 +65,24 @@ class SellOrders: Fragment() {
 
         binding = DataBindingUtil.bind(view)!!
 
+        binding.itemsList.layoutManager = LinearLayoutManager(activity)
+        binding.itemsList.itemAnimator = DefaultItemAnimator()
+        binding.itemsList.adapter = ordersAdapter
+
         return view
+    }
+
+    override fun dataStartedLoading() {
+        binding.swipeRefresh.isRefreshing = true
+    }
+
+    override fun dataFinishedLoading() {
+        binding.swipeRefresh.isRefreshing = false
+    }
+
+    override fun dataFailedLoading(errorMessage: String) {
+        binding.swipeRefresh.isRefreshing = false
+//        Snackbar.make(binding.baseView, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
 }
