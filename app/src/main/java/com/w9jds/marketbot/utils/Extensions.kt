@@ -7,6 +7,8 @@ import android.text.Spanned
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.w9jds.marketbot.R
+import java.text.DecimalFormat
 
 @BindingAdapter("typeId")
 fun ImageView.setTypeId(typeId: Int) {
@@ -23,3 +25,45 @@ fun TextView.setHtmlText(html: String) {
         Html.fromHtml(html, paintFlags)
     }
 }
+
+@BindingAdapter("iskValue")
+fun TextView.setIskValue(price: Double) {
+    val formatter = DecimalFormat("#,###.00")
+    val formattedPrice = "${formatter.format(price)} ISK"
+
+    text = formattedPrice
+}
+
+@BindingAdapter("volumeAmount")
+fun TextView.setVolumeAmount(inventory: Long) {
+    val formatter = DecimalFormat("#,###")
+
+    text = formatter.format(inventory)
+}
+
+@BindingAdapter("buyRegion")
+fun TextView.setBuyRegion(region: String) {
+    text = when (region.toIntOrNull()) {
+        null -> region.capitalize()
+        else -> when (region.toInt()) {
+            1 -> "$region Jump"
+            else -> "$region Jumps"
+        }
+    }
+}
+
+
+//    @BindingAdapter("bind:marginPercentage")
+//    public static void setMarginPercentage(TextView textView, StationMargin margin) {
+//
+//        DecimalFormat format = new DecimalFormat("0.#");
+//        String percentage = format.format(margin.getPercentage()) + "%";
+//        textView.setText(percentage);
+//
+//        if (margin.getPercentage() <= 20) {
+//            textView.setTextColor(0xFFFF0000);
+//        }
+//        else {
+//            textView.setTextColor(0xFF00FF00);
+//        }
+//    }

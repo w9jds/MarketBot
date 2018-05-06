@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.w9jds.marketbot.R
+import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.classes.models.Region
 import com.w9jds.marketbot.classes.models.market.MarketOrder
 import com.w9jds.marketbot.classes.models.market.MarketType
@@ -29,6 +30,8 @@ class SellOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
     private lateinit var ordersLoaders: OrdersLoader
     private lateinit var type: MarketType
 
+    private var region: Region? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,24 +39,34 @@ class SellOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
 
         ordersAdapter = OrdersAdapter()
         ordersLoaders = object: OrdersLoader(context!!) {
+            init {
+                MarketBot.base.inject(this)
+            }
+
             override fun onRegionsLoaded(data: List<MarketOrder>) {
-                ordersAdapter.updateItems(data)
+                ordersAdapter.updateItems(data.sortedBy { it.price })
             }
         }
 
+//        ordersLoaders.registerLoadingCallback(this)
         regionsObservable.observeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-                    if (it.region_id != null && type.type_id != null) {
-                        ordersLoaders.loadSellOrders(it.region_id, type.type_id!!)
-                    }
+                    region = it
+                    loadSellOrders()
                 },
                 onError = {
                     dataFailedLoading(it.message ?: "Error occured pulling orders...")
                     it.printStackTrace()
                 }
             )
+    }
+
+    private fun loadSellOrders() {
+        if (region != null && type.type_id != null) {
+            ordersLoaders.loadSellOrders(region?.region_id!!, type.type_id!!)
+        }
     }
 
     fun setOnRegionChangeObservable(observable: Observable<Region>) {
@@ -68,6 +81,8 @@ class SellOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
         binding.itemsList.layoutManager = LinearLayoutManager(activity)
         binding.itemsList.itemAnimator = DefaultItemAnimator()
         binding.itemsList.adapter = ordersAdapter
+
+        binding.swipeRefresh.setOnRefreshListener { loadSellOrders() }
 
         return view
     }

@@ -8,12 +8,16 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("/market/{regionId}/orders/{typeId}")
+//    @GET("/market/{regionId}/orders/{typeId}")
+//    fun getOrders(
+//        @Path("regionId") regionId: Int,
+//        @Path("typeId") typeId: Int,
+//        @Query("type") orderType: String
+//    ): Observable<List<MarketOrder>>
+
+    @GET("/v1/markets/{region_id}/orders/")
     fun getOrders(
-        @Path("regionId") regionId: Int,
-        @Path("typeId") typeId: Int,
-        @Query("type") orderType: String
+            @Path("region_id") regionId: Int,
+            @Query("type_id") typeId: Int
     ): Observable<List<MarketOrder>>
-
-
 }

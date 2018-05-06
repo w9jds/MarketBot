@@ -6,28 +6,28 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v4.app.ActivityCompat
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
-import com.w9jds.marketbot.R
-import io.reactivex.subjects.BehaviorSubject
-import android.support.v7.util.DiffUtil
-import com.bumptech.glide.Glide
 import com.w9jds.marketbot.BR
+import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketGroup
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.ui.ItemActivity
 import com.w9jds.marketbot.utils.FirebaseDiffUtil
+import io.reactivex.subjects.BehaviorSubject
 
 
 class GroupsAdapter(private val host: Activity, private val listener: BehaviorSubject<DataSnapshot>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val MARKET_GROUP_VIEW: Int = 0
-    private val MARKET_TYPE_VIEW: Int = 1
+    companion object {
+        private const val MARKET_GROUP_VIEW: Int = 0
+        private const val MARKET_TYPE_VIEW: Int = 1
+    }
 
     private var items: MutableList<DataSnapshot> = mutableListOf()
 

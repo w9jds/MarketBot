@@ -1,19 +1,19 @@
 package com.w9jds.marketbot.classes.models.market
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.SerializedName
 
-data class MarketOrder(
-        @JsonProperty val order_id: Int,
-        @JsonProperty val type_id: Int,
-        @JsonProperty val location_id: Int,
-        @JsonProperty val system_id: Int,
-        @JsonProperty val system_name: String?,
-        @JsonProperty val volume_total: Int,
-        @JsonProperty val volume_remain: Int,
-        @JsonProperty val min_volume: Int,
-        @JsonProperty val price: Double,
-        @JsonProperty val is_buy_order: Boolean,
-        @JsonProperty val duration: Int,
-        @JsonProperty val issued: String,
-        @JsonProperty val range: String
+class MarketOrder(
+        @SerializedName("order_id") val order_id: Long,
+        @SerializedName("type_id") val type_id: Long,
+        @SerializedName("location_id") val location_id: Long,
+        @SerializedName("system_id") val system_id: Long,
+        val system_name: String?,
+        @SerializedName("volume_total") val volume_total: Long,
+        @SerializedName("volume_remain") val volume_remain: Long,
+        @SerializedName("min_volume") val min_volume: Long,
+        @SerializedName("price") val price: Double,
+        @SerializedName("is_buy_order") val is_buy_order: Boolean,
+        @SerializedName("duration") val duration: Long,
+        @SerializedName("issued")  val issued: String,
+        @SerializedName("range")  val range: String
 )

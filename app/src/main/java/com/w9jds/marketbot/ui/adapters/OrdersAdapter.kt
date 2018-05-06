@@ -15,7 +15,9 @@ import com.w9jds.marketbot.utils.OrdersDiffUtil
 
 class OrdersAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val MARKET_ORDER_VIEW: Int = 0
+    companion object {
+        private const val MARKET_ORDER_VIEW: Int = 0
+    }
 
     private var items: MutableList<MarketOrder> = mutableListOf()
 
