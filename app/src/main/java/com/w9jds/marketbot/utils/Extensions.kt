@@ -3,18 +3,17 @@ package com.w9jds.marketbot.utils
 import android.databinding.BindingAdapter
 import android.os.Build
 import android.text.Html
-import android.text.Spanned
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.w9jds.marketbot.R
+import com.w9jds.marketbot.classes.models.market.MarketOrder
 import java.text.DecimalFormat
 
 @BindingAdapter("typeId")
 fun ImageView.setTypeId(typeId: Int) {
     Glide.with(context)
-            .load("https://imageserver.eveonline.com/Type/${typeId}_64.png")
-            .into(this)
+        .load("https://imageserver.eveonline.com/Type/${typeId}_64.png")
+        .into(this)
 }
 
 @BindingAdapter("htmlText")
@@ -30,14 +29,12 @@ fun TextView.setHtmlText(html: String) {
 fun TextView.setIskValue(price: Double) {
     val formatter = DecimalFormat("#,###.00")
     val formattedPrice = "${formatter.format(price)} ISK"
-
     text = formattedPrice
 }
 
 @BindingAdapter("volumeAmount")
 fun TextView.setVolumeAmount(inventory: Long) {
     val formatter = DecimalFormat("#,###")
-
     text = formatter.format(inventory)
 }
 
@@ -49,6 +46,18 @@ fun TextView.setBuyRegion(region: String) {
             1 -> "$region Jump"
             else -> "$region Jumps"
         }
+    }
+}
+
+@BindingAdapter("orderLocation")
+fun TextView.setOrderLocation(order: MarketOrder) {
+    val location: String? = order.location_name
+
+    text = if (location.isNullOrBlank()) {
+        "${order.system_name} - Unknown Structure"
+    }
+    else {
+        location
     }
 }
 

@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import com.w9jds.marketbot.R
-import com.w9jds.marketbot.classes.models.Region
+import com.w9jds.marketbot.classes.models.universe.Region
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.ui.fragments.BuyOrders
 import com.w9jds.marketbot.ui.fragments.Info

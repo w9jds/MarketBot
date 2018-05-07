@@ -1,4 +1,4 @@
-package com.w9jds.marketbot.classes.models
+package com.w9jds.marketbot.classes.models.universe
 
 data class Region (
         val region_id: Int? = null,

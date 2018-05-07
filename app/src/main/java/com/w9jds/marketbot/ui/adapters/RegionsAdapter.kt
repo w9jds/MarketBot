@@ -8,7 +8,7 @@ import android.widget.SpinnerAdapter
 import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
 import com.w9jds.marketbot.R
-import com.w9jds.marketbot.classes.models.Region
+import com.w9jds.marketbot.classes.models.universe.Region
 
 class RegionsAdapter : BaseAdapter(), SpinnerAdapter {
 

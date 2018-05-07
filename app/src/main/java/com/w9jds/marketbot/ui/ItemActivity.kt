@@ -10,7 +10,7 @@ import android.widget.AdapterView
 import com.google.firebase.database.DataSnapshot
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.MarketBot
-import com.w9jds.marketbot.classes.models.Region
+import com.w9jds.marketbot.classes.models.universe.Region
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.data.DataLoadingSubject
 import com.w9jds.marketbot.data.loader.RegionsLoader

@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.MarketBot
-import com.w9jds.marketbot.classes.models.Region
+import com.w9jds.marketbot.classes.models.universe.Region
 import com.w9jds.marketbot.classes.models.market.MarketOrder
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.data.DataLoadingSubject
@@ -81,21 +81,21 @@ class BuyOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
         binding.itemsList.itemAnimator = DefaultItemAnimator()
         binding.itemsList.adapter = ordersAdapter
 
-        binding.swipeRefresh.setOnRefreshListener { loadBuyOrders() }
+//        binding.swipeRefresh.setOnRefreshListener { loadBuyOrders() }
 
         return view
     }
 
     override fun dataStartedLoading() {
-        binding.swipeRefresh.isRefreshing = true
+//        binding.swipeRefresh.isRefreshing = true
     }
 
     override fun dataFinishedLoading() {
-        binding.swipeRefresh.isRefreshing = false
+//        binding.swipeRefresh.isRefreshing = false
     }
 
     override fun dataFailedLoading(errorMessage: String) {
-        binding.swipeRefresh.isRefreshing = false
+//        binding.swipeRefresh.isRefreshing = false
 //        Snackbar.make(binding.baseView, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
