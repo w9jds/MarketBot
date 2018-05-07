@@ -21,7 +21,6 @@ import com.w9jds.marketbot.databinding.ActivityMainBinding
 import com.w9jds.marketbot.ui.adapters.GroupsAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.app_bar.view.*
 
 class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks {
 
@@ -71,7 +70,6 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     private fun checkNetworkStatus() {
         if (loader.isConnected()) {
             database.goOnline()
-            Snackbar.make(binding.baseView, "Market Syncing in Background...", Snackbar.LENGTH_LONG).show()
         }
         else {
             database.goOffline()
