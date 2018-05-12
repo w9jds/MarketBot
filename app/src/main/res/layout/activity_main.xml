@@ -14,18 +14,20 @@
             android:id="@+id/activity_header"
             layout="@layout/app_bar" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/market_groups"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/market_groups"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:id="@+id/content_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-7dp"
+            android:indeterminate="true"
+            style="@style/Widget.MarketBot.ContentLoadingProgress"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

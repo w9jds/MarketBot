@@ -32,6 +32,9 @@
     <string name="ign_chingy_chonga">IGN: Chingy Chonga</string>
     <string name="jeremy_shore">Jeremy Shore</string>
 
+    <string name="no_sell_orders_available">No Sell Orders Available In This Region</string>
+    <string name="no_buy_orders_available">No Buy Orders Available In This Region</string>
+
     <string name="info_label">Info</string>
     <string name="maximum_buy_price">Maximum Buy Price:</string>
     <string name="maximum_sell_price">Maximum Sell Price:</string>

@@ -43,11 +43,18 @@ class BuyOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
             }
 
             override fun onRegionsLoaded(data: List<MarketOrder>) {
+                binding.message.visibility = View.GONE
+
+                if (data.isEmpty()) {
+                    binding.message.text = getString(R.string.no_buy_orders_available)
+                    binding.message.visibility = View.VISIBLE
+                }
+
                 ordersAdapter.updateItems(data.sortedByDescending { it.price })
             }
         }
 
-//        ordersLoaders.registerLoadingCallback(this)
+        ordersLoaders.registerLoadingCallback(this)
         regionObservable.observeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
@@ -87,14 +94,17 @@ class BuyOrders: Fragment(), DataLoadingSubject.DataLoadingCallbacks {
     }
 
     override fun dataStartedLoading() {
+        binding.contentLoading.show()
 //        binding.swipeRefresh.isRefreshing = true
     }
 
     override fun dataFinishedLoading() {
+        binding.contentLoading.hide()
 //        binding.swipeRefresh.isRefreshing = false
     }
 
     override fun dataFailedLoading(errorMessage: String) {
+        binding.contentLoading.hide()
 //        binding.swipeRefresh.isRefreshing = false
 //        Snackbar.make(binding.baseView, errorMessage, Snackbar.LENGTH_LONG).show()
     }

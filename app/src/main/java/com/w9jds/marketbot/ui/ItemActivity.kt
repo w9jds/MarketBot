@@ -46,9 +46,7 @@ class ItemActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
 
         if (supportActionBar != null) {
             supportActionBar?.setDisplayShowTitleEnabled(false)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setHomeButtonEnabled(true)
         }
 
         handleIntent()

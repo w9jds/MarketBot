@@ -8,6 +8,7 @@ import android.databinding.ViewDataBinding
 import android.support.v4.app.ActivityCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ import com.w9jds.marketbot.utils.FirebaseDiffUtil
 import io.reactivex.subjects.BehaviorSubject
 
 
-class GroupsAdapter(private val host: Activity, private val listener: BehaviorSubject<DataSnapshot>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GroupsAdapter(private val host: Activity, private val listener: BehaviorSubject<DataSnapshot>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val MARKET_GROUP_VIEW: Int = 0
@@ -53,7 +54,8 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
         val holder = GroupHolder(view)
 
         holder.itemView.setOnClickListener {
-            listener.onNext(items[holder.adapterPosition])
+            listener?.onNext(items[holder.adapterPosition]) ?:
+                Log.d("GROUPS_ADAPTER", "Click ignored, No listener available.")
         }
 
         return holder
@@ -77,7 +79,6 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
             )
 
             ActivityCompat.startActivity(host, intent, options.toBundle())
-
         }
 
         return holder

@@ -1,6 +1,7 @@
 package com.w9jds.marketbot.ui
 
 import android.app.SearchManager
+import android.content.ComponentName
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -21,10 +22,10 @@ import com.w9jds.marketbot.databinding.ActivityMainBinding
 import com.w9jds.marketbot.ui.adapters.GroupsAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.app_bar.view.*
 
 class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks {
 
-    private val database: FirebaseDatabase = MarketBot.base.database()
     private val parentListener: BehaviorSubject<DataSnapshot> = BehaviorSubject.create()
 
     private lateinit var binding: ActivityMainBinding
@@ -51,10 +52,6 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
             setSupportActionBar(binding.baseView.toolbar)
         }
 
-        binding.swipeRefresh.setOnRefreshListener {
-            this.loadBaseGroups()
-        }
-
         binding.marketGroups.layoutManager = LinearLayoutManager(this)
         binding.marketGroups.itemAnimator = DefaultItemAnimator()
 
@@ -68,12 +65,12 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     }
 
     private fun checkNetworkStatus() {
-        if (loader.isConnected()) {
-            database.goOnline()
-        }
-        else {
-            database.goOffline()
-        }
+//        if (loader.isConnected()) {
+//            database.goOnline()
+//        }
+//        else {
+//            database.goOffline()
+//        }
     }
 
     private fun loadBaseGroups() {
@@ -105,15 +102,15 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
     }
 
     override fun dataStartedLoading() {
-        binding.swipeRefresh.isRefreshing = true
+        binding.contentLoading.show()
     }
 
     override fun dataFinishedLoading() {
-        binding.swipeRefresh.isRefreshing = false
+        binding.contentLoading.hide()
     }
 
     override fun dataFailedLoading(errorMessage: String) {
-        binding.swipeRefresh.isRefreshing = false
+        binding.contentLoading.hide()
         Snackbar.make(binding.baseView, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
@@ -123,11 +120,11 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
         if (menu != null) {
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
             val searchView = menu.findItem(R.id.search).actionView as SearchView
-//            searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(
-//                    ComponentName(application, SearchActivity.class)
-//                )
-//            )
+            searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(
+                    ComponentName(application, SearchActivity::class.java)
+                )
+            )
         }
 
         return true

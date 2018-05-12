@@ -1,30 +1,33 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="MarketBot" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="android:colorPrimary">@color/primary</item>-->
-        <!--<item name="android:colorBackground">@color/background_light</item>-->
-        <!--<item name="android:colorAccent">@color/accent</item>-->
-        <!--<item name="android:textColorHint">@color/hint_disabled_dark</item>-->
-        <!--<item name="android:windowBackground">@color/background_light</item>-->
-
+    <style name="Theme.MarketBot" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:navigationBarColor">@color/primaryDarkColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/primaryColor</item>
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
-    <style name="MarketBot.Activities">
+    <style name="Theme.MarketBot.Dark">
+        <item name="colorPrimaryDark">#27272F</item>
+        <item name="colorAccent">#33333D</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+
+    <style name="Widget.MarketBot.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorAccent</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Widget.MarketBot.ContentLoadingProgress" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">@color/primaryDarkColor</item>
+    </style>
+
+    <style name="Theme.MarketBot.Activities">
         <item name="android:windowContentTransitions">true</item>
-
-    </style>
-
-    <style name="MarketBot.Activities.MainActivity">
-
-    </style>
-
-    <style name="MarketBot.Activities.ItemActivity">
 
     </style>
 
@@ -36,16 +39,6 @@
         <!--<item name="android:popupBackground">@android:color/white</item>-->
     <!--</style>-->
 
-    <!--<style name="Widget.MarketBot.Toolbar" parent="Widget.AppCompat.Toolbar">-->
-        <!--<item name="titleTextAppearance">@android:style/TextAppearance.Material.Widget.ActionBar.Title</item>-->
-        <!--<item name="android:background">@color/primary</item>-->
-        <!--<item name="android:theme">@style/MarketBotDarkOverlay</item>-->
-        <!--<item name="android:minHeight">?attr/actionBarSize</item>-->
-    <!--</style>-->
-
-    <!--<style name="Widget.MarketBot.Toolbar.SmallCapsTitle">-->
-        <!--<item name="titleTextAppearance">@style/TextAppearance.ToolbarTitleSmallCaps</item>-->
-    <!--</style>-->
 
     <!--<style name="Widget.MarketBot.Toolbar.ItemToolbar" parent="Widget.MarketBot.Toolbar.SmallCapsTitle">-->
         <!--<item name="android:textColorPrimary">@android:color/white</item>-->
@@ -71,10 +64,6 @@
         <!--<item name="android:textColor">@color/text_primary_light</item>-->
         <!--<item name="android:fontFeatureSettings">smcp</item>-->
         <!--<item name="android:letterSpacing">0.2</item>-->
-    <!--</style>-->
-
-    <!--<style name="MarketBotDarkOverlay" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar">-->
-
     <!--</style>-->
 
 </resources>
