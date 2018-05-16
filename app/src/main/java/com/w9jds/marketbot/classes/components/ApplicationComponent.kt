@@ -6,7 +6,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.w9jds.marketbot.classes.modules.ApiModule
 import com.w9jds.marketbot.classes.modules.ApplicationModule
 import com.w9jds.marketbot.data.Database
-import com.w9jds.marketbot.data.model.OrdersLoader
+import com.w9jds.marketbot.data.model.OrdersModel
 import javax.inject.Singleton
 import dagger.Component
 
@@ -18,5 +18,5 @@ interface ApplicationComponent {
     fun preferences(): SharedPreferences
     fun database(): Database
 
-    fun inject(loader: OrdersLoader)
+    fun inject(loader: OrdersModel)
 }

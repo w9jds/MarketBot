@@ -3,6 +3,7 @@ package com.w9jds.marketbot.ui.fragments
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -34,6 +35,12 @@ class GroupsFragment: Fragment(), LifecycleOwner {
         super.onCreate(savedInstanceState)
 
         model = ViewModelProviders.of(this).get(GroupsModel::class.java)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
