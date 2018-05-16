@@ -19,8 +19,8 @@
             android:id="@+id/item_icon"
             android:layout_gravity="center_vertical"
             android:transitionName="@string/type_icon_transition"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_margin="16dp"
             bind:typeId="@{marketType.type_id}"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constrainedWidth="true" />
 
-        <include layout="@layout/attributes_layout"
+        <include layout="@layout/layout_attributes"
             android:id="@+id/details_layout"
             bind:marketType="@{marketType}"
             android:layout_height="wrap_content"

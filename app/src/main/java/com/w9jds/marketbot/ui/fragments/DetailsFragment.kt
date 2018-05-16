@@ -11,7 +11,7 @@ import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.databinding.FragmentTypeInfoBinding
 
-class Info : Fragment() {
+class DetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentTypeInfoBinding
     private lateinit var type: MarketType

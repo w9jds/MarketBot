@@ -8,10 +8,10 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.universe.Region
 import com.w9jds.marketbot.classes.models.market.MarketType
-import com.w9jds.marketbot.ui.fragments.BuyOrders
-import com.w9jds.marketbot.ui.fragments.Info
-import com.w9jds.marketbot.ui.fragments.Margins
-import com.w9jds.marketbot.ui.fragments.SellOrders
+import com.w9jds.marketbot.ui.fragments.BuyOrdersFragment
+import com.w9jds.marketbot.ui.fragments.DetailsFragment
+import com.w9jds.marketbot.ui.fragments.MarginsFragment
+import com.w9jds.marketbot.ui.fragments.SellOrdersFragment
 import io.reactivex.Observable
 
 class TabAdapter(
@@ -34,17 +34,17 @@ class TabAdapter(
     }
 
     override fun getItem(position: Int): Fragment? {
-        val sellFragment = createTypeInstance(SellOrders(), type)
-        val buyFragment = createTypeInstance(BuyOrders(), type)
+        val sellFragment = createTypeInstance(SellOrdersFragment(), type)
+        val buyFragment = createTypeInstance(BuyOrdersFragment(), type)
 
         sellFragment.setOnRegionChangeObservable(regionObservable)
         buyFragment.setOnRegionChangeObservable(regionObservable)
 
         return when(position) {
-            0 -> createTypeInstance(Info(), type)
+            0 -> createTypeInstance(DetailsFragment(), type)
             1 -> sellFragment
             2 -> buyFragment
-            3 -> createTypeInstance(Margins(), type)
+            3 -> createTypeInstance(MarginsFragment(), type)
             else -> null
         }
     }

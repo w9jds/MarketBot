@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
-import com.w9jds.marketbot.databinding.FragmentTypeListsBinding
+import com.w9jds.marketbot.databinding.FragmentListBinding
 
-class Margins: Fragment() {
+class MarginsFragment: Fragment() {
 
-    private lateinit var binding: FragmentTypeListsBinding
+    private lateinit var binding: FragmentListBinding
     private lateinit var type: MarketType
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +22,7 @@ class Margins: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_type_lists, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_list, container, false)
 
         binding = DataBindingUtil.bind(view)!!
 

@@ -2,6 +2,7 @@ package com.w9jds.marketbot.classes.models.market
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
@@ -13,52 +14,52 @@ import com.w9jds.marketbot.classes.models.dogma.EffectBase
 data class MarketType(
 
         @PrimaryKey(autoGenerate = false)
-        val type_id: Int? = null,
+        var type_id: Int? = null,
 
         @ColumnInfo(name = "name")
-        val name: String = "",
+        var name: String = "",
 
         @ColumnInfo(name = "description")
-        val description: String = "",
+        var description: String = "",
 
         @ColumnInfo(name = "published")
-        val published: Boolean = false,
+        var published: Boolean = false,
 
         @ColumnInfo(name = "group_id")
-        val group_id: Int? = null,
+        var group_id: Int? = null,
 
         @ColumnInfo(name = "market_group_id")
-        val market_group_id: Int? = null,
+        var market_group_id: Int? = null,
 
         @ColumnInfo(name = "radius")
-        val radius: Float? = null,
+        var radius: Float? = null,
 
         @ColumnInfo(name = "volume")
-        val volume: Float? = null,
+        var volume: Float? = null,
 
         @ColumnInfo(name = "packaged_volume")
-        val packaged_volume: Float? = null,
+        var packaged_volume: Float? = null,
 
         @ColumnInfo(name = "icon_id")
-        val icon_id: Int? = null,
+        var icon_id: Int? = null,
 
         @ColumnInfo(name = "capacity")
-        val capacity: Float? = null,
+        var capacity: Float? = null,
 
         @ColumnInfo(name = "portion_size")
-        val portion_size: Int? = null,
+        var portion_size: Int? = null,
 
         @ColumnInfo(name = "mass")
-        val mass: Float? = null,
+        var mass: Float? = null,
 
         @ColumnInfo(name = "graphic_id")
-        val graphic_id: Int? = null,
+        var graphic_id: Int? = null,
 
-        @ColumnInfo(name = "dogma_attributes")
-        val dogma_attributes: List<AttributeBase>? = null,
+        @Ignore
+        var dogma_attributes: List<AttributeBase>? = null,
 
-        @ColumnInfo(name = "dogma_effects")
-        val dogma_effects: List<EffectBase>? = null
+        @Ignore
+        var dogma_effects: List<EffectBase>? = null
 
 ): Parcelable {
     constructor(parcel: Parcel) : this(

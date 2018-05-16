@@ -1,9 +1,11 @@
 package com.w9jds.marketbot.classes.modules
 
 import android.app.Application
+import android.arch.persistence.room.Room
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.google.firebase.database.FirebaseDatabase
+import com.w9jds.marketbot.data.Database
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -11,7 +13,9 @@ import javax.inject.Singleton
 @Module
 class ApplicationModule(private val application: Application) {
 
-    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+//    private val firebase: FirebaseDatabase = FirebaseDatabase.getInstance()
+//    private val database: Database = Room.databaseBuilder(application,
+//            Database::class.java, "market-storage").build()
 
     @Provides
     @Singleton
@@ -24,12 +28,14 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideFirebaseDatabase(): FirebaseDatabase {
+        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
         database.setPersistenceEnabled(true)
-
-//        database.getReference("groups").keepSynced(true)
-//        database.getReference("types").keepSynced(true)
-//        database.getReference("regions").keepSynced(true)
-
         return database
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(application: Application): Database {
+       return Room.databaseBuilder(application, Database::class.java, "market-storage").build()
     }
 }

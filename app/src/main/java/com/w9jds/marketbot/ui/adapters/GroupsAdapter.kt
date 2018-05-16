@@ -1,11 +1,8 @@
 package com.w9jds.marketbot.ui.adapters
 
-import android.app.Activity
-import android.app.ActivityOptions
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
-import android.support.v4.app.ActivityCompat
+import android.support.v4.app.FragmentManager
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -18,12 +15,11 @@ import com.w9jds.marketbot.BR
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketGroup
 import com.w9jds.marketbot.classes.models.market.MarketType
-import com.w9jds.marketbot.ui.ItemActivity
 import com.w9jds.marketbot.utils.FirebaseDiffUtil
 import io.reactivex.subjects.BehaviorSubject
 
 
-class GroupsAdapter(private val host: Activity, private val listener: BehaviorSubject<DataSnapshot>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GroupsAdapter(private val manager: FragmentManager, private val listener: BehaviorSubject<DataSnapshot>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val MARKET_GROUP_VIEW: Int = 0
@@ -50,7 +46,7 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
 
     private fun createGroupHolder(parent: ViewGroup): GroupHolder {
         val view: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.group_item_layout, parent, false)
+                .inflate(R.layout.layout_item_group, parent, false)
         val holder = GroupHolder(view)
 
         holder.itemView.setOnClickListener {
@@ -63,22 +59,22 @@ class GroupsAdapter(private val host: Activity, private val listener: BehaviorSu
 
     private fun createTypeHolder(parent: ViewGroup): TypeHolder {
         val view: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.type_item_layout, parent, false)
+                .inflate(R.layout.layout_item_type, parent, false)
         val holder = TypeHolder(view)
 
         holder.itemView.setOnClickListener {
             val type = items[holder.adapterPosition].getValue(MarketType::class.java)
 
-            val intent = Intent()
-            intent.setClass(host, ItemActivity::class.java)
-            intent.putExtra("type", type)
-
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                    host,
-                    android.util.Pair(host.findViewById(R.id.app_bar), host.getString(R.string.toolbar_transition_name))
-            )
-
-            ActivityCompat.startActivity(host, intent, options.toBundle())
+//            val intent = Intent()
+//            intent.setClass(host, ItemActivity::class.java)
+//            intent.putExtra("type", type)
+//
+//            val options = ActivityOptions.makeSceneTransitionAnimation(
+//                    host,
+//                    android.util.Pair(host.findViewById(R.id.app_bar), host.getString(R.string.toolbar_transition_name))
+//            )
+//
+//            ActivityCompat.startActivity(host, intent, options.toBundle())
         }
 
         return holder

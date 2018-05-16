@@ -31,7 +31,7 @@ class OrdersAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private fun createOrderHolder(parent: ViewGroup): OrderHolder {
         val view: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.order_item_layout, parent, false)
+                .inflate(R.layout.layout_item_order, parent, false)
 
         return OrderHolder(view)
     }

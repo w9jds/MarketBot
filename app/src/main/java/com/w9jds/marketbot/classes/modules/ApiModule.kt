@@ -1,7 +1,5 @@
 package com.w9jds.marketbot.classes.modules
 
-import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.w9jds.marketbot.BuildConfig
 import com.w9jds.marketbot.classes.ApiService
 import dagger.Module
 import dagger.Provides
@@ -34,9 +32,9 @@ class ApiModule {
     fun provideApiClient(headers: Interceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
 
-        if (BuildConfig.DEBUG) {
-            builder.addNetworkInterceptor(StethoInterceptor())
-        }
+//        if (BuildConfig.DEBUG) {
+//            builder.addNetworkInterceptor(StethoInterceptor())
+//        }
 
         return builder.addInterceptor(headers).build()
     }

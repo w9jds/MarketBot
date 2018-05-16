@@ -31,39 +31,4 @@
 
     </style>
 
-    <!--<style name="Widget.Light.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">-->
-        <!--<item name="android:dropDownSelector">?android:selectableItemBackground</item>-->
-        <!--<item name="android:divider">@null</item>-->
-        <!--<item name="android:overlapAnchor">true</item>-->
-        <!--<item name="android:gravity">left</item>-->
-        <!--<item name="android:popupBackground">@android:color/white</item>-->
-    <!--</style>-->
-
-
-    <!--<style name="Widget.MarketBot.Toolbar.ItemToolbar" parent="Widget.MarketBot.Toolbar.SmallCapsTitle">-->
-        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-        <!--<item name="selectableItemBackground">?android:selectableItemBackground</item>-->
-        <!--<item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>-->
-    <!--</style>-->
-
-    <!--<style name="Widget.MarketBot.OverlayToolbar" parent="android:Widget.Material.ActionBar">-->
-        <!--<item name="android:background">?android:colorPrimary</item>-->
-        <!--<item name="android:windowNoTitle">true</item>-->
-    <!--</style>-->
-
-    <!--<style name="Widget.MarketBot.Toolbar.Accent">-->
-        <!--<item name="android:background">?android:colorAccent</item>-->
-        <!--<item name="android:titleTextAppearance">@style/TextAppearance.AccentToolbar</item>-->
-    <!--</style>-->
-
-    <!--<style name="TextAppearance.AccentToolbar" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse">-->
-        <!--<item name="android:textColor">@color/text_on_accent</item>-->
-    <!--</style>-->
-
-    <!--<style name="TextAppearance.ToolbarTitleSmallCaps" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">-->
-        <!--<item name="android:textColor">@color/text_primary_light</item>-->
-        <!--<item name="android:fontFeatureSettings">smcp</item>-->
-        <!--<item name="android:letterSpacing">0.2</item>-->
-    <!--</style>-->
-
 </resources>

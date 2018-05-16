@@ -1,4 +1,4 @@
-package com.w9jds.marketbot.utils
+package com.w9jds.marketbot.utils.extensions
 
 import android.databinding.BindingAdapter
 import android.os.Build
@@ -60,19 +60,3 @@ fun TextView.setOrderLocation(order: MarketOrder) {
         location
     }
 }
-
-
-//    @BindingAdapter("bind:marginPercentage")
-//    public static void setMarginPercentage(TextView textView, StationMargin margin) {
-//
-//        DecimalFormat format = new DecimalFormat("0.#");
-//        String percentage = format.format(margin.getPercentage()) + "%";
-//        textView.setText(percentage);
-//
-//        if (margin.getPercentage() <= 20) {
-//            textView.setTextColor(0xFFFF0000);
-//        }
-//        else {
-//            textView.setTextColor(0xFF00FF00);
-//        }
-//    }

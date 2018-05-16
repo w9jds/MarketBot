@@ -12,23 +12,17 @@
 
         <include
             android:id="@+id/activity_header"
-            layout="@layout/app_bar" />
+            layout="@layout/layout_app_bar" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/market_groups"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <android.support.v4.widget.ContentLoadingProgressBar
-            android:id="@+id/content_loading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-7dp"
-            android:indeterminate="true"
-            style="@style/Widget.MarketBot.ContentLoadingProgress"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/content_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
 
     </android.support.design.widget.CoordinatorLayout>
 
 </layout>
+

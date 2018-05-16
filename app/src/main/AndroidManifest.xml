@@ -4,6 +4,7 @@
     package="com.w9jds.marketbot">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -26,36 +27,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".activities.SearchActivity" />
-        </activity>
-
-        <activity
-            android:name=".ui.SearchActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize|keyboardHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            <nav-graph android:value="@navigation/nav_graph"/>
 
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-        </activity>
-
-        <activity
-            android:name=".ui.ItemActivity"
-            android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize|keyboardHidden">
 
         </activity>
+
+        <service
+            android:name=".data.service.MarketSync"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
 
     </application>
 

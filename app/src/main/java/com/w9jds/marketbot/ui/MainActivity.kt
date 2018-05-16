@@ -1,48 +1,32 @@
 package com.w9jds.marketbot.ui
 
 import android.app.SearchManager
-import android.content.ComponentName
+import android.app.job.JobScheduler
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.FirebaseDatabase
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.MarketBot
-import com.w9jds.marketbot.data.DataLoadingSubject
-import com.w9jds.marketbot.data.loader.GroupsLoader
 import com.w9jds.marketbot.databinding.ActivityMainBinding
-import com.w9jds.marketbot.ui.adapters.GroupsAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.app_bar.view.*
+import com.w9jds.marketbot.ui.fragments.GroupsFragment
+import com.w9jds.marketbot.ui.fragments.SearchFragment
+import kotlinx.android.synthetic.main.layout_app_bar.view.*
 
-class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks {
+class MainActivity: AppCompatActivity(), LifecycleOwner {
 
-    private val parentListener: BehaviorSubject<DataSnapshot> = BehaviorSubject.create()
+    private val sharedPreference: SharedPreferences = MarketBot.base.preferences()
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: GroupsAdapter
-
-    private var parent: DataSnapshot? = null
-    private val loader: GroupsLoader = object : GroupsLoader(this) {
-        override fun onDataLoaded(data: List<DataSnapshot>) {
-
-            if (parent != null) {
-                binding.baseView.toolbar.title = parent?.child("name")?.value.toString()
-            }
-
-            adapter.updateItems(data)
-
-        }
-    }
+    private lateinit var lifecycleRegistry: LifecycleRegistry
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,68 +34,50 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
 
         if (binding.baseView.toolbar != null) {
             setSupportActionBar(binding.baseView.toolbar)
+            supportActionBar?.title = " "
         }
 
-        binding.marketGroups.layoutManager = LinearLayoutManager(this)
-        binding.marketGroups.itemAnimator = DefaultItemAnimator()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.content_container, GroupsFragment(), "market_fragment")
+            .addToBackStack(null)
+            .commit()
 
-        adapter = GroupsAdapter(this, parentListener)
-        binding.marketGroups.adapter = adapter
+        lifecycleRegistry = LifecycleRegistry(this)
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
 
-        checkNetworkStatus()
-
-        attachListeners()
-        loadBaseGroups()
+        checkMarketStatus()
     }
 
-    private fun checkNetworkStatus() {
-//        if (loader.isConnected()) {
-//            database.goOnline()
-//        }
-//        else {
-//            database.goOffline()
-//        }
+    override fun onStart() {
+        super.onStart()
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
-    private fun loadBaseGroups() {
-        parent = null
-        binding.baseView.toolbar.title = " "
-        loader.loadMarketGroups(null)
+    override fun onResume() {
+        super.onResume()
+        lifecycleRegistry.markState(Lifecycle.State.RESUMED)
     }
 
-    private fun onNextParent(snapshot: DataSnapshot) {
-        if (!loader.isDataLoading()) {
-            parent = snapshot
-            val id = snapshot.child("market_group_id").value as Long
+    private fun loadFragment() {
 
+    }
 
-            if (snapshot.hasChild("types")) {
-                loader.loadMarketTypes(id)
+    private fun checkMarketStatus() {
+        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+
+        when (sharedPreference.contains("lastSynced")) {
+            true -> {
+
             }
-            else {
-                loader.loadMarketGroups(id.toDouble())
+            false -> {
+//                val info = JobInfo
+//                    .Builder(1, ComponentName(packageName, MarketSync::class.qualifiedName))
+//                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+//                    .build()
+//
+//                scheduler.schedule(info)
             }
         }
-    }
-
-    private fun attachListeners() {
-        loader.registerLoadingCallback(this)
-        parentListener.observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(this::onNextParent)
-            .subscribe()
-    }
-
-    override fun dataStartedLoading() {
-        binding.contentLoading.show()
-    }
-
-    override fun dataFinishedLoading() {
-        binding.contentLoading.hide()
-    }
-
-    override fun dataFailedLoading(errorMessage: String) {
-        binding.contentLoading.hide()
-        Snackbar.make(binding.baseView, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -120,11 +86,7 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
         if (menu != null) {
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
             val searchView = menu.findItem(R.id.search).actionView as SearchView
-            searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(
-                    ComponentName(application, SearchActivity::class.java)
-                )
-            )
+
         }
 
         return true
@@ -140,24 +102,39 @@ class MainActivity: AppCompatActivity(), DataLoadingSubject.DataLoadingCallbacks
         }
     }
 
-    override fun onBackPressed() {
-        if (parent != null) {
-            if (parent!!.hasChild("parent_group_id")) {
-                val groupId = parent?.child("parent_group_id")?.value as Long
+    override fun onNewIntent(intent: Intent?) {
+        when (intent?.action) {
+            Intent.ACTION_SEARCH -> {
+                supportFragmentManager.putFragment(intent.extras, "search_results", SearchFragment())
+            }
+            Intent.ACTION_DEFAULT -> {
 
-                loader.getMarketGroup(groupId, {
-                    parent = it
-                    binding.baseView.toolbar.title = it?.child("name")?.value.toString()
-                    loader.loadMarketGroups(groupId.toDouble())
-                })
-            }
-            else {
-                loadBaseGroups()
             }
         }
-        else {
-            super.onBackPressed()
-        }
+    }
+
+    override fun onBackPressed() {
+//        if (parent != null) {
+//            if (parent!!.hasChild("parent_group_id")) {
+//                val groupId = parent?.child("parent_group_id")?.value as Long
+//
+//                loader.getMarketGroup(groupId, {
+//                    parent = it
+//                    binding.baseView.toolbar.title = it?.child("name")?.value.toString()
+//                    loader.loadMarketGroups(groupId.toDouble())
+//                })
+//            }
+//            else {
+//                loadBaseGroups()
+//            }
+//        }
+//        else {
+//            super.onBackPressed()
+//        }
+    }
+
+    override fun getLifecycle(): Lifecycle {
+        return lifecycleRegistry
     }
 
 }
