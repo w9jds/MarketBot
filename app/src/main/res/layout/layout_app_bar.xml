@@ -6,21 +6,21 @@
 
     <merge>
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
             android:transitionName="@string/toolbar_transition_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
     </merge>
 

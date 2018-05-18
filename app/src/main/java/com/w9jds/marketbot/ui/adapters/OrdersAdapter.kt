@@ -1,17 +1,16 @@
 package com.w9jds.marketbot.ui.adapters
 
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.w9jds.marketbot.BR
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketOrder
 import com.w9jds.marketbot.utils.OrdersDiffUtil
-
 
 class OrdersAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

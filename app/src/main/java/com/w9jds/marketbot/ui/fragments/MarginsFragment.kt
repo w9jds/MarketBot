@@ -1,11 +1,11 @@
 package com.w9jds.marketbot.ui.fragments
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.databinding.FragmentListBinding

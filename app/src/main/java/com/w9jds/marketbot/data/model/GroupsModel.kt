@@ -1,16 +1,18 @@
 package com.w9jds.marketbot.data.model
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.*
 import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.classes.models.market.MarketGroup
 import com.w9jds.marketbot.data.LoaderModel
-import com.w9jds.marketbot.utils.extensions.getValue
+import com.w9jds.marketbot.utils.extensions.once
+import com.w9jds.marketbot.utils.extensions.value
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.subscribeBy
 
 class GroupsModel: LoaderModel() {
 
-    var groups: MutableLiveData<List<DataSnapshot>> = MutableLiveData()
+    val groups: MutableLiveData<List<DataSnapshot>> = MutableLiveData()
 
     private val firebase: FirebaseDatabase = MarketBot.base.firebase()
 
@@ -39,26 +41,38 @@ class GroupsModel: LoaderModel() {
         }
     }
 
+    private fun setGroups(data: DataSnapshot) {
+        groups.value = data.children?.distinct() ?: emptyList()
+        loadFinished()
+    }
+
+    private fun handleErrors(error: Throwable) {
+        groups.value = emptyList()
+        loadFinished()
+    }
+
     fun loadMarketTypes(groupId: Long) {
         loadStarted()
 
-        firebase.getReference("types/$groupId").orderByChild("name")
-                .addListenerForSingleValueEvent(valueHandler)
-
+        firebase.getReference("types/$groupId").orderByChild("name").once()
+                .subscribeBy(
+                    onNext = this::setGroups,
+                    onError = this::handleErrors
+                )
     }
 
     fun getMarketGroup(groupId: Long): Observable<List<MarketGroup>> {
-        return firebase.getReference("groups/$groupId").getValue()
+        return firebase.getReference("groups/$groupId").value()
     }
 
-    fun loadSearchResults(query: String) {
-        loadStarted()
-
-        firebase.getReference("types")
-                .orderByChild("name")
-                .startAt(query)
-                .endAt("$query\\uf8ff")
-                .addListenerForSingleValueEvent(valueHandler)
-    }
+//    fun loadSearchResults(query: String) {
+//        loadStarted()
+//
+//        firebase.getReference("types")
+//                .orderByChild("name")
+//                .startAt(query)
+//                .endAt("$query\\uf8ff")
+//                .addListenerForSingleValueEvent(valueHandler)
+//    }
 
 }

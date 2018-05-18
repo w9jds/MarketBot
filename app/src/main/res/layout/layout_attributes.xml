@@ -7,13 +7,13 @@
             type="com.w9jds.marketbot.classes.models.market.MarketType" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="8dp"
             android:layout_height="match_parent"
@@ -116,6 +116,6 @@
             app:layout_constraintStart_toEndOf="@+id/portion_label"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

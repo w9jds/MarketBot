@@ -1,13 +1,9 @@
 package com.w9jds.marketbot.data.service
 
-import android.util.Log
 import androidx.work.Worker
 import com.google.firebase.database.DataSnapshot
 import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.classes.models.market.MarketGroup
-import com.w9jds.marketbot.utils.extensions.getSnapshot
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class GroupsWorker: Worker()  {
@@ -17,19 +13,19 @@ class GroupsWorker: Worker()  {
 
     override fun doWork(): WorkerResult {
 
-        firebase.getReference("groups").getSnapshot()
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.computation())
-                .subscribeBy(
-                    onNext = {
-                        processGroups(it?.children?.distinct() ?: emptyList())
-                        WorkerResult.SUCCESS
-                    },
-                    onError = {
-                        Log.e("MarketSync", it.message, it)
-                        WorkerResult.FAILURE
-                    }
-                )
+//        firebase.getReference("groups").getSnapshot()
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.computation())
+//                .subscribeBy(
+//                    onNext = {
+//                        processGroups(it?.children?.distinct() ?: emptyList())
+//                        WorkerResult.SUCCESS
+//                    },
+//                    onError = {
+//                        Log.e("MarketSync", it.message, it)
+//                        WorkerResult.FAILURE
+//                    }
+//                )
 
         TODO("not implemented")
     }

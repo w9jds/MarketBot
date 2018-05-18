@@ -1,14 +1,14 @@
 package com.w9jds.marketbot.ui.fragments
 
-import android.arch.lifecycle.LifecycleOwner
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.classes.models.universe.Region

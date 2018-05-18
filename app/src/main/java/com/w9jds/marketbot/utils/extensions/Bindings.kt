@@ -1,10 +1,10 @@
 package com.w9jds.marketbot.utils.extensions
 
-import android.databinding.BindingAdapter
 import android.os.Build
 import android.text.Html
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.w9jds.marketbot.classes.models.market.MarketOrder
 import java.text.DecimalFormat

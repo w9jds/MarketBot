@@ -1,14 +1,13 @@
 package com.w9jds.marketbot.classes.models.market
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.Ignore
+import androidx.room.ColumnInfo
 import com.w9jds.marketbot.classes.models.dogma.AttributeBase
 import com.w9jds.marketbot.classes.models.dogma.EffectBase
-
 
 @Entity
 data class MarketType(

@@ -1,14 +1,14 @@
 package com.w9jds.marketbot.ui
 
 import android.app.SearchManager
-import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 import android.content.SharedPreferences
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SearchView
 import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.databinding.ActivityMainBinding

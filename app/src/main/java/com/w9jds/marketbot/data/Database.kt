@@ -1,7 +1,8 @@
 package com.w9jds.marketbot.data
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import com.w9jds.marketbot.classes.models.market.MarketGroup
 import com.w9jds.marketbot.classes.models.market.MarketType
 import com.w9jds.marketbot.data.dao.MarketGroupDao

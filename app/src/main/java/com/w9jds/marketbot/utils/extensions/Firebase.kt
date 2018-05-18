@@ -6,7 +6,7 @@ import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Observable
 
-fun Query.getSnapshot(): Observable<DataSnapshot> {
+fun Query.once(): Observable<DataSnapshot> {
     return Observable.create {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -23,8 +23,8 @@ fun Query.getSnapshot(): Observable<DataSnapshot> {
     }
 }
 
-inline fun <reified T: Any> Query.getValue(): Observable<T> {
-    return getSnapshot().map {
+inline fun <reified T: Any> Query.value(): Observable<T> {
+    return once().map {
         it.getValue(T::class.java)
     }
 }

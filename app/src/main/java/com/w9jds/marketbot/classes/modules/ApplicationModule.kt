@@ -1,9 +1,9 @@
 package com.w9jds.marketbot.classes.modules
 
 import android.app.Application
-import android.arch.persistence.room.Room
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.room.Room
 import com.google.firebase.database.FirebaseDatabase
 import com.w9jds.marketbot.data.Database
 import dagger.Module

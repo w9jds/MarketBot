@@ -1,7 +1,6 @@
 package com.w9jds.marketbot.data.model
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
 import com.w9jds.marketbot.classes.ApiService
 import com.w9jds.marketbot.classes.models.market.MarketOrder
 import com.w9jds.marketbot.classes.models.universe.Reference
@@ -18,7 +17,7 @@ class OrdersModel: LoaderModel() {
     @Inject
     lateinit var apiService: ApiService
 
-    var orders: MutableLiveData<List<MarketOrder>> = MutableLiveData()
+    val orders: MutableLiveData<List<MarketOrder>> = MutableLiveData()
 
     fun loadBuyOrders(regionId: Int, typeId: Int) {
         loadStarted()

@@ -1,15 +1,15 @@
 package com.w9jds.marketbot.ui.adapters
 
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
-import android.support.v4.app.FragmentManager
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.w9jds.marketbot.BR
 import com.w9jds.marketbot.R
