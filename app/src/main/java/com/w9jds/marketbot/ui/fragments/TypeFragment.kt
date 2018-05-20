@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.classes.models.market.MarketType
@@ -29,14 +31,6 @@ class TypeFragment: Fragment() {
 
     private val regionObservable: BehaviorSubject<Region> = BehaviorSubject.create()
 
-
-//    private var regionLoader: RegionsLoader = object : RegionsLoader(context!!) {
-//        override fun onRegionsLoaded(data: List<DataSnapshot>) {
-//            regionsAdapter.updateItems(data)
-//            binding.regionSpinner.setSelection(regionsAdapter.positions[regionId] ?: 0)
-//        }
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,7 +50,31 @@ class TypeFragment: Fragment() {
 
         binding.contentPager.adapter = tabAdapter
         binding.contentPager.offscreenPageLimit = 4
+        binding.contentPager.addOnPageChangeListener(pageChangeListener)
+        binding.filterButton.setOnClickListener(onFilterClicked)
         binding.slidingTabs.setupWithViewPager(binding.contentPager)
 
+    }
+
+    private val onFilterClicked = View.OnClickListener {
+
+    }
+
+    private val pageChangeListener = object: ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) {
+            when (state) {
+                1 -> binding.filterButton.show()
+                2 -> binding.filterButton.show()
+                else -> binding.filterButton.hide()
+            }
+        }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+        }
+
+        override fun onPageSelected(position: Int) {
+
+        }
     }
 }

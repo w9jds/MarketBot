@@ -1,82 +1,44 @@
-//package com.w9jds.marketbot.ui.adapters
-//
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.widget.BaseAdapter
-//import android.widget.SpinnerAdapter
-//import android.widget.TextView
-//import com.google.firebase.database.DataSnapshot
-//import com.w9jds.marketbot.R
-//import com.w9jds.marketbot.classes.models.universe.Region
-//
-//class RegionsAdapter : BaseAdapter(), SpinnerAdapter {
-//
-//    private val items: MutableList<DataSnapshot> = mutableListOf()
-//    val positions: HashMap<Int, Int> = HashMap()
-//
-//    inner class RegionViewHolder(itemView: View) {
-//        val name: TextView = itemView.findViewById(R.id.region_name)
-//    }
-//
-//    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-//        var view: View? = convertView
-//        val holder: RegionViewHolder
-//        val region: Region? = getItem(position)
-//
-//        if (view == null) {
-//            view = LayoutInflater.from(parent?.context).inflate(R.layout.region_item_layout, parent, false)
-//
-//            holder = RegionViewHolder(view)
-//            view.tag = holder
-//        }
-//        else {
-//            holder = view.tag as RegionViewHolder
-//        }
-//
-//        holder.name.text = region?.name
-//        return view!!
-//    }
-//
-//    override fun getItem(position: Int): Region? {
-//        return items[position].getValue(Region::class.java)
-//    }
-//
-//    override fun getItemId(position: Int): Long {
-//        return items[position].key.toLong()
-//    }
-//
-//    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
-//        var view: View? = convertView
-//        val holder: RegionViewHolder
-//        val region: Region? = getItem(position)
-//
-//        if (view == null) {
-//            view = LayoutInflater.from(parent?.context).inflate(R.layout.region_item_dropdown_layout, parent, false)
-//
-//            holder = RegionViewHolder(view)
-//            view.tag = holder
-//        }
-//        else {
-//            holder = view.tag as RegionViewHolder
-//        }
-//
-//        holder.name.text = region?.name
-//        return view!!
-//    }
-//
-//    override fun getCount(): Int {
-//        return items.count()
-//    }
-//
-//    fun updateItems(snapshots: List<DataSnapshot>) {
-//        items.clear()
-//        positions.clear()
-//
-//        items.addAll(snapshots)
-//        items.forEachIndexed { index, dataSnapshot -> positions[dataSnapshot.key.toInt()] = index }
-//
-//        notifyDataSetChanged()
-//    }
-//
-//}
+package com.w9jds.marketbot.ui.adapters
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.w9jds.marketbot.BR
+import com.w9jds.marketbot.R
+import com.w9jds.marketbot.classes.models.universe.Region
+
+class RegionsAdapter(diffCallback: DiffUtil.ItemCallback<Region>) : ListAdapter<Region, RegionsAdapter.RegionViewHolder>(diffCallback) {
+
+    inner class RegionViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val binding = DataBindingUtil.bind<ViewDataBinding>(itemView)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegionViewHolder {
+        return createRegionHolder(parent)
+    }
+
+    override fun onBindViewHolder(holder: RegionViewHolder, position: Int) {
+
+    }
+
+    private fun createRegionHolder(parent: ViewGroup): RegionViewHolder {
+        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.layout_item_region, parent, false)
+        val holder = RegionViewHolder(view)
+
+        holder.itemView.setOnClickListener {
+
+        }
+
+        return holder
+    }
+
+    private fun bindRegion(holder: RegionViewHolder, region: Region) {
+        holder.binding?.setVariable(BR.region, region)
+    }
+
+}
