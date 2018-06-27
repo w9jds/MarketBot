@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:startDestination="@id/groupsFragment">
+
+    <fragment
+        android:id="@+id/groupsFragment"
+        android:name="com.w9jds.marketbot.ui.fragments.GroupsFragment"
+        android:label="GroupsFragment" >
+
+        <action
+            android:id="@+id/action_groupsFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/groupsFragment" />
+        <action
+            android:id="@+id/action_groupsFragment_to_typeFragment"
+            app:destination="@id/typeFragment"
+            app:popUpTo="@+id/groupsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.w9jds.marketbot.ui.fragments.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_typeFragment"
+            app:destination="@id/typeFragment"
+            app:popUpTo="@+id/searchFragment" />
+        <deepLink app:uri="android.intent.action.SEARCH" />
+        <argument
+            android:name="query"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/typeFragment"
+        android:name="com.w9jds.marketbot.ui.fragments.TypeFragment"
+        android:label="TypeFragment" >
+        <deepLink app:uri="com.w9jds.marketbot.intent.action.OPEN_TYPE" />
+    </fragment>
+</navigation>

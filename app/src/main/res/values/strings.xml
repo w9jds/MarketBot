@@ -5,11 +5,12 @@
     <string name="sell_orders">Sell Orders</string>
     <string name="buy_orders">Buy Orders</string>
     <string name="type_info_label">Info</string>
+    <string name="history">Market History</string>
 
-    <string name="mass_label">Mass: </string>
-    <string name="capacity_label">Capacity: </string>
-    <string name="portion_label">Portion Size: </string>
-    <string name="volume_label">Volume: </string>
+    <string name="mass_label">Mass:</string>
+    <string name="capacity_label">Capacity:</string>
+    <string name="portion_label">Portion Size:</string>
+    <string name="volume_label">Volume:</string>
 
     <string name="price_format">$d ISK</string>
     <string name="volume_progress_format">$s / $s</string>
@@ -26,12 +27,14 @@
 
     <string name="range_label">Range:</string>
     <string name="search_hint">Search Market…</string>
-    <string name="eternal_gratitude">For creating the application icon, eternal gratitude goes to:</string>
-    <string name="crest_version">Crest Version:</string>
+
     <string name="marketbot_version">MarketBot Version:</string>
-    <string name="rixx_javix">Rixx Javix</string>
     <string name="ign_chingy_chonga">IGN: Chingy Chonga</string>
     <string name="jeremy_shore">Jeremy Shore</string>
+
+    <string name="no_sell_orders_available">No Sell Orders Available In This Region</string>
+    <string name="no_buy_orders_available">No Buy Orders Available In This Region</string>
+
     <string name="info_label">Info</string>
     <string name="maximum_buy_price">Maximum Buy Price:</string>
     <string name="maximum_sell_price">Maximum Sell Price:</string>
@@ -50,6 +53,5 @@
         <item>@string/sell</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
