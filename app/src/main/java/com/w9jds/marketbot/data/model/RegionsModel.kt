@@ -15,12 +15,12 @@ class RegionsModel: LoaderModel() {
     private val database: FirebaseDatabase = MarketBot.base.firebase()
 
     private val valueHandler = object: ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot?) {
-            regions.value = snapshot?.children?.distinct() ?: emptyList()
+        override fun onDataChange(snapshot: DataSnapshot) {
+            regions.value = snapshot.children.distinct() ?: emptyList()
             loadFinished()
         }
 
-        override fun onCancelled(error: DatabaseError?) {
+        override fun onCancelled(error: DatabaseError) {
             regions.value = emptyList()
             loadFinished()
         }

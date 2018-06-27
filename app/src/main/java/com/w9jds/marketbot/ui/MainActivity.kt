@@ -1,12 +1,9 @@
 package com.w9jds.marketbot.ui
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import com.w9jds.marketbot.R
@@ -47,17 +44,13 @@ class MainActivity: AppCompatActivity(), LifecycleOwner {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 
-        if (menu != null) {
-            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            val searchView = menu.findItem(R.id.search).actionView as SearchView
-
-        }
+//        if (menu != null) {
+//            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//            val searchView = menu.findItem(R.id.search).actionView as SearchView
+//
+//        }
 
         return true
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return super.onSupportNavigateUp()
     }
 
     override fun onBackPressed() {

@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.w9jds.marketbot.R
 import com.w9jds.marketbot.classes.MarketBot
 import com.w9jds.marketbot.classes.models.market.MarketType

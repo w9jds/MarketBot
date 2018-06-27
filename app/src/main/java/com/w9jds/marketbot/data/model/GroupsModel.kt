@@ -17,12 +17,12 @@ class GroupsModel: LoaderModel() {
     private val firebase: FirebaseDatabase = MarketBot.base.firebase()
 
     private val valueHandler = object: ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot?) {
-            groups.value = snapshot?.children?.distinct() ?: emptyList()
+        override fun onDataChange(snapshot: DataSnapshot) {
+            groups.value = snapshot.children.distinct() ?: emptyList()
             loadFinished()
         }
 
-        override fun onCancelled(error: DatabaseError?) {
+        override fun onCancelled(error: DatabaseError) {
             groups.value = emptyList()
             loadFinished()
         }
